@@ -17,13 +17,6 @@ IterableDiffers
 import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from 'angular2/common';
 import { CONST_EXPR } from 'angular2/src/facade/lang';
 
-@Directive('')
-class DummyDirective extends DefaultValueAccessor {
-  constructor(renderer: Renderer, el: ElementRef, differs: IterableDiffers, zone: NgZone) {
-    super(renderer, el);
-  }
-}
-
 export function PolymerElement(name) {
   const propertiesWithNotify = [];
   const nonPrimitiveProperties = [];
