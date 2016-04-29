@@ -12,14 +12,15 @@ forwardRef,
 provide,
 Renderer,
 NgZone,
-IterableDiffers
+IterableDiffers,
+KeyValueDiffers
 } from 'angular2/core';
 import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from 'angular2/common';
 import { CONST_EXPR } from 'angular2/src/facade/lang';
 
 export function PolymerElement(name) {
   const propertiesWithNotify = [];
-  const nonPrimitiveProperties = [];
+  const arrayAndObjectProperties = [];
 
   const proto = Object.getPrototypeOf(document.createElement(name));
   const isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
@@ -42,8 +43,8 @@ export function PolymerElement(name) {
       };
     }
 
-    if (info.type && info.type.name === 'Array' || info.type.name === 'Object') {
-      nonPrimitiveProperties.push(name);
+    if (info.type && info.type === Object || info.type === Array) {
+      arrayAndObjectProperties.push(name);
     }
 
     if (info && info.notify) {
@@ -115,14 +116,18 @@ export function PolymerElement(name) {
 
   const notifyForDiffersDirective = Directive({
     selector: name,
-    inputs: nonPrimitiveProperties
+    inputs: arrayAndObjectProperties
   }).Class({
-    constructor: [ElementRef, IterableDiffers, function(el: ElementRef, differs: IterableDiffers) {
+    constructor: [ElementRef, KeyValueDiffers, function(el: ElementRef, differs: KeyValueDiffers) {
       this._element = el.nativeElement;
+      this._keyValueDiffers = differs;
 
-      this._differs = nonPrimitiveProperties
-        .map(property => { return { name: property, differ: differs.find([]).create(null) }; });
     }],
+
+    ngOnInit() {
+      this._differs = arrayAndObjectProperties
+        .map(property => { return { name: property, differ: this._keyValueDiffers.find(this[property] || {}).create(null) }; });
+    },
 
     ngDoCheck() {
       this._differs.map(d => {
@@ -130,7 +135,7 @@ export function PolymerElement(name) {
           return { name: d.name, diff: diff };
       }).filter(changes => changes.diff)
         .forEach(changes => {
-          this._element[changes.name] = changes.diff.collection.slice(0)
+          this._element[changes.name] = Array.isArray(this[changes.name]) ? this[changes.name].slice(0) : Object.assign({}, this[changes.name]);
       });
     }
   });

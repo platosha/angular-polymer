@@ -2,7 +2,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
     var core_1, common_1;
     function PolymerElement(name) {
         var propertiesWithNotify = [];
-        var nonPrimitiveProperties = [];
+        var arrayAndObjectProperties = [];
         var proto = Object.getPrototypeOf(document.createElement(name));
         var isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
         proto.behaviors.forEach(function (behavior) { return configureProperties(behavior.properties); });
@@ -21,8 +21,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     type: info
                 };
             }
-            if (info.type && info.type.name === 'Array' || info.type.name === 'Object') {
-                nonPrimitiveProperties.push(name);
+            if (info.type && info.type === Object || info.type === Array) {
+                arrayAndObjectProperties.push(name);
             }
             if (info && info.notify) {
                 propertiesWithNotify.push(name);
@@ -88,13 +88,17 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
         });
         var notifyForDiffersDirective = core_1.Directive({
             selector: name,
-            inputs: nonPrimitiveProperties
+            inputs: arrayAndObjectProperties
         }).Class({
-            constructor: [core_1.ElementRef, core_1.IterableDiffers, function (el, differs) {
+            constructor: [core_1.ElementRef, core_1.KeyValueDiffers, function (el, differs) {
                     this._element = el.nativeElement;
-                    this._differs = nonPrimitiveProperties
-                        .map(function (property) { return { name: property, differ: differs.find([]).create(null) }; });
+                    this._keyValueDiffers = differs;
                 }],
+            ngOnInit: function () {
+                var _this = this;
+                this._differs = arrayAndObjectProperties
+                    .map(function (property) { return { name: property, differ: _this._keyValueDiffers.find(_this[property] || {}).create(null) }; });
+            },
             ngDoCheck: function () {
                 var _this = this;
                 this._differs.map(function (d) {
@@ -102,7 +106,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     return { name: d.name, diff: diff };
                 }).filter(function (changes) { return changes.diff; })
                     .forEach(function (changes) {
-                    _this._element[changes.name] = changes.diff.collection.slice(0);
+                    _this._element[changes.name] = Array.isArray(_this[changes.name]) ? _this[changes.name].slice(0) : Object.assign({}, _this[changes.name]);
                 });
             }
         });
