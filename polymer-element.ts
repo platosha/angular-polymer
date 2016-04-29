@@ -11,13 +11,22 @@ Provider,
 forwardRef,
 provide,
 Renderer,
-NgZone
+NgZone,
+IterableDiffers
 } from 'angular2/core';
 import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from 'angular2/common';
 import { CONST_EXPR } from 'angular2/src/facade/lang';
 
+@Directive('')
+class DummyDirective extends DefaultValueAccessor {
+  constructor(renderer: Renderer, el: ElementRef, differs: IterableDiffers, zone: NgZone) {
+    super(renderer, el);
+  }
+}
+
 export function PolymerElement(name) {
   const propertiesWithNotify = [];
+  const nonPrimitiveProperties = [];
 
   const proto = Object.getPrototypeOf(document.createElement(name));
   const isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
@@ -27,6 +36,7 @@ export function PolymerElement(name) {
   function configureProperties(properties) {
     if (properties) {
       Object.getOwnPropertyNames(properties)
+        .filter(name => name.indexOf('_') !== 0)
         .forEach(name => configureProperty(name, properties))
     }
   }
@@ -39,6 +49,10 @@ export function PolymerElement(name) {
       };
     }
 
+    if (info.type && info.type.name === 'Array' || info.type.name === 'Object') {
+      nonPrimitiveProperties.push(name);
+    }
+
     if (info && info.notify) {
       propertiesWithNotify.push(name);
     }
@@ -46,42 +60,37 @@ export function PolymerElement(name) {
 
   const eventNameForProperty = property => `${property}Change`;
 
-  var directive = Directive({
+  const changeEventsAdapterDirective = Directive({
     selector: name,
-    providers: [provide(
-      NG_VALUE_ACCESSOR, {
-        useExisting: forwardRef(() => directive),
-        multi: true
-      })],
     outputs: propertiesWithNotify.map(eventNameForProperty),
     host: propertiesWithNotify.reduce((hostBindings, property) => {
-      const binding = `(${property}-changed)`;
-      if (!hostBindings[binding]) {
-        hostBindings[binding] = `${eventNameForProperty(property) }.emit($event.detail.value);`;
-        if (property === 'value' && isFormElement) {
-          hostBindings[binding] += 'onValueChanged($event.detail.value)';
-        }
-      }
+      hostBindings[`(${property}-changed)`] = `${eventNameForProperty(property) }.emit($event.detail.value);`;
       return hostBindings;
     }, {})
   }).Class({
-    extends: isFormElement ? DefaultValueAccessor : function() { },
-    constructor: [Renderer, ElementRef, NgZone, function(renderer: Renderer, el: ElementRef, zone: NgZone) {
-      this._element = el.nativeElement;
-      this.zone = zone;
-
-      if (isFormElement) {
-        DefaultValueAccessor.call(this, renderer, el);
-        this._element.addEventListener('blur', () => this.onTouched(), true);
-      }
-
+    constructor: function() {
       propertiesWithNotify
         .forEach(property => this[eventNameForProperty(property)] = new EventEmitter<any>(false));
+    }
+  });
 
+  const formElementDirective = Directive({
+    selector: name,
+    providers: [provide(
+      NG_VALUE_ACCESSOR, {
+        useExisting: forwardRef(() => formElementDirective),
+        multi: true
+      })],
+    host: {
+      '(value-changed)': 'onValueChanged($event.detail.value)'
+    }
+  }).Class({
+    extends: DefaultValueAccessor,
+    constructor: [Renderer, ElementRef, function(renderer: Renderer, el: ElementRef) {
+      DefaultValueAccessor.call(this, renderer, el);
 
-      if (!Polymer.Settings.useShadow) {
-        el.nativeElement.async(this._observeMutations.bind(this));
-      }
+      this._element = el.nativeElement;
+      this._element.addEventListener('blur', () => this.onTouched(), true);
     }],
 
     onValueChanged: function(value: String) {
@@ -95,7 +104,43 @@ export function PolymerElement(name) {
       } else {
         this._initialValueSet = true;
       }
-    },
+    }
+  });
+
+  const notifyForDiffersDirective = Directive({
+    selector: name,
+    inputs: nonPrimitiveProperties
+  }).Class({
+    constructor: [ElementRef, IterableDiffers, function(el: ElementRef, differs: IterableDiffers) {
+      this._element = el.nativeElement;
+
+      this._differs = nonPrimitiveProperties
+        .map(property => { return { name: property, differ: differs.find([]).create(null) }; });
+    }],
+
+    ngDoCheck() {
+      this._differs.map(d => {
+          var diff = d.differ.diff(typeof this[d.name] === 'string' ? JSON.parse(this[d.name]) : this[d.name]);
+          return { name: d.name, diff: diff };
+      }).filter(changes => changes.diff)
+        .forEach(changes => {
+          console.log(changes);
+          this._element[changes.name] = changes.diff.collection.slice(0)
+      });
+    }
+  });
+
+  const lightDomObserverDirective = Directive({
+    selector: name
+  }).Class({
+    constructor: [ElementRef, NgZone, function(el: ElementRef, zone: NgZone) {
+      this._element = el.nativeElement;
+      this.zone = zone;
+
+      if (!Polymer.Settings.useShadow) {
+        el.nativeElement.async(this._observeMutations.bind(this));
+      }
+    }],
 
     _observeMutations: function() {
       const lightDom = Polymer.dom(this._element);
@@ -148,5 +193,9 @@ export function PolymerElement(name) {
     }
   });
 
-  return directive;
+  var directives = [changeEventsAdapterDirective, formElementDirective, notifyForDiffersDirective, lightDomObserverDirective];
+  // if (isFormElement) {
+  //   directives.push();
+  // }
+  return directives;
 }
