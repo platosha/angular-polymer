@@ -58,6 +58,19 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     .forEach(function (property) { return _this[eventNameForProperty(property)] = new core_1.EventEmitter(false); });
             }
         });
+        var validationDirective = core_1.Directive({
+            selector: name
+        }).Class({
+            constructor: [core_1.ElementRef, core_1.Injector, function (el, injector) {
+                    this._element = el.nativeElement;
+                    this._control = injector.get(common_1.NgControl, null);
+                }],
+            ngDoCheck: function () {
+                if (this._control) {
+                    this._element.invalid = !this._control.pristine && !this._control.valid;
+                }
+            }
+        });
         var formElementDirective = core_1.Directive({
             selector: name,
             providers: [core_1.provide(common_1.NG_VALUE_ACCESSOR, {
@@ -78,10 +91,10 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
             onValueChanged: function (value) {
                 var _this = this;
                 if (this._initialValueSet) {
-                    this.onChange(value);
-                    setTimeout(function () {
-                        _this._element.invalid = !_this._element.classList.contains('ng-pristine') && !_this._element.classList.contains('ng-valid');
-                    }, 0);
+                    // need a debounce here to prevent weird race conditions
+                    this._element.debounce('value-changed', function () {
+                        _this.onChange(value);
+                    }, 1);
                 }
                 else {
                     this._initialValueSet = true;
@@ -104,7 +117,6 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     return { name: d.name, diff: diff };
                 }).filter(function (changes) { return changes.diff; })
                     .forEach(function (changes) {
-                    console.log(changes);
                     _this._element[changes.name] = changes.diff.collection.slice(0);
                 });
             }
@@ -162,10 +174,11 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 return !node.tagName || !node.classList.contains(name);
             }
         });
-        var directives = [changeEventsAdapterDirective, formElementDirective, notifyForDiffersDirective, lightDomObserverDirective];
-        // if (isFormElement) {
-        //   directives.push();
-        // }
+        var directives = [changeEventsAdapterDirective, notifyForDiffersDirective, lightDomObserverDirective];
+        if (isFormElement) {
+            directives.push(formElementDirective);
+            directives.push(validationDirective);
+        }
         return directives;
     }
     exports_1("PolymerElement", PolymerElement);

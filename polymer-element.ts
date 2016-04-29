@@ -74,6 +74,21 @@ export function PolymerElement(name) {
     }
   });
 
+  const validationDirective = Directive({
+    selector: name
+  }).Class({
+    constructor: [ElementRef, Injector, function(el: ElementRef, injector: Injector) {
+      this._element = el.nativeElement;
+      this._control = injector.get(NgControl, null);
+    }],
+
+    ngDoCheck: function() {
+      if(this._control) {
+        this._element.invalid = !this._control.pristine && !this._control.valid;
+      }
+    }
+  });
+
   const formElementDirective = Directive({
     selector: name,
     providers: [provide(
@@ -95,12 +110,10 @@ export function PolymerElement(name) {
 
     onValueChanged: function(value: String) {
       if (this._initialValueSet) {
-        this.onChange(value);
-
-        setTimeout(() => {
-          this._element.invalid = !this._element.classList.contains('ng-pristine') && !this._element.classList.contains('ng-valid');
-        }, 0);
-
+        // need a debounce here to prevent weird race conditions
+        this._element.debounce('value-changed', () => {
+          this.onChange(value);
+        }, 1);
       } else {
         this._initialValueSet = true;
       }
@@ -124,7 +137,6 @@ export function PolymerElement(name) {
           return { name: d.name, diff: diff };
       }).filter(changes => changes.diff)
         .forEach(changes => {
-          console.log(changes);
           this._element[changes.name] = changes.diff.collection.slice(0)
       });
     }
@@ -193,9 +205,12 @@ export function PolymerElement(name) {
     }
   });
 
-  var directives = [changeEventsAdapterDirective, formElementDirective, notifyForDiffersDirective, lightDomObserverDirective];
-  // if (isFormElement) {
-  //   directives.push();
-  // }
+  var directives = [changeEventsAdapterDirective, notifyForDiffersDirective, lightDomObserverDirective];
+
+  if (isFormElement) {
+    directives.push(formElementDirective);
+    directives.push(validationDirective);
+  }
+
   return directives;
 }
