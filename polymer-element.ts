@@ -126,7 +126,11 @@ export function PolymerElement(name) {
 
     ngOnInit() {
       this._differs = arrayAndObjectProperties
-        .map(property => { return { name: property, differ: this._keyValueDiffers.find(this[property] || {}).create(null) }; });
+        .map(property => {
+          if (this[property]) {
+            this._element.set(property, this[property]);
+          }
+          return { name: property, differ: this._keyValueDiffers.find(this[property] || {}).create(null) }; });
     },
 
     ngDoCheck() {
