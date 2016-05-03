@@ -1,19 +1,13 @@
-// import {Directive, Class, EventEmitter} from 'angular2/core';
 import {
-Injector,
-OnInit,
-Directive,
-ElementRef,
-Output,
-HostListener,
-EventEmitter,
-Provider,
-forwardRef,
-provide,
-Renderer,
-NgZone,
-IterableDiffers,
-KeyValueDiffers
+  Injector,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  provide,
+  Renderer,
+  NgZone,
+  KeyValueDiffers
 } from '@angular/core';
 import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/common';
 
