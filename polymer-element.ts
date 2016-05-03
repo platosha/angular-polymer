@@ -126,17 +126,17 @@ export function PolymerElement(name) {
 
     ngOnInit() {
       this._differs = arrayAndObjectProperties
-        .map(property => { return { name: property, differ: this._keyValueDiffers.find(this[property] || {}).create(null) }; });
+        .map(property => {
+          return { name: property, differ: this._keyValueDiffers.find(this[property] || {}).create(null) }; });
     },
 
     ngDoCheck() {
       this._differs.map(d => {
-          var diff = d.differ.diff(typeof this[d.name] === 'string' ? JSON.parse(this[d.name]) : this[d.name]);
-          return { name: d.name, diff: diff };
+          var diff = typeof this[d.name] === 'function' ? true :
+            d.differ.diff(typeof this[d.name] === 'string' ? JSON.parse(this[d.name]) : this[d.name]);
+          return { name: d.name, diff: diff};
       }).filter(changes => changes.diff)
-        .forEach(changes => {
-          this._element[changes.name] = Array.isArray(this[changes.name]) ? this[changes.name].slice(0) : Object.assign({}, this[changes.name]);
-      });
+        .forEach(changes => this._element.notifyPath(changes.name, this[changes.name]));
     }
   });
 
