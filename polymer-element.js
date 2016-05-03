@@ -69,13 +69,19 @@ System.register(['@angular/core', '@angular/common'], function(exports_1, contex
                 '(value-changed)': 'onValueChanged($event.detail.value)'
             }
         }).Class({
-            extends: common_1.DefaultValueAccessor,
             constructor: [core_1.Renderer, core_1.ElementRef, function (renderer, el) {
                     var _this = this;
-                    common_1.DefaultValueAccessor.call(this, renderer, el);
+                    this._renderer = renderer;
                     this._element = el.nativeElement;
                     this._element.addEventListener('blur', function () { return _this.onTouched(); }, true);
                 }],
+            onChange: function (_) { },
+            onTouched: function () { },
+            writeValue: function (value) {
+                this._renderer.setElementProperty(this._element, 'value', value);
+            },
+            registerOnChange: function (fn) { this.onChange = fn; },
+            registerOnTouched: function (fn) { this.onTouched = fn; },
             onValueChanged: function (value) {
                 var _this = this;
                 if (this._initialValueSet) {

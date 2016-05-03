@@ -9,7 +9,7 @@ import {
   NgZone,
   KeyValueDiffers
 } from '@angular/core';
-import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/common';
+import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
 
 export function PolymerElement(name) {
   const propertiesWithNotify = [];
@@ -88,13 +88,21 @@ export function PolymerElement(name) {
       '(value-changed)': 'onValueChanged($event.detail.value)'
     }
   }).Class({
-    extends: DefaultValueAccessor,
     constructor: [Renderer, ElementRef, function(renderer: Renderer, el: ElementRef) {
-      DefaultValueAccessor.call(this, renderer, el);
-
+      this._renderer = renderer;
       this._element = el.nativeElement;
       this._element.addEventListener('blur', () => this.onTouched(), true);
     }],
+
+    onChange: (_: any) => { },
+    onTouched: () => { },
+
+    writeValue: function(value: any): void {
+      this._renderer.setElementProperty(this._element, 'value', value);
+    },
+
+    registerOnChange: function(fn: (_: any) => void): void { this.onChange = fn; },
+    registerOnTouched: function(fn: () => void): void { this.onTouched = fn; },
 
     onValueChanged: function(value: String) {
       if (this._initialValueSet) {
