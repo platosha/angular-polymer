@@ -16,7 +16,8 @@ export function PolymerElement(name) {
   const arrayAndObjectProperties = [];
 
   const proto = Object.getPrototypeOf(document.createElement(name));
-  const isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
+  const Polymer = (<any>window).Polymer;
+  const isFormElement = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
   proto.behaviors.forEach(behavior => configureProperties(behavior.properties));
   configureProperties(proto.properties);
 

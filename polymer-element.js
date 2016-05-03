@@ -6,7 +6,8 @@ System.register(['@angular/core', '@angular/common'], function(exports_1, contex
         var propertiesWithNotify = [];
         var arrayAndObjectProperties = [];
         var proto = Object.getPrototypeOf(document.createElement(name));
-        var isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
+        var Polymer = window.Polymer;
+        var isFormElement = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
         proto.behaviors.forEach(function (behavior) { return configureProperties(behavior.properties); });
         configureProperties(proto.properties);
         function configureProperties(properties) {
