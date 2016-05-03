@@ -1,4 +1,6 @@
-System.register(['angular2/core', 'angular2/common'], function(exports_1) {
+System.register(['@angular/core', '@angular/common'], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var core_1, common_1;
     function PolymerElement(name) {
         var propertiesWithNotify = [];

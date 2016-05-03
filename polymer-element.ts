@@ -14,9 +14,8 @@ Renderer,
 NgZone,
 IterableDiffers,
 KeyValueDiffers
-} from 'angular2/core';
-import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from 'angular2/common';
-import { CONST_EXPR } from 'angular2/src/facade/lang';
+} from '@angular/core';
+import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/common';
 
 export function PolymerElement(name) {
   const propertiesWithNotify = [];
