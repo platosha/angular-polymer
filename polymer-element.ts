@@ -18,12 +18,15 @@ KeyValueDiffers
 import { NgControl, NG_VALUE_ACCESSOR, DefaultValueAccessor } from 'angular2/common';
 import { CONST_EXPR } from 'angular2/src/facade/lang';
 
+declare var Polymer;
+
 export function PolymerElement(name) {
   const propertiesWithNotify = [];
   const arrayAndObjectProperties = [];
 
   const proto = Object.getPrototypeOf(document.createElement(name));
-  const isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
+  const isFormElement = (<any>window).Polymer && Polymer.IronFormElementBehavior
+        && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
   proto.behaviors.forEach(behavior => configureProperties(behavior.properties));
   configureProperties(proto.properties);
 

@@ -4,7 +4,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
         var propertiesWithNotify = [];
         var arrayAndObjectProperties = [];
         var proto = Object.getPrototypeOf(document.createElement(name));
-        var isFormElement = window.Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
+        var isFormElement = window.Polymer && Polymer.IronFormElementBehavior
+            && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
         proto.behaviors.forEach(function (behavior) { return configureProperties(behavior.properties); });
         configureProperties(proto.properties);
         function configureProperties(properties) {
@@ -97,17 +98,18 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
             ngOnInit: function () {
                 var _this = this;
                 this._differs = arrayAndObjectProperties
-                    .map(function (property) { return { name: property, differ: _this._keyValueDiffers.find(_this[property] || {}).create(null) }; });
+                    .map(function (property) {
+                    return { name: property, differ: _this._keyValueDiffers.find(_this[property] || {}).create(null) };
+                });
             },
             ngDoCheck: function () {
                 var _this = this;
                 this._differs.map(function (d) {
-                    var diff = d.differ.diff(typeof _this[d.name] === 'string' ? JSON.parse(_this[d.name]) : _this[d.name]);
+                    var diff = typeof _this[d.name] === 'function' ? true :
+                        d.differ.diff(typeof _this[d.name] === 'string' ? JSON.parse(_this[d.name]) : _this[d.name]);
                     return { name: d.name, diff: diff };
                 }).filter(function (changes) { return changes.diff; })
-                    .forEach(function (changes) {
-                    _this._element[changes.name] = Array.isArray(_this[changes.name]) ? _this[changes.name].slice(0) : Object.assign({}, _this[changes.name]);
-                });
+                    .forEach(function (changes) { return _this._element.notifyPath(changes.name, _this[changes.name]); });
             }
         });
         var lightDomObserverDirective = core_1.Directive({
