@@ -1,6 +1,4 @@
-System.register(['@angular/core', '@angular/common'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['@angular/core', '@angular/common'], function(exports_1) {
     var core_1, common_1;
     function PolymerElement(name) {
         var propertiesWithNotify = [];
@@ -97,25 +95,73 @@ System.register(['@angular/core', '@angular/common'], function(exports_1, contex
         });
         var notifyForDiffersDirective = core_1.Directive({
             selector: name,
-            inputs: arrayAndObjectProperties
+            inputs: arrayAndObjectProperties,
+            host: arrayAndObjectProperties.reduce(function (hostBindings, property) {
+                hostBindings[("(" + Polymer.CaseMap.camelToDashCase(property) + "-changed)")] = "_setValueFromElement('" + property + "', $event);";
+                return hostBindings;
+            }, {})
         }).Class({
-            constructor: [core_1.ElementRef, core_1.KeyValueDiffers, function (el, differs) {
+            constructor: [core_1.ElementRef, core_1.IterableDiffers, core_1.KeyValueDiffers, function (el, iterableDiffers, keyValueDiffers) {
                     this._element = el.nativeElement;
-                    this._keyValueDiffers = differs;
+                    this._iterableDiffers = iterableDiffers;
+                    this._keyValueDiffers = keyValueDiffers;
+                    this._differs = {};
+                    this._arrayDiffs = {};
                 }],
             ngOnInit: function () {
                 var _this = this;
-                this._differs = arrayAndObjectProperties
-                    .map(function (property) { return { name: property, differ: _this._keyValueDiffers.find(_this[property] || {}).create(null) }; });
+                // In case the element has a default value and the directive doesn't have any value set for a property,
+                // we need to make sure the element value is set to the directive.
+                arrayAndObjectProperties.filter(function (property) { return _this._element[property] && !_this[property]; })
+                    .forEach(function (property) {
+                    _this[property] = _this._element[property];
+                });
+            },
+            _setValueFromElement: function (property, event) {
+                // Properties in this directive need to be kept synced manually with the element properties.
+                // Don't use event.detail.value here because it might contain changes for a sub-property.
+                if (this[property] !== event.target[property]) {
+                    this[property] = event.target[property];
+                    this._differs[property] = this._createDiffer(this[property]);
+                }
+            },
+            _createDiffer: function (value) {
+                return Array.isArray(value) ? this._iterableDiffers.find(value).create(null) : this._keyValueDiffers.find(value || {}).create(null);
+            },
+            _handleArrayDiffs: function (property, diff) {
+                var _this = this;
+                if (diff) {
+                    diff.forEachRemovedItem(function (item) { return _this._element.notifyPath(property + '.' + item.previousIndex); });
+                    diff.forEachAddedItem(function (item) { return _this._element.notifyPath(property + '.' + item.currentIndex); });
+                    diff.forEachMovedItem(function (item) { return _this._element.notifyPath(property + '.' + item.currentIndex); });
+                }
+            },
+            _handleObjectDiffs: function (property, diff) {
+                var _this = this;
+                if (diff) {
+                    var notify = function (item) { return _this._element.notifyPath(property + '.' + item.key, item.currentValue); };
+                    diff.forEachRemovedItem(notify);
+                    diff.forEachAddedItem(notify);
+                    diff.forEachChangedItem(notify);
+                }
             },
             ngDoCheck: function () {
                 var _this = this;
-                this._differs.map(function (d) {
-                    var diff = d.differ.diff(typeof _this[d.name] === 'string' ? JSON.parse(_this[d.name]) : _this[d.name]);
-                    return { name: d.name, diff: diff };
-                }).filter(function (changes) { return changes.diff; })
-                    .forEach(function (changes) {
-                    _this._element[changes.name] = Array.isArray(_this[changes.name]) ? _this[changes.name].slice(0) : Object.assign({}, _this[changes.name]);
+                arrayAndObjectProperties.forEach(function (property) {
+                    if (_this._element[property] !== _this[property]) {
+                        _this._element[property] = _this[property];
+                        _this._differs[property] = _this._createDiffer(_this[property]);
+                    }
+                    else if (_this._differs[property]) {
+                        // TODO: these differs won't pickup any changes in need properties like items[0].foo
+                        var diff = _this._differs[property].diff(_this[property]);
+                        if (diff instanceof core_1.DefaultIterableDiffer) {
+                            _this._handleArrayDiffs(property, diff);
+                        }
+                        else {
+                            _this._handleObjectDiffs(property, diff);
+                        }
+                    }
                 });
             }
         });

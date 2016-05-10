@@ -7,7 +7,9 @@ import {
   provide,
   Renderer,
   NgZone,
-  KeyValueDiffers
+  KeyValueDiffers,
+  IterableDiffers,
+  DefaultIterableDiffer
 } from '@angular/core';
 import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
 
@@ -118,26 +120,76 @@ export function PolymerElement(name) {
 
   const notifyForDiffersDirective = Directive({
     selector: name,
-    inputs: arrayAndObjectProperties
-  }).Class({
-    constructor: [ElementRef, KeyValueDiffers, function(el: ElementRef, differs: KeyValueDiffers) {
-      this._element = el.nativeElement;
-      this._keyValueDiffers = differs;
+    inputs: arrayAndObjectProperties,
+    host: arrayAndObjectProperties.reduce((hostBindings, property) => {
+      hostBindings[`(${Polymer.CaseMap.camelToDashCase(property)}-changed)`] = `_setValueFromElement('${property}', $event);`;
+      return hostBindings;
+    }, {})
 
+  }).Class({
+    constructor: [ElementRef, IterableDiffers, KeyValueDiffers, function(el: ElementRef, iterableDiffers: IterableDiffers, keyValueDiffers: KeyValueDiffers) {
+      this._element = el.nativeElement;
+      this._iterableDiffers = iterableDiffers;
+      this._keyValueDiffers = keyValueDiffers;
+
+      this._differs = {};
+      this._arrayDiffs = {};
     }],
 
     ngOnInit() {
-      this._differs = arrayAndObjectProperties
-        .map(property => { return { name: property, differ: this._keyValueDiffers.find(this[property] || {}).create(null) }; });
+      // In case the element has a default value and the directive doesn't have any value set for a property,
+      // we need to make sure the element value is set to the directive.
+      arrayAndObjectProperties.filter(property => this._element[property] && !this[property])
+                              .forEach(property => {
+                                this[property] = this._element[property];
+                              });
+    },
+
+    _setValueFromElement(property, event) {
+        // Properties in this directive need to be kept synced manually with the element properties.
+        // Don't use event.detail.value here because it might contain changes for a sub-property.
+        if (this[property] !== event.target[property]) {
+          this[property] = event.target[property];
+          this._differs[property] = this._createDiffer(this[property]);
+        }
+    },
+
+    _createDiffer(value) {
+      return Array.isArray(value) ? this._iterableDiffers.find(value).create(null) : this._keyValueDiffers.find(value || {}).create(null);
+    },
+
+    _handleArrayDiffs(property, diff) {
+      if (diff) {
+        diff.forEachRemovedItem((item) => this._element.notifyPath(property + '.' + item.previousIndex));
+        diff.forEachAddedItem((item) => this._element.notifyPath(property + '.' + item.currentIndex));
+        diff.forEachMovedItem((item) => this._element.notifyPath(property + '.' + item.currentIndex));
+      }
+    },
+
+    _handleObjectDiffs(property, diff) {
+      if (diff) {
+        var notify = (item) => this._element.notifyPath(property + '.' + item.key, item.currentValue);
+        diff.forEachRemovedItem(notify);
+        diff.forEachAddedItem(notify);
+        diff.forEachChangedItem(notify);
+      }
     },
 
     ngDoCheck() {
-      this._differs.map(d => {
-          var diff = d.differ.diff(typeof this[d.name] === 'string' ? JSON.parse(this[d.name]) : this[d.name]);
-          return { name: d.name, diff: diff };
-      }).filter(changes => changes.diff)
-        .forEach(changes => {
-          this._element[changes.name] = Array.isArray(this[changes.name]) ? this[changes.name].slice(0) : Object.assign({}, this[changes.name]);
+      arrayAndObjectProperties.forEach(property => {
+        if (this._element[property] !== this[property]) {
+          this._element[property] = this[property];
+          this._differs[property] = this._createDiffer(this[property]);
+        } else if (this._differs[property]) {
+
+          // TODO: these differs won't pickup any changes in need properties like items[0].foo
+          var diff = this._differs[property].diff(this[property]);
+          if (diff instanceof DefaultIterableDiffer) {
+            this._handleArrayDiffs(property, diff);
+          } else {
+            this._handleObjectDiffs(property, diff);
+          }
+        }
       });
     }
   });
