@@ -36,7 +36,7 @@ System.register(['@angular/core', '@angular/common'], function(exports_1, contex
             selector: name,
             outputs: propertiesWithNotify.map(eventNameForProperty),
             host: propertiesWithNotify.reduce(function (hostBindings, property) {
-                hostBindings[("(" + property + "-changed)")] = eventNameForProperty(property) + ".emit($event.detail.value);";
+                hostBindings[("(" + Polymer.CaseMap.camelToDashCase(property) + "-changed)")] = eventNameForProperty(property) + ".emit($event.detail.value);";
                 return hostBindings;
             }, {})
         }).Class({

@@ -52,7 +52,7 @@ export function PolymerElement(name) {
     selector: name,
     outputs: propertiesWithNotify.map(eventNameForProperty),
     host: propertiesWithNotify.reduce((hostBindings, property) => {
-      hostBindings[`(${property}-changed)`] = `${eventNameForProperty(property) }.emit($event.detail.value);`;
+      hostBindings[`(${Polymer.CaseMap.camelToDashCase(property)}-changed)`] = `${eventNameForProperty(property)}.emit($event.detail.value);`;
       return hostBindings;
     }, {})
   }).Class({
