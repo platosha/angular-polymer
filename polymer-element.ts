@@ -37,7 +37,7 @@ export function PolymerElement(name) {
       };
     }
 
-    if (info.type && info.type === Object || info.type === Array) {
+    if (info.type && !info.readOnly && (info.type === Object || info.type === Array)) {
       arrayAndObjectProperties.push(name);
     }
 

@@ -24,7 +24,7 @@ System.register(['@angular/core', '@angular/common'], function(exports_1, contex
                     type: info
                 };
             }
-            if (info.type && info.type === Object || info.type === Array) {
+            if (info.type && !info.readOnly && (info.type === Object || info.type === Array)) {
                 arrayAndObjectProperties.push(name);
             }
             if (info && info.notify) {
