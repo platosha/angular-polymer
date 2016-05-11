@@ -1,6 +1,4 @@
-System.register(['@angular/core', '@angular/common'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['@angular/core', '@angular/common'], function(exports_1) {
     var core_1, common_1;
     function PolymerElement(name) {
         var propertiesWithNotify = [];
@@ -129,7 +127,11 @@ System.register(['@angular/core', '@angular/common'], function(exports_1, contex
                 }
             },
             _createDiffer: function (value) {
-                return Array.isArray(value) ? this._iterableDiffers.find(value).create(null) : this._keyValueDiffers.find(value || {}).create(null);
+                var differ = Array.isArray(value) ? this._iterableDiffers.find(value).create(null) : this._keyValueDiffers.find(value || {}).create(null);
+                // initial diff with the current value to make sure the differ is synced
+                // and doesn't report any outdated changes on the next ngDoCheck call.
+                differ.diff(value);
+                return differ;
             },
             _handleArrayDiffs: function (property, diff) {
                 var _this = this;

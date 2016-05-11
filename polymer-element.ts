@@ -156,7 +156,13 @@ export function PolymerElement(name: any) {
     },
 
     _createDiffer(value: string) {
-      return Array.isArray(value) ? (<any>(<any>this)._iterableDiffers).find(value).create(null) : (<any>(<any>this)._keyValueDiffers).find(value || {}).create(null);
+      var differ = Array.isArray(value) ? (<any>(<any>this)._iterableDiffers).find(value).create(null) : (<any>(<any>this)._keyValueDiffers).find(value || {}).create(null);
+
+      // initial diff with the current value to make sure the differ is synced
+      // and doesn't report any outdated changes on the next ngDoCheck call.
+      differ.diff(value);
+
+      return differ;
     },
 
     _handleArrayDiffs(property: string, diff: any) {
