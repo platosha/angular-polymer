@@ -132,7 +132,6 @@ export function PolymerElement(name: any) {
       this._element = el.nativeElement;
       this._iterableDiffers = iterableDiffers;
       this._keyValueDiffers = keyValueDiffers;
-
       this._differs = {};
       this._arrayDiffs = {};
     }],
@@ -162,20 +161,27 @@ export function PolymerElement(name: any) {
 
     _handleArrayDiffs(property: string, diff: any) {
       if (diff) {
-        var elm = (<any>this)._element;
-        diff.forEachRemovedItem((item: any) => elm.notifyPath(property + '.' + item.previousIndex));
-        diff.forEachAddedItem((item: any) => elm.notifyPath(property + '.' + item.currentIndex));
-        diff.forEachMovedItem((item: any) => elm.notifyPath(property + '.' + item.currentIndex));
+        diff.forEachRemovedItem((item: any) => this._notifyArray(property, item.previousIndex));
+        diff.forEachAddedItem((item: any) => this._notifyArray(property, item.currentIndex));
+        diff.forEachMovedItem((item: any) => this._notifyArray(property, item.currentIndex));
       }
     },
 
     _handleObjectDiffs(property: string, diff: any) {
       if (diff) {
-        var notify = (item: any) => (<any>this)._element.notifyPath(property + '.' + item.key, item.currentValue);
+        var notify = (item: any) => this._notifyPath(property + '.' + item.key, item.currentValue);
         diff.forEachRemovedItem(notify);
         diff.forEachAddedItem(notify);
         diff.forEachChangedItem(notify);
       }
+    },
+
+    _notifyArray(property: string, index: number) {
+      this._notifyPath(property + '.' + index, this[property][index]);
+    },
+
+    _notifyPath(path: string, value: any) {
+       (<any>this)._element.notifyPath(path, value);
     },
 
     ngDoCheck() {
