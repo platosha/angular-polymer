@@ -149,8 +149,9 @@ export function PolymerElement(name: any) {
     _setValueFromElement(property: string, event: Event) {
         // Properties in this directive need to be kept synced manually with the element properties.
         // Don't use event.detail.value here because it might contain changes for a sub-property.
-        if (this[property] !== event.target[property]) {
-          this[property] = event.target[property];
+        var target:any = event.target;
+        if (this[property] !== target[property]) {
+          this[property] = target[property];
           (<any>this)._differs[property] = this._createDiffer(this[property]);
         }
     },
