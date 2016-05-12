@@ -34,7 +34,7 @@ System.register(['@angular/core', '@angular/common'], function(exports_1) {
             selector: name,
             outputs: propertiesWithNotify.map(eventNameForProperty),
             host: propertiesWithNotify.reduce(function (hostBindings, property) {
-                hostBindings[("(" + Polymer.CaseMap.camelToDashCase(property) + "-changed)")] = eventNameForProperty(property) + ".emit($event.detail.value);";
+                hostBindings[("(" + Polymer.CaseMap.camelToDashCase(property) + "-changed)")] = "_emitChangeEvent('" + property + "', $event);";
                 return hostBindings;
             }, {})
         }).Class({
@@ -42,6 +42,16 @@ System.register(['@angular/core', '@angular/common'], function(exports_1) {
                 var _this = this;
                 propertiesWithNotify
                     .forEach(function (property) { return _this[eventNameForProperty(property)] = new core_1.EventEmitter(false); });
+            },
+            _emitChangeEvent: function (property, event) {
+                // Event is a notification for a sub-property when `path` exists and the
+                // event.detail.value holds a value for a sub-property.
+                // For sub-property changes we don't need to explicitly emit events,
+                // since all interested parties are bound to the same object and Angular
+                // takes care of updating sub-property bindings on changes.
+                if (!event.detail.path) {
+                    this[eventNameForProperty(property)].emit(event.detail.value);
+                }
             }
         });
         var validationDirective = core_1.Directive({

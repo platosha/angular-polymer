@@ -54,13 +54,25 @@ export function PolymerElement(name: any) {
     selector: name,
     outputs: propertiesWithNotify.map(eventNameForProperty),
     host: propertiesWithNotify.reduce((hostBindings, property) => {
-      hostBindings[`(${Polymer.CaseMap.camelToDashCase(property)}-changed)`] = `${eventNameForProperty(property)}.emit($event.detail.value);`;
+      hostBindings[`(${Polymer.CaseMap.camelToDashCase(property)}-changed)`] = `_emitChangeEvent('${property}', $event);`;
       return hostBindings;
     }, {})
   }).Class({
     constructor: function() {
       propertiesWithNotify
         .forEach(property => this[eventNameForProperty(property)] = new EventEmitter<any>(false));
+    },
+
+    _emitChangeEvent(property: string, event: any) {
+      // Event is a notification for a sub-property when `path` exists and the
+      // event.detail.value holds a value for a sub-property.
+
+      // For sub-property changes we don't need to explicitly emit events,
+      // since all interested parties are bound to the same object and Angular
+      // takes care of updating sub-property bindings on changes.
+      if (!event.detail.path) {
+        this[eventNameForProperty(property)].emit(event.detail.value);
+      }
     }
   });
 
