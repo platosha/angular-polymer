@@ -16,5 +16,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  }
 }

@@ -5,6 +5,7 @@
   "repository": "https://github.com/vaadin/angular2-polymer.git",
   "main": "index.js",
   "scripts": {
+    "test": "tsc && concurrently \"npm run tsc:w\" \"live-server --open=tests.html\"",
     "postinstall": "typings install",
     "prepublish": "tsc",
     "typings": "typings",
@@ -24,6 +25,9 @@
     "zone.js": "^0.6.12"
   },
   "devDependencies": {
+    "concurrently": "2.0.0",
+    "jasmine-core": "2.4.1",
+    "live-server": "1.0.0",
     "typescript": "1.8.10",
     "typings": "0.8.1"
   }
