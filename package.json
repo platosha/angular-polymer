@@ -1,6 +1,6 @@
 {
   "name": "@vaadin/angular2-polymer",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha2",
   "description": "Angular 2 support for Polymer elements",
   "main": "index.js",
   "author": "Vaadin Ltd",
