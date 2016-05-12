@@ -1,13 +1,10 @@
 {
-  "name": "vaadin-ng2-polymer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "polymer-element.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "@vaadin/angular2-polymer",
+  "version": "1.0.0-alpha1",
+  "description": "Angular 2 support for Polymer elements",
+  "main": "index.js",
+  "author": "Vaadin Ltd",
+  "license": "Apache 2.0",
   "dependencies": {
     "@angular/common":  "2.0.0-rc.0",
     "@angular/compiler":  "2.0.0-rc.0",
@@ -17,7 +14,6 @@
     "@angular/platform-browser-dynamic":  "2.0.0-rc.0",
     "@angular/router-deprecated":  "2.0.0-rc.0",
     "@angular/upgrade":  "2.0.0-rc.0",
-
     "systemjs": "0.19.27",
     "es6-shim": "^0.35.0",
     "reflect-metadata": "^0.1.3",
