@@ -25,7 +25,6 @@
     "gulp-htmlmin": "^2.0.0",
     "gulp-insert": "^0.5.0",
     "gulp-minify-inline": "^0.2.1",
-    "gulp-remove-html-comments": "^1.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-vulcanize": "^6.1.0"
   }
