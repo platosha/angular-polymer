@@ -74,7 +74,7 @@ System.register(['@angular/core', '@angular/common'], function(exports_1) {
                     multi: true
                 })],
             host: {
-                '(value-changed)': 'onValueChanged($event.detail.value)'
+                '(valueChange)': 'onValueChanged($event)'
             }
         }).Class({
             constructor: [core_1.Renderer, core_1.ElementRef, function (renderer, el) {
@@ -91,12 +91,8 @@ System.register(['@angular/core', '@angular/common'], function(exports_1) {
             registerOnChange: function (fn) { this.onChange = fn; },
             registerOnTouched: function (fn) { this.onTouched = fn; },
             onValueChanged: function (value) {
-                var _this = this;
                 if (this._initialValueSet) {
-                    // need a debounce here to prevent weird race conditions
-                    this._element.debounce('value-changed', function () {
-                        _this.onChange(value);
-                    }, 1);
+                    this.onChange(value);
                 }
                 else {
                     this._initialValueSet = true;

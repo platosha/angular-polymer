@@ -99,7 +99,7 @@ export function PolymerElement(name: any) {
         multi: true
       })],
     host: {
-      '(value-changed)': 'onValueChanged($event.detail.value)'
+      '(valueChange)': 'onValueChanged($event)'
     }
   }).Class({
     constructor: [Renderer, ElementRef, function(renderer: Renderer, el: ElementRef) {
@@ -120,10 +120,7 @@ export function PolymerElement(name: any) {
 
     onValueChanged: function(value: String) {
       if (this._initialValueSet) {
-        // need a debounce here to prevent weird race conditions
-        this._element.debounce('value-changed', () => {
-          this.onChange(value);
-        }, 1);
+        this.onChange(value);
       } else {
         this._initialValueSet = true;
       }
