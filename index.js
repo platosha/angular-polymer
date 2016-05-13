@@ -1,13 +1,4 @@
-System.register(['./polymer-element'], function(exports_1) {
-    return {
-        setters:[
-            function (polymer_element_1_1) {
-                exports_1({
-                    "PolymerElement": polymer_element_1_1["PolymerElement"]
-                });
-            }],
-        execute: function() {
-        }
-    }
-});
-//# sourceMappingURL=index.js.map
+"use strict";
+var polymer_element_1 = require('./src/polymer-element');
+exports.PolymerElement = polymer_element_1.PolymerElement;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsZ0NBQStCLHVCQUF1QixDQUFDO0FBQTlDLDBEQUE4QyJ9

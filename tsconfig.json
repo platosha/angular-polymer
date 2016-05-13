@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "target": "es5",
-    "module": "system",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noImplicitAny": true
+    "noImplicitAny": false
   },
   "exclude": [
     "bower_components",
