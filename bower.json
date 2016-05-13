@@ -16,5 +16,14 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.10",
+    "vaadin-grid": "Vaadin/vaadin-grid#^1.0.0",
+    "vaadin-combo-box": "Vaadin/vaadin-combo-box#^1.1.0-beta3",
+    "vaadin-date-picker": "Vaadin/vaadin-date-picker#^1.1.0-beta3",
+    "vaadin-upload": "Vaadin/vaadin-upload#^1.0.0",
+    "vaadin-charts": "Vaadin/vaadin-charts#private-chart"
+  }
 }
