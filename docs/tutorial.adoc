@@ -1,0 +1,1007 @@
+= Angular 2 with Polymer Elements Tutorial
+
+== Introduction
+
+TODO: Link the resulting application code repository in this section when it gets published.
+
+The following tutorial explains how to use Polymer elements in Angular 2 applications.
+
+For this purpose we are going to create an application similar to the Tour of Heroes example. Bun unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we’ll use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application would have a nice-looking mobile-first Material designed UI.
+
+=== The start point
+
+This tutorial is based on the https://angular.io/docs/ts/latest/quickstart.html[Angular 2 5 min QuickStart] and the https://angular.io/docs/ts/latest/tutorial/[Angular 2 Tour of Heroes]. We are going to start from the empty application source from the https://angular.io/docs/ts/latest/quickstart.html[QuickStart repository].
+
+If you are not yet familiar with Angular 2, please walk through the Angular 2 QuickStart and the Tour of Heroes first. In this tutorial we are going to skip the explanations that are already given in the Angular 2 tutorials.
+
+=== The end result
+
+In our heroes management application there would be two UI screens. This is the first screen with the list of all heroes made with Vaadin Grid of https://vaadin.com/elements[Vaadin Elements]:
+
+[[figure.heroes.list]]
+.A screenshot of the list of heroes
+image::img/heroes-list-default.png[width="432",height="644"]
+
+By clicking a grid row, the user can open the second screen, the hero detail editor made using Paper Input and Vaadin DatePicker:
+
+[[figure.hero.detail]]
+.A screenshot of hero detail view
+image::img/hero-detail.png[width="432",height="644"]
+
+Both screens have a context-sensitive toolbar at the top with the title and the optional back icon button.
+
+== Creating project
+
+This tutorial is based on the Angular 2 QuickStart TypeScript source code. In this step, we create new project on top of the QuickStart source code.
+
+[NOTE]
+====
+If you are not yet familiar with Angular 2, please go through the https://angular.io/docs/ts/latest/quickstart.html[Angular 2 QuickStart] tutorial, which explains every step of starting a new Angular 2 application from scratch.
+====
+
+=== Starting from the QuickStart repository
+
+Clone the https://github.com/angular/quickstart[QuickStart repository] into the tutorial project folder:
+
+[source,bash]
+----
+git clone https://github.com/angular/quickstart my-project
+cd my-project
+----
+
+We are not going to contribute to the quickstart repository itself, so the the original repository data is not needed. Remove the git repository data folder:
+
+[source,bash]
+----
+rm -rf .git
+----
+
+=== Starting from QuickStart ZIP package
+
+Alternatively, instead of using git to clone the QuickStart repository, you can download and extract the https://github.com/angular/quickstart/archive/master.zip[QuickStart ZIP package].
+
+=== Installing npm packages and starting the development server
+
+Install npm dependencies:
+
+[source,bash]
+----
+npm install
+----
+
+At this point you should be able to compile the TypeScript source code of the application and launch the development server. Let’s start the server to verify:
+
+[source,bash]
+----
+npm start
+----
+
+Press `Ctrl+C` to stop the development server.
+
+[TIP]
+====
+See the https://github.com/angular/quickstart/blob/master/README.md[QuickStart README] for more information about creating a new project and other useful npm commands.
+====
+
+== Adding and installing dependencies
+
+After the previous step, we have an empty Angular 2 application source with all the Angular dependencies installed. In this step we are going to add Polymer with some elements as dependencies to our application and install them.
+
+Vaadin Elements and other Polymer elements are mainly distributed through http://bower.io/[Bower]. In this step we are going to use Bower to declare and install our element dependencies.
+
+=== Adding Bower dependencies
+
+[IMPORTANT]
+====
+You should install Bower before we start using it. Use npm to install Bower with this command:
+
+[source,bash]
+----
+npm install -g bower
+----
+====
+
+Create `bower.json` file in your project root with the following contents:
+
+[source,json]
+.bower.json
+----
+{
+  "name": "my-project",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Your Name"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
+    "iron-icons": "PolymerElements/iron-icons#^1.1.3",
+    "paper-styles": "PolymerElements/paper-styles#^1.1.4",
+    "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#^1.0.15",
+    "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.4",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.1.1",
+    "paper-input": "PolymerElements/paper-input#^1.1.11",
+    "vaadin-grid": "Vaadin/vaadin-grid#^1.1.0",
+    "vaadin-date-picker": "Vaadin/vaadin-date-picker#^1.1.0"
+  }
+}
+----
+
+This file declares all bower dependencies for our application. Now install them with this command:
+
+[source,bash]
+----
+bower install
+----
+
+After that, in your project root you should have `bower_components` directory with all elements declared by bower.json together with the elements’ requirements. Verify that:
+
+[source,bash]
+----
+ls bower_components
+----
+
+.Output
+----
+font-roboto
+iron-a11y-announcer
+iron-a11y-keys-behavior
+iron-autogrow-textarea
+iron-behaviors
+iron-checked-element-behavior
+iron-dropdown
+iron-fit-behavior
+iron-flex-layout
+iron-form-element-behavior
+iron-icon
+iron-icons
+iron-iconset-svg
+iron-input
+iron-media-query
+iron-meta
+iron-overlay-behavior
+iron-resizable-behavior
+iron-selector
+iron-validatable-behavior
+neon-animation
+paper-behaviors
+paper-button
+paper-icon-button
+paper-input
+paper-material
+paper-ripple
+paper-scroll-header-panel
+paper-styles
+paper-toolbar
+polymer
+vaadin-date-picker
+vaadin-grid
+web-animations-js
+webcomponentsjs
+----
+
+[TIP]
+.Add bower_components to .gitignore
+====
+It is ususally a good practice to exclude external dependencies from your source control. Angular 2 QuickStart source code already contains `.gitignore` file, which excludes `node_modules` directory with npm dependencies from git repository of your application.
+
+Please add the following line to the `.gitignore` file to also prevent bower dependencies from being tracked by your source control:
+
+[source]
+----
+bower_components
+----
+====
+
+=== Npm dependency
+
+Alongside with bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular component templates. Run this command to install the package and save the dependency in `package.json` at the same time:
+
+[source,bash]
+----
+npm install @vaadin/angular2-polymer --save
+----
+
+== Adding Polymer elements to our application
+
+In the previous step, we downloaded elements to bower_components directory. Now we are going to import these elements in our application.
+
+In your project root, edit index.html file and replace the contents with these lines:
+
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Angular 2 with Polymer Elements QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Polyfills -->
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+
+    <!-- JavaScript libraries -->
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+
+    <!-- Styles -->
+    <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+    <link rel="import" href="bower_components/paper-styles/color.html">
+    <link rel="import" href="bower_components/paper-styles/default-theme.html">
+    <link rel="import" href="bower_components/paper-styles/typography.html">
+    <link rel="import" href="bower_components/paper-styles/shadow.html">
+    <style is="custom-style">
+      body {
+        @apply(--layout-fullbleed);
+        @apply(--paper-font-body1);
+        background: var(--primary-background-color);
+        color: var(--primary-text-color);
+      }
+    </style>
+
+    <!-- Polymer Elements -->
+    <link rel="import" href="bower_components/iron-icons/iron-icons.html">
+    <link rel="import" href="bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+    <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+    <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/vaadin-grid/vaadin-grid.html">
+    <link rel="import" href="bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
+    <!-- SystemJS Configuration -->
+    <script src="systemjs.config.js"></script>
+    <script>
+      document.addEventListener('WebComponentsReady', function() {
+        System.import('app').catch(function(err){ console.error(err); });
+      });
+    </script>
+  </head>
+
+  <body>
+    <my-app>Loading...</my-app>
+  </body>
+</html>
+----
+
+Here’s the list of important changes explained:
+
+Doctype declaration::
+We added `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use Standards mode, as required by the internals of `vaadin-grid`.
+
+webcomponentsjs-lite.min.js polyfills::
+The technology stack behind Web Components (namely, HTML Imports, Shadow DOM and Custom Elements) is not yet natively supported in all browses. We added webcomponentsjs-lite.js set of polyfills that enables using Web Components in browsers that lack native support.
+
+Importing Polymer elements::
+We added imports of Polymer elements that we are going to use in our application to the head section of `index.html`.
+
+SystemJS app import change::
+In some browsers, HTML Imports are loaded asynchronously. But we need them to be completely loaded before we import our Angular application. Hence we wrapped `System.import('app')...` call in the listener callback of the `WebComponentsReady` event, which is fired by the polyfill after all imports are loaded and elements have been registered.
++
+[IMPORTANT]
+.Load order
+====
+The order of loading Polymer elements and the rest of the Angular application code does matter. It is required to have Polymer elements loaded and registered before importing the Angular application. `@vaadin/angular2-polymer` package strictly depends on that.
+====
+
+
+Style changes::
+Polymer elements come with nice builtin styles in the way of Material Desing. Angular 2 also provides style encapsulation mechanisms for our application components.
++
+So the global styles are not needed anymore. Therefore we removed the `styles.css` external stylesheet and replaced it with `iron-flex-layout` and `paper-styles` style mixins imports and one embedded global style rule for body.
++
+The body style is the only global style that remains in our application. We need it to stretch the body container to occupy full height of the browser viewport, and also to specity default font styles and line height, default background and text colors.
++
+[TIP]
+====
+Instead of feaguring out the exact rules and values for the body style, here we import and reuse CSS mixins and CSS custom properties declared in `iron-flex-layout` and `paper-styles`.
+====
++
+[IMPORTANT]
+====
+When using custom CSS mixins and custom CSS properties in your main document styles, wrap your styles inside `<style is="custom-style"></style>` tag.
+
+See https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling section of the Polymer Developer Guide] for more information on styling Polymer lements and the document, custom CSS mixins and properties usage and limitations.
+====
+
+Delete `styles.css` file from your project directory since it is no longer in use.
+
+[NOTE]
+.Duplicated imports handling
+====
+Duplicated fetch of the same file is prevented in HTML Imports by checking the file location.
+
+For example, in our tutorial application, we:
+
+* Have `<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">` in our `index.html` file.
+* Also we have `<link rel="import" href="bower_components/paper-input/paper-input.html">` Polymer Element later in `index.html` file.
+* Inside `paper-input.html`, there’s `<link rel="import" href="paper-input-container.html">`, which contains the relative path that resolves to `bower_components/paper-input/paper-input-container.html`
+* And inside `paper-input-container.html` there is an import of `iron-flex-layout.html`, once again from a relative path, with `<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">`. In our case, it resolves to `bower_components/iron-flex-layout/iron-flex-layout.html`
+
+As you see, we have two imports of `iron-flex-layout.html`. You might think that it adds an overhead of fetching the same file multiple times. However, as long as the second import of `iron-flex-layout.html` points to the same location as the first import has (`bower_components/iron-flex-layout/iron-flex-layout.html`), HTML Imports recognizes and prevents the second fetch of the same file.
+
+See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
+====
+
+== Building the application layout with Paper Elements
+
+After the previous step we have some Polymer elements imported in `index.html` of our application. In this step we are going to use them to create an application layout with a toolbar in `AppComponent`.
+
+=== Updating SystemJS configuration
+
+For using Polymer elements in our Angular components we need to import `PolymerElement` directives from `@vaadin/angular2-polymer`. Thus we need to make the module loader (SystemJS, in our case) aware of how to load the `@vaadin/angular2-polymer` package.
+
+Angular 2 TypeScript QuickStart contains SystemJS packages import configuration in `systemjs.config.js` file in the project root. Please edit this file and add mapping for the `@vaadin` scope and the `@vaadin/angular2-polymer` package there like follows:
+
+[source,javascript]
+.systemjs.config.js Changes
+----
+  var map = {
+    // ...
+    '@vaadin':                    'node_modules/@vaadin',
+    // ...
+  };
+
+
+  // ...
+  var packageNames = [
+    // ...
+    '@vaadin/angular2-polymer'
+    // ...
+  ];
+  // ...
+----
+
+Here is how your `systemjs.config.js` should look like after the change:
+
+[source,javascript]
+.systemjs.config.js
+----
+(function(global) {
+
+  // map tells the System loader where to look for things
+  var map = {
+    'app':                        'app', // 'dist',
+    'rxjs':                       'node_modules/rxjs',
+    'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
+    '@vaadin':                    'node_modules/@vaadin',
+    '@angular':                   'node_modules/@angular'
+  };
+
+  // packages tells the System loader how to load when no filename and/or no extension
+  var packages = {
+    'app':                        { main: 'main.js',  defaultExtension: 'js' },
+    'rxjs':                       { defaultExtension: 'js' },
+    'angular2-in-memory-web-api': { defaultExtension: 'js' }
+  };
+
+  var packageNames = [
+    '@angular/common',
+    '@angular/compiler',
+    '@angular/core',
+    '@angular/http',
+    '@angular/platform-browser',
+    '@angular/platform-browser-dynamic',
+    '@angular/router-deprecated',
+    '@angular/testing',
+    '@angular/upgrade',
+    '@vaadin/angular2-polymer'
+  ];
+
+  // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
+  packageNames.forEach(function(pkgName) {
+    packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
+  });
+
+  var config = {
+    map: map,
+    packages: packages
+  }
+
+  // filterSystemConfig - index.html's chance to modify config before we register it.
+  if (global.filterSystemConfig) { global.filterSystemConfig(config); }
+
+  System.config(config);
+
+})(this);
+----
+
+=== AppComponent changes
+
+Open `app/app.component.ts` and replace the contents with the following code:
+
+[source,typescript]
+.app/app.component.ts
+----
+import { Component } from '@angular/core';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <paper-scroll-header-panel fixed>
+      <paper-toolbar>
+        <div class="title">All heroes</div>
+      </paper-toolbar>
+      <div>My application content</div>
+    </paper-scroll-header-panel>
+  `,
+  styles: [`
+    paper-scroll-header-panel {
+      height: 100%;
+    }
+
+    paper-toolbar .title {
+      margin-left: 56px;
+    }
+  `],
+  directives: [
+    PolymerElement('paper-scroll-header-panel'),
+    PolymerElement('paper-toolbar')
+  ]
+})
+export class AppComponent { }
+----
+
+Save changes and launch the development server to see the results in your browser. After loading, your application have this look:
+
+[[figure.app.layout]]
+.A screenshot of empty application layout
+image::img/app-layout.png[width="432",height="644"]
+
+Now your application has a layout made by using `paper-scroll-header-panel`, and `paper-toolbar`.
+
+=== Elements used in this step
+
+`paper-scroll-header-panel`:: Adds a scrollable container for the application contents. Also automatically detects `paper-toolbar` in the contents and places it above the scrollable container.
+
+`paper-toolbar`:: Provides a toolbar wrapper styled in a way of Material Desing. Uses default theme from `paper-styles`.
+
+[IMPORTANT]
+.PolymerElement directives
+====
+In order to enable all features of Polymer elements used inside your Angular component templates, remember to import `PolymerElement` in the component file and add `PolymerElement('element-name')` line for each Polymer element you use to the `directives` array of your component metadata.
+====
+
+== List heroes with Vaadin Grid
+
+In the previous step we added the application layout with `paper-scroll-header-panel` and `paper-toolbar`. Next we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
+
+[NOTE]
+.Some parts are explained in the Tour of Heroes
+====
+This step partly follows the Angular 2 Tour of Heroes Tutorial. Therefore here we skip explaining the parts of the code that are similar in both this tutorial and the Tour of Heroes, like the `Hero` class and the `HeroService`.
+
+See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for the detailed explainations of these parts.
+====
+
+=== Hero class
+
+Let us start with creating the `Hero` class. Add `app/hero.ts` file with the following contents:
+
+[source,typescript]
+.app/hero.ts
+----
+export class Hero {
+  id: number;
+  name: string;
+  birthday: string; // Using strings for simplicity
+}
+----
+
+Unlike in Angular 2 Tour of Heroes, in our application we are about to store and expose birthday of each hero for the user. Here we add `birthday: string;` property to our `Hero` class.
+
+[NOTE]
+.Using strings to store dates
+====
+Why are we using tye `string` type and not `Date` to store dates? There are two reasons:
+
+. Builtin JavaScript `Date` type is always stored as a timestamp, so it always contains the exact time information. This is not only redundant, but also harder to use then a plain string in case of storing just a date. It requires extra care about the correct time and timezone when storing the value and displaying it to the user, otherwise we might get incorrect dates because of timezone mismatches.
+
+. `Vaadin DatePicker`, as well as native HTML5 `<input type="date">`, gives the date value as an ISO-formatted `string`. To keep the simplicity, in our application we also store dates as strings, avoiding conversions.
+====
+
+=== Mock heroes data
+
+Add `app/mock-heroes.ts` file with some heroes data:
+
+[source,typescript]
+.app/mock-heroes.ts
+----
+import { Hero } from './hero';
+
+export var HEROES: Hero[] = [
+  { "id": 11,  "name": "Mr. Nice",   "birthday": "1980-01-11" },
+  { "id": 12,  "name": "Narco",      "birthday": "1980-01-12" },
+  { "id": 13,  "name": "Bombasto",   "birthday": "1980-01-13" },
+  { "id": 14,  "name": "Celeritas",  "birthday": "1980-01-14" },
+  { "id": 15,  "name": "Magneta",    "birthday": "1980-01-15" },
+  { "id": 16,  "name": "RubberMan",  "birthday": "1980-01-16" },
+  { "id": 17,  "name": "Dynama",     "birthday": "1980-01-17" },
+  { "id": 18,  "name": "Dr IQ",      "birthday": "1980-01-18" },
+  { "id": 19,  "name": "Magma",      "birthday": "1980-01-19" },
+  { "id": 20,  "name": "Tornado",    "birthday": "1980-01-20" }
+];
+----
+
+=== The hero service
+
+We also need a `HeroService` to be able to retrive the heroes list in our Angular application. Add `app/hero.service.ts` file:
+
+[source,typescript]
+.app/hero.service.ts
+----
+import { Injectable } from '@angular/core';
+
+import { Hero } from './hero';
+import { HEROES } from './mock-heroes';
+
+@Injectable()
+export class HeroService {
+  getHeroes() {
+    return Promise.resolve(HEROES);
+  }
+}
+----
+
+=== Heroes list component
+
+Add the heroes list component file `app/heroes.component.ts` with the following code:
+
+[source,typescript]
+.app/heroes.component.ts
+----
+import { Component, OnInit } from '@angular/core';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { Hero } from './hero';
+import { HeroService } from './hero.service';
+
+@Component({
+  selector: 'my-heroes',
+  template: `
+    <vaadin-grid [items]="heroes">
+      <table>
+        <colgroup>
+          <col name="id">
+          <col name="name">
+          <col name="birthday">
+        </colgroup>
+      </table>
+    </vaadin-grid>
+  `,
+  styles: [`
+    vaadin-grid {
+      height: 100%;
+    }
+  `],
+  directives: [
+    PolymerElement('vaadin-grid')
+  ]
+})
+export class HeroesComponent implements OnInit {
+  heroes: Hero[];
+
+  constructor(private _heroService: HeroService) { }
+
+  getHeroes() {
+    this._heroService.getHeroes().then(heroes => this.heroes = heroes);
+  }
+
+  ngOnInit() {
+    this.getHeroes();
+  }
+}
+----
+
+Here in `HeroesComponent` we have the `<vaadin-grid>` element in the template. In styles, there is a `height: 100%;` rule for `vaadin-grid`. In the template, inside `<vaadin-grid>` there are three columns specified with their corresponding item property names.
+
+Also in the template, the `items` property of `<vaadin-grid>` is bound to the `heroes` array property of `HeroesComponent`. At the same time, we import and use `HeroService` to get the list of heroes and assign the `heroes` property. Angular component data binding takes care of updating `items` property of `<vaadin-grid>` with the list of heroes for us.
+
+[NOTE]
+.PolymerElement directives
+====
+Once again, we import `PolymerElement` in this file and add `PolymerElement('vaadin-grid')` to the `directives` of the component to enable all features for Vaadin Grid Polymer element in our `HeroesComponent`.
+====
+
+=== Displaying heroes list
+
+Finally in this step, change `app/app.component.ts` to provide `HeroService` for our application and display the heroes list component:
+
+[source,typescript]
+.app/app.component.ts
+----
+import { Component } from '@angular/core';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { HeroService } from './hero.service';
+import { HeroesComponent } from './heroes.component';
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <paper-scroll-header-panel fixed>
+      <paper-toolbar>
+        <div class="title">All heroes</div>
+      </paper-toolbar>
+      <my-heroes></my-heroes>
+    </paper-scroll-header-panel>
+  `,
+  styles: [`
+    paper-scroll-header-panel {
+      height: 100%;
+    }
+
+    paper-toolbar .title {
+      margin-left: 56px;
+    }
+  `],
+  directives: [
+    PolymerElement('paper-scroll-header-panel'),
+    PolymerElement('paper-toolbar'),
+    HeroesComponent
+  ],
+  providers: [
+    HeroService
+  ]
+})
+export class AppComponent { }
+----
+
+Here is what have changed in `app/app.component.ts`:
+
+* We import `HeroService` and list it in `providers`
+* We also import `HeroesComponent`, append it to `directives` and replace `<div>My application content</div>` to `<my-heroes></my-heroes>`
+
+Now it’s time to look at the browser window again to the heroes list in our application. Here is how it should look like:
+
+[[figure.heroes.list]]
+.A screenshot of the application with the list of heroes
+image::img/heroes-list.png[width="432",height="644"]
+
+== Hero editor and routing
+
+Previosly we added the heroes list in our application. In this step we are going to add the editing feature. After that, the user should be able to navigate to the hero details by clicking a row in the heroes list, edit the details and get back to the list with the back button in the toolbar.
+
+[NOTE]
+.Some parts are explained in the Tour of Heroes
+====
+This step partly follows the Angular 2 Tour of Heroes Tutorial. Therefore here we skip explaining the parts of the code that are similar in both this tutorial and the Tour of Heroes, like the routing requirements and configuration.
+
+See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for the detailed explainations of the similar parts.
+====
+
+=== Add the hero get method to the service
+
+Let us add the `getHero(id: number)` method to the `HeroService`, that would be used to retrive a single hero in our application components. Open the `app/hero.service.ts` file and change its contents to the following code:
+
+[source,typescript]
+.app/hero.service.ts
+----
+import { Injectable } from '@angular/core';
+
+import { Hero } from './hero';
+import { HEROES } from './mock-heroes';
+
+@Injectable()
+export class HeroService {
+  getHeroes() {
+    return Promise.resolve(HEROES);
+  }
+
+  getHero(id: number) {
+    return Promise.resolve(HEROES).then(
+      heroes => heroes.filter(hero => hero.id === id)[0]
+    );
+  }
+}
+----
+
+=== Add the hero editor component
+
+Create the file `app/hero-detail.component.ts` and place these lines inside:
+
+[source,typescript]
+.app/hero-detail.component.ts
+----
+import { Component, OnInit } from '@angular/core';
+import { RouteParams } from '@angular/router-deprecated';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { Hero } from './hero';
+import { HeroService } from './hero.service';
+
+@Component({
+  selector: 'my-hero-detail',
+  template: `
+    <div *ngIf="hero">
+      <paper-input label="Name" [(value)]="hero.name"></paper-input>
+      <vaadin-date-picker label="Birthday" [(value)]="hero.birthday"></vaadin-date-picker>
+    </div>
+  `,
+  directives: [
+    PolymerElement('paper-input'),
+    PolymerElement('vaadin-date-picker')
+  ],
+  styles: [`
+    :host {
+      display: block;
+      padding: 16px;
+    }
+  `]
+})
+export class HeroDetailComponent implements OnInit {
+  hero: Hero;
+
+  constructor(
+    private _routeParams: RouteParams,
+    private _heroService: HeroService
+  ) { }
+
+  ngOnInit() {
+    let id = +this._routeParams.get('id');
+    this._heroService.getHero(id).then(hero => this.hero = hero);
+  }
+}
+----
+
+So, here we have just created `HeroDetailComponent`, the heroes editor for our application. It uses `paper-input` bound to the `hero.name` and Vaadin DatePicker bound to the `hero.birthday` property this time with two-way data binding (i.e. with `[(value)]` syntax).
+
+`HeroDetailComponent` gets the hero `id` from `RouteParams` and calls `getHero(id: number)` method from `HeroService` with the hero id argument to retrive the hero object. After the retrieval, the hero object is assigned to the `hero` property of `HeroDetailComponent`.
+
+Since we use two-way binding, the `hero.name` and the `hero.birthday` subproperty values are automatically displayed in the corresponding elements, and when the user edits these values in the elements, the subproperties of `hero` property are updated automatically.
+
+[IMPORTANT]
+.Use ngIf when loading content
+====
+The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the `hero` is not loaded yet, so we can not use `hero.name` and `hero.birthday` subproperties. Using them at this moment would result in errors.
+
+That is why we wrap `<paper-input>` and `<vaadin-date-picker>` elements with `<div *ngIf="hero"></div>` in the component template. The `ngIf` structural directive not only hides the content, but also stops the hidden part of the template from being evaluated and rendered. This effectively prevents errors of accessing non-existant subproperties during the loading.
+====
+
+Unlike with Vaadin Grid in the heroes list, we don’t want our editor contents to touch the edges of the browser window. It’s nice to have some spacing around them. For that reason we add `display: block;` and `padding: 16px;` rules in the styles section of our component metadata.
+
+=== Add routing
+
+The Angular 2 Component Router uses `history.pushState` API for navigation. This requires us to declare the base `href` for the main document. Add this line to the `index.html` file in the project root just after the `<head>` opening tag:
+
+[source,html]
+.index.html <head> section
+----
+  <base href="/">
+----
+
+Next, add routing, the back button and navigation reaction to the `AppComponent`. Edit `app/app.component.ts` to contain the code below:
+
+[source,typescript]
+.app/app.component.ts
+----
+import { Component, OnInit } from '@angular/core';
+import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, RouteData } from '@angular/router-deprecated';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { HeroService } from './hero.service';
+import { HeroesComponent } from './heroes.component';
+import { HeroDetailComponent } from './hero-detail.component';
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <paper-scroll-header-panel fixed>
+      <paper-toolbar [class.raised]="isInChildView">
+        <paper-icon-button icon="arrow-back" *ngIf="isInChildView" (click)="goBack()"></paper-icon-button>
+        <div class="title">{{title}}</div>
+      </paper-toolbar>
+      <router-outlet></router-outlet>
+    </paper-scroll-header-panel>
+  `,
+  styles: [`
+    paper-scroll-header-panel {
+      height: 100%;
+    }
+
+    paper-toolbar.raised {
+      @apply(--shadow-elevation-4dp);
+    }
+
+    paper-toolbar paper-icon-button {
+      margin-left: -8px;
+      margin-right: 24px;
+    }
+
+    paper-toolbar .title {
+      margin-left: 56px;
+    }
+
+    paper-toolbar paper-icon-button + .title {
+      margin-left: 0;
+    }
+  `],
+  directives: [
+    ROUTER_DIRECTIVES,
+    PolymerElement('paper-scroll-header-panel'),
+    PolymerElement('paper-toolbar'),
+    PolymerElement('paper-icon-button')
+  ],
+  providers: [
+    ROUTER_PROVIDERS,
+    HeroService
+  ]
+})
+@RouteConfig([
+  {
+    path: '/heroes',
+    name: 'Heroes',
+    component: HeroesComponent,
+    useAsDefault: true,
+    data: {
+      title: 'All heroes',
+      root: true
+    }
+  },
+  {
+    path: '/heroes/:id',
+    name: 'HeroDetail',
+    component: HeroDetailComponent,
+    data: {
+      title: 'Hero detail'
+    }
+  }
+])
+export class AppComponent implements OnInit {
+  title = '';
+  isInChildView = false;
+
+  constructor(private _router: Router) { }
+
+  ngOnInit() {
+    this._router.subscribe(() => {
+      let routeData: RouteData = this._router.currentInstruction.component.routeData;
+      this.title = routeData.get('title');
+      this.isInChildView = !routeData.get('root');
+    });
+  }
+
+  goBack() {
+    this._router.navigate(['Heroes']);
+  }
+}
+----
+
+Now we import `RouteConfig` decorator and some other Angular 2 Component Router parts. We also add `HeroDetailComponent` import alongside with `HeroesComponent`.
+
+As usual with the routing in Angular 2, we add `ROUTER_DIRECTIVES` to the `directives` array of `AppComponent` component metadata, as well as `ROUTER_PROVIDERS` to the `providers` array.
+
+We use `RouteConfig` decorator to declare routes in our application. There are two routes, one for the heroes list (`HeroesComponent`), and another for the hero detail editor (`HeroDetailComponent`).
+
+Note that the first route has `useAsDefault: true;` option in order to open the heroes list by default.
+
+The second route path features `:id` parameter. It is received inside `HeroDetailComponent` and used there to retrive the hero object, as described above in this step.
+
+=== Nice touches in the AppComponent
+
+Here are the UX-related changes to AppComponent explained.
+
+==== Dynamic toolbar title
+
+We add the `title` property to the `AppComponent` and bind it to the text content of `<div class="title"></div>` inside the toolbar in the template.
+
+Instead of a static title, the title is now updated dynamically. We subscribe to the `Router` in `AppComponent` and use `RouteData` in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the `Router` event is dispatched so the `title` property is updated.
+
+==== The back icon in the toolbar
+
+We add `<paper-icon-button>` to have a back icon inside the `<paper-toolbar>` in the template. The icon has a click event binding, which calls `goBack()` method of `AppComponent`. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
+
+When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added `isInChildView` property to `AppComponent`, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the `<paper-icon-button>`.
+
+We also add a few style rules for the `paper-icon-button` and `.title` to have a nice alignment for them.
+
+==== Dynamic toolbar shadow
+
+To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the `<paper-toolbar>` to `isInChildView` property and add a style rule which applies the shadow mixin from `paper-styles` to the `<paper-toolbar>` when it has the `raised` class.
+
+=== Navigation from list to detail
+
+The last feature to implement in this step is navigation from the heroes list to the hero detail by clicking a row. Open `app/heroes.component.ts` and change it to contain the following code:
+
+[source,typescript]
+.app/heroes.component.ts
+----
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router-deprecated';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { Hero } from './hero';
+import { HeroService } from './hero.service';
+
+@Component({
+  selector: 'my-heroes',
+  template: `
+    <vaadin-grid [items]="heroes" (selected-items-changed)="onSelectedItemsChanged($event)">
+      <table>
+        <colgroup>
+          <col name="id">
+          <col name="name">
+          <col name="birthday">
+        </colgroup>
+      </table>
+    </vaadin-grid>
+  `,
+  styles: [`
+    vaadin-grid {
+      height: 100%;
+    }
+  `],
+  directives: [
+    PolymerElement('vaadin-grid')
+  ]
+})
+export class HeroesComponent implements OnInit {
+  heroes: Hero[];
+
+  constructor(
+    private _router: Router,
+    private _heroService: HeroService
+  ) { }
+
+  getHeroes() {
+    this._heroService.getHeroes().then(heroes => this.heroes = heroes);
+  }
+
+  ngOnInit() {
+    this.getHeroes();
+  }
+
+  goToHeroDetailById(id: number) {
+    this._router.navigate(['HeroDetail', { id: id }]);
+  }
+
+  onSelectedItemsChanged(event: any) {
+    let selectedIndex: number = event.target.selection.selected()[0];
+    if (selectedIndex !== undefined) {
+      this.goToHeroDetailById(this.heroes[selectedIndex].id);
+    }
+  }
+}
+----
+
+Now when the user clicks a row inside the heroes list, `<vaadin-grid>` fires `selected-items-changed` event. We bound the event to the `onSelectedItemsChanged` method of the `HeroesComponent`. In listener method, we read the selected item index, get the `id` property of the corresponding `heroes` array item and call `goToHeroDetailById`, which uses `Router` to navigate to the hero detail of the selected hero.
+
+=== Try it out
+
+All the changes for this step are done. Now launch your application again and try how the navigation works.
+
+After opening the application, click the first row in the heroes list. You should see the detail view like in the following screenshot:
+
+[[figure.hero.detail]]
+.A screenshot of hero detail view
+image::img/hero-detail.png[width="432",height="644"]
+
+Click the back icon in the toolbar to navigate back to the heroes list. If you made any changes in the hero detail editor, they should be shown in the heroes list right away.
+
+== Wrap-up
+
+All the tutorial steps are complete. Now you can use all powers of Polymer elements in your Angular 2 applications and know how to do it.
+
+TODO: Link the resulting application code repository in this section when it gets published.
+
+=== Next steps
+
+There are several ways of improvement for our application. For example, you might want to add an explicit “Save” button to the hero detail editor and make the user able to intentionally submit or discard their changes. To do that, use the `ngForm` directive. See the https://angular.io/docs/ts/latest/guide/forms.html[Forms Chapter] in the Angular 2 Basics guide for the detailed instructions.
+
+In the tutorial, we did not consider the topic of storing your application data. For simplicity, our application uses mock in-memory data and relies on data binding to make temporary changes, that are not saved anywhere. You might want to move the heroes data to a server and add some HTTP API calls in your application. See the Angular 2 https://angular.io/docs/ts/latest/guide/server-communication.html[Http Client] documentation to know how to do that.
+
+Read the https://www.polymer-project.org/1.0/[Polymer Project] website to know about other features that Polymer provides you with. There is also the https://www.polymer-project.org/1.0/start/[Getting Started] guide, where you can learn how to create your own elements and apps based on Polymer.
+
+Don’t forget to find out other elements you can use for building your applications on the https://vaadin.com/elements[Vaadin Elements] page and in the https://elements.polymer-project.org/[Polymer Catalog].
