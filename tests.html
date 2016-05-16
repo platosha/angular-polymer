@@ -6,6 +6,7 @@
 
   <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
   <link rel="import" href="bower_components/polymer/polymer.html">
+  <link rel="import" href="test-element.html">
 
   <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
 
@@ -21,7 +22,9 @@
     var packages = {};
     [
       '@angular/common',
-      '@angular/core'
+      '@angular/core',
+      '@angular/compiler',
+      '@angular/platform-browser'
     ].forEach(function(name) {
       packages[name] = { main: 'index.js', defaultExtension: 'js' };
     });
@@ -35,9 +38,11 @@
       },
       packages: packages
     });
+    //document.addEventListener('WebComponentsReady', function() {
     System.import('polymer-element.spec')
       .then(window.onload)
       .catch(console.error.bind(console));
+    //});
   </script>
 </body>
 </html>
