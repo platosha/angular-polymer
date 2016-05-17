@@ -1,14 +1,21 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-form-element-behavior/iron-form-element-behavior.html">
 
 <dom-module id="test-element">
   <template>
-    Hi
+    <div id="contents">
+      <content select=".content"></content>
+    </div>
   </template>
 </dom-module>
 
 <script>
   Polymer({
     is: 'test-element',
+
+    behaviors: [
+      Polymer.IronFormElementBehavior
+    ],
 
     properties: {
       value: {
