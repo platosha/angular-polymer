@@ -3,6 +3,7 @@
 
 <dom-module id="test-element">
   <template>
+    <div id="nested" nested-object-value$=[[nestedObject.value]] array-object-value$=[[arrayObject.0]]></div>
     <div id="selected">
       <content select=".selected"></content>
     </div>
@@ -24,6 +25,16 @@
       value: {
         value: '',
         notify: true
+      },
+
+      nestedObject: {
+        value: {
+          value: ''
+        }
+      },
+
+      arrayObject: {
+        value: []
       }
     }
   });

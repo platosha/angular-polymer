@@ -57,7 +57,13 @@ describe('PolymerElement', () => {
   describe('Two-way data binding', () => {
 
     beforeAll(() => {
-      template = `<test-element [(value)]="value"></test-element>`;
+      template = `
+        <test-element
+          [(value)]="value"
+          [(nestedObject)]="nestedObject"
+          [(arrayObject)]="arrayObject">
+        </test-element>
+        `;
     });
 
     it('should have initial bound value', () => {
@@ -74,6 +80,20 @@ describe('PolymerElement', () => {
     it('should change bound value on value change', () => {
       testElement.value = 'bar';
       expect(testComponent.value).toEqual('bar');
+    });
+
+    it('should reflect change to a nested value (object)', () => {
+      testComponent.nestedObject.value = 'foo';
+      fixture.detectChanges();
+      var nested = Polymer.dom(testElement.root).querySelector('#nested');
+      expect(nested.getAttribute('nested-object-value')).toEqual('foo');
+    });
+
+    it('should reflect change to a nested value (array)', () => {
+      testComponent.arrayObject.push('foo');
+      fixture.detectChanges();
+      var nested = Polymer.dom(testElement.root).querySelector('#nested');
+      expect(nested.getAttribute('array-object-value')).toEqual('foo');
     });
 
   });
@@ -167,7 +187,7 @@ describe('PolymerElement', () => {
         `;
     });
 
-    beforeEach((done)=> {
+    beforeEach((done) => {
       setTimeout(done, 0);
     });
 
@@ -226,6 +246,10 @@ describe('PolymerElement', () => {
 class TestComponent {
 
   value = 'foo';
+
+  nestedObject = { value: undefined };
+
+  arrayObject = [];
 
   barVisible = false;
 
