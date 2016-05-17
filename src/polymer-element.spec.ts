@@ -86,7 +86,7 @@ describe('PolymerElement', () => {
       template = `
         <form [ngFormModel]="form">
           <test-element ngControl="value" required></test-element>
-        </form>'
+        </form>
         `;
     });
 
@@ -151,6 +151,71 @@ describe('PolymerElement', () => {
 
     });
   });
+
+  describe('Light dom content', () => {
+
+    beforeAll(() => {
+      template = `
+        <test-element [(value)]="value" class="hascontent">
+          <div class="foo">Foo</div>
+          <div class="bar selected" *ngIf="barVisible">Bar</div>
+          <div class="bar2" *ngIf="barVisible">Bar2</div>
+          <div class="baz selected">Baz</div>
+          Qux
+
+        </test-element>
+        `;
+    });
+
+    beforeEach((done)=> {
+      setTimeout(done, 0);
+    });
+
+    function contentParentChildren(contentParentId) {
+      var root = Polymer.dom(testElement.root);
+      var selected = root.querySelector('#' + contentParentId);
+      if (Polymer.Settings.useShadow) {
+        return selected.firstElementChild.getDistributedNodes();
+      } else {
+        return selected.childNodes;
+      }
+    }
+
+    function containsChild(contentParentId, childClassName) {
+      var children = contentParentChildren(contentParentId);
+      return Array.prototype.filter.call(children, (node) => {
+        return node.classList && node.classList.contains(childClassName);
+      }).length > 0;
+    }
+
+    it('should distribute correctly', () => {
+      // Local dom
+      expect(containsChild('selected', 'foo')).toEqual(false);
+      expect(containsChild('all', 'foo')).toEqual(true);
+
+      expect(containsChild('selected', 'bar')).toEqual(false);
+      expect(containsChild('all', 'bar')).toEqual(false);
+
+      expect(containsChild('selected', 'baz')).toEqual(true);
+
+      var hasQux = Array.prototype.filter.call(contentParentChildren('all'), (node) => {
+        return node.textContent.indexOf('Qux') !== -1;
+      });
+      expect(hasQux.length).toEqual(1);
+
+      // Light dom
+      expect(Polymer.dom(testElement).querySelector('.foo')).not.toEqual(null);
+    });
+
+    it('should support ngif', () => {
+      testComponent.barVisible = true;
+      fixture.detectChanges();
+      // expect(containsChild('selected', 'bar')).toEqual(true);
+      expect(containsChild('all', 'bar2')).toEqual(true);
+    });
+
+  });
+
 });
 
 @Component({
@@ -162,6 +227,6 @@ class TestComponent {
 
   value = 'foo';
 
-  barvisible = false;
+  barVisible = false;
 
 }
