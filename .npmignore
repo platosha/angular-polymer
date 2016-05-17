@@ -1,5 +1,12 @@
+# Source files
+bower.json
+index.ts
+/src/
+tsconfig.json
+typings/
+typings.json
 
-# Created by https://www.gitignore.io/api/node,bower
+# Created by https://www.gitignore.io/api/node,bower,typings
 
 ### Node ###
 # Logs
@@ -17,6 +24,9 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+
+# nyc test coverage
+.nyc_output
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -44,4 +54,7 @@ bower_components
 .bower-registry
 .bower-tmp
 
-test
+
+### Typings ###
+## Ignore downloaded typings
+typings

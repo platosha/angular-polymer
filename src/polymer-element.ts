@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
 
-export function PolymerElement(name: any) {
+export function PolymerElement(name: string): any[] {
   const propertiesWithNotify: Array<any> = [];
   const arrayAndObjectProperties: Array<any> = [];
 
@@ -146,7 +146,7 @@ export function PolymerElement(name: any) {
     }],
 
     ngOnInit() {
-      var elm = (<any>this)._element;
+      var elm = this._element;
       // In case the element has a default value and the directive doesn't have any value set for a property,
       // we need to make sure the element value is set to the directive.
       arrayAndObjectProperties.filter(property => elm[property] && !this[property])
@@ -161,12 +161,12 @@ export function PolymerElement(name: any) {
         var target:any = event.target;
         if (this[property] !== target[property]) {
           this[property] = target[property];
-          (<any>this)._differs[property] = this._createDiffer(this[property]);
+          this._differs[property] = this._createDiffer(this[property]);
         }
     },
 
     _createDiffer(value: string) {
-      var differ = Array.isArray(value) ? (<any>(<any>this)._iterableDiffers).find(value).create(null) : (<any>(<any>this)._keyValueDiffers).find(value || {}).create(null);
+      var differ = Array.isArray(value) ? this._iterableDiffers.find(value).create(null) : this._keyValueDiffers.find(value || {}).create(null);
 
       // initial diff with the current value to make sure the differ is synced
       // and doesn't report any outdated changes on the next ngDoCheck call.
