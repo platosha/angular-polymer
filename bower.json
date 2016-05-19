@@ -16,5 +16,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.6"
+  }
 }
