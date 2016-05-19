@@ -1,4 +1,0 @@
-"use strict";
-var polymer_element_1 = require('./src/polymer-element');
-exports.PolymerElement = polymer_element_1.PolymerElement;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsZ0NBQStCLHVCQUF1QixDQUFDO0FBQTlDLDBEQUE4QyJ9
