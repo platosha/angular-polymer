@@ -126,9 +126,8 @@ Create `bower.json` file in your project root with the following contents:
     "polymer": "Polymer/polymer#^1.4.0",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
     "iron-icons": "PolymerElements/iron-icons#^1.1.3",
+    "app-layout": "PolymerElements/app-layout#^0.9.0",
     "paper-styles": "PolymerElements/paper-styles#^1.1.4",
-    "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#^1.0.15",
-    "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.4",
     "paper-icon-button": "PolymerElements/paper-icon-button#^1.1.1",
     "paper-input": "PolymerElements/paper-input#^1.1.11",
     "vaadin-grid": "Vaadin/vaadin-grid#^1.1.0",
@@ -153,6 +152,7 @@ ls bower_components
 
 .Output
 ----
+app-layout
 font-roboto
 iron-a11y-announcer
 iron-a11y-keys-behavior
@@ -171,6 +171,7 @@ iron-media-query
 iron-meta
 iron-overlay-behavior
 iron-resizable-behavior
+iron-scroll-target-behavior
 iron-selector
 iron-validatable-behavior
 neon-animation
@@ -180,9 +181,7 @@ paper-icon-button
 paper-input
 paper-material
 paper-ripple
-paper-scroll-header-panel
 paper-styles
-paper-toolbar
 polymer
 vaadin-date-picker
 vaadin-grid
@@ -253,8 +252,7 @@ In your project root, edit index.html file and replace the contents with these l
 
     <!-- Polymer Elements -->
     <link rel="import" href="bower_components/iron-icons/iron-icons.html">
-    <link rel="import" href="bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
-    <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+    <link rel="import" href="bower_components/app-layout/app-layout.html">
     <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="bower_components/paper-input/paper-input.html">
     <link rel="import" href="bower_components/vaadin-grid/vaadin-grid.html">
@@ -430,25 +428,25 @@ import { PolymerElement } from '@vaadin/angular2-polymer';
 @Component({
   selector: 'my-app',
   template: `
-    <paper-scroll-header-panel fixed>
-      <paper-toolbar>
-        <div class="title">All heroes</div>
-      </paper-toolbar>
+    <app-header-layout has-scrolling-region>
+      <app-header fixed>
+        <app-toolbar>
+          <div title spacer>All heroes</div>
+        </app-toolbar>
+      </app-header>
       <div>My application content</div>
-    </paper-scroll-header-panel>
+    </app-header-layout>
   `,
   styles: [`
-    paper-scroll-header-panel {
-      height: 100%;
-    }
-
-    paper-toolbar .title {
-      margin-left: 56px;
+    app-toolbar {
+      background: var(--primary-color);
+      color: var(--dark-theme-text-color);
     }
   `],
   directives: [
-    PolymerElement('paper-scroll-header-panel'),
-    PolymerElement('paper-toolbar')
+    PolymerElement('app-header-layout'),
+    PolymerElement('app-header'),
+    PolymerElement('app-toolbar')
   ]
 })
 export class AppComponent { }
@@ -460,13 +458,25 @@ Save changes and launch the development server to see the results in your browse
 .A screenshot of empty application layout
 image::img/app-layout.png[width="432",height="644"]
 
-Now your application has a layout made by using `paper-scroll-header-panel`, and `paper-toolbar`.
+Now your application has a layout made by using `app-header-layout`, `app-header` and `app-toolbar`.
 
 === Elements used in this step
 
-`paper-scroll-header-panel`:: Adds a scrollable container for the application contents. Also automatically detects `paper-toolbar` in the contents and places it above the scrollable container.
+`app-header-layout`:: The application layout consisting of the `app-header` and the main contents. In our case, it adds a scrollable container for the application contents as well.
 
-`paper-toolbar`:: Provides a toolbar wrapper styled in a way of Material Desing. Uses default theme from `paper-styles`.
+`app-header`:: Acts as a header in the application layout. The header is fixed in our application.
+
+`app-toolbar`:: Provides a toolbar wrapper.
+
+[NOTE]
+.app-layout elements are design-agnostic
+====
+Polymer elements from `app-layout` set, including `app-toolbar` that we use, are design-agnostic. They do not enforce have Material Design look by default, though still support it. Therefore we need to adjust `app-toolbar` styles a bit.
+
+Therefore we added color rules for the `app-toolbar` in the styles of the `AppComponent`. We reuse the color values of default theme from `paper-styles`.
+
+Apart from the colors, it inherits the font family declared for the body. We have already decleared our font settings for the body in `index.html` earliear during this step.
+====
 
 [IMPORTANT]
 .PolymerElement directives
@@ -476,7 +486,7 @@ In order to enable all features of Polymer elements used inside your Angular com
 
 == List heroes with Vaadin Grid
 
-In the previous step we added the application layout with `paper-scroll-header-panel` and `paper-toolbar`. Next we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
+In the previous step we added the application layout with `app-layout` elements. Next we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
 
 [NOTE]
 .Some parts are explained in the Tour of Heroes
@@ -631,25 +641,25 @@ import { HeroesComponent } from './heroes.component';
 @Component({
   selector: 'my-app',
   template: `
-    <paper-scroll-header-panel fixed>
-      <paper-toolbar>
-        <div class="title">All heroes</div>
-      </paper-toolbar>
+    <app-header-layout has-scrolling-region>
+      <app-header fixed>
+        <app-toolbar>
+          <div title spacer>All heroes</div>
+        </app-toolbar>
+      </app-header>
       <my-heroes></my-heroes>
-    </paper-scroll-header-panel>
+    </app-header-layout>
   `,
   styles: [`
-    paper-scroll-header-panel {
-      height: 100%;
-    }
-
-    paper-toolbar .title {
-      margin-left: 56px;
+    app-toolbar {
+      background: var(--primary-color);
+      color: var(--dark-theme-text-color);
     }
   `],
   directives: [
-    PolymerElement('paper-scroll-header-panel'),
-    PolymerElement('paper-toolbar'),
+    PolymerElement('app-header-layout'),
+    PolymerElement('app-header'),
+    PolymerElement('app-toolbar'),
     HeroesComponent
   ],
   providers: [
@@ -798,34 +808,30 @@ import { HeroDetailComponent } from './hero-detail.component';
 @Component({
   selector: 'my-app',
   template: `
-    <paper-scroll-header-panel fixed>
-      <paper-toolbar [class.raised]="isInChildView">
-        <paper-icon-button icon="arrow-back" *ngIf="isInChildView" (click)="goBack()"></paper-icon-button>
-        <div class="title">{{title}}</div>
-      </paper-toolbar>
+    <app-header-layout has-scrolling-region>
+      <app-header fixed>
+        <app-toolbar [class.raised]="isInChildView">
+          <paper-icon-button icon="arrow-back" *ngIf="isInChildView" (click)="goBack()"></paper-icon-button>
+          <div title spacer>{{title}}</div>
+        </app-toolbar>
+      </app-header>
       <router-outlet></router-outlet>
-    </paper-scroll-header-panel>
+    </app-header-layout>
   `,
   styles: [`
-    paper-scroll-header-panel {
-      height: 100%;
+    app-toolbar {
+      background: var(--primary-color);
+      color: var(--dark-theme-text-color);
     }
 
-    paper-toolbar.raised {
+    app-toolbar.raised {
       @apply(--shadow-elevation-4dp);
     }
 
-    paper-toolbar paper-icon-button {
-      margin-left: -8px;
-      margin-right: 24px;
-    }
-
-    paper-toolbar .title {
-      margin-left: 56px;
-    }
-
-    paper-toolbar paper-icon-button + .title {
-      margin-left: 0;
+    paper-icon-button {
+      position: absolute;
+      top: 12px;
+      left: 8px;
     }
   `],
   directives: [
@@ -895,21 +901,21 @@ Here are the UX-related changes to AppComponent explained.
 
 ==== Dynamic toolbar title
 
-We add the `title` property to the `AppComponent` and bind it to the text content of `<div class="title"></div>` inside the toolbar in the template.
+We add the `title` property to the `AppComponent` and bind it to the text content of `<div title spacer></div>` inside the toolbar in the template.
 
 Instead of a static title, the title is now updated dynamically. We subscribe to the `Router` in `AppComponent` and use `RouteData` in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the `Router` event is dispatched so the `title` property is updated.
 
 ==== The back icon in the toolbar
 
-We add `<paper-icon-button>` to have a back icon inside the `<paper-toolbar>` in the template. The icon has a click event binding, which calls `goBack()` method of `AppComponent`. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
+We add `<paper-icon-button>` to have a back icon inside the `<app-toolbar>` in the template. The icon has a click event binding, which calls `goBack()` method of `AppComponent`. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
 
 When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added `isInChildView` property to `AppComponent`, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the `<paper-icon-button>`.
 
-We also add a few style rules for the `paper-icon-button` and `.title` to have a nice alignment for them.
+We also add a few positioning style rules for the `paper-icon-button`.
 
 ==== Dynamic toolbar shadow
 
-To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the `<paper-toolbar>` to `isInChildView` property and add a style rule which applies the shadow mixin from `paper-styles` to the `<paper-toolbar>` when it has the `raised` class.
+To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the `<app-toolbar>` to `isInChildView` property and add a style rule which applies the shadow mixin from `paper-styles` to the `<app-toolbar>` when it has the `raised` class.
 
 === Navigation from list to detail
 
