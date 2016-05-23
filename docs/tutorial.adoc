@@ -4,9 +4,9 @@
 
 TODO: Link the resulting application code repository in this section when it gets published.
 
-The following tutorial explains how to use Polymer elements in Angular 2 applications.
+This tutorial explains how to use Polymer elements in Angular 2 applications with the help of the `@vaadin/angular2-polymer` directives.
 
-For this purpose we are going to create an application similar to the Tour of Heroes example. Bun unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we’ll use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application would have a nice-looking mobile-first Material designed UI.
+For this purpose we are going to create a staff management application similar to the https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] example. Bun unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we’ll use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application will have a nice-looking mobile-first Material designed UI.
 
 === The start point
 
@@ -16,7 +16,7 @@ If you are not yet familiar with Angular 2, please walk through the Angular 2 Qu
 
 === The end result
 
-In our heroes management application there would be two UI screens. This is the first screen with the list of all heroes made with Vaadin Grid of https://vaadin.com/elements[Vaadin Elements]:
+In our heroes management application there will be two UI screens. This is the first screen with the list of all heroes made with Vaadin Grid of https://vaadin.com/elements[Vaadin Elements]:
 
 [[figure.heroes.list]]
 .A screenshot of the list of heroes
@@ -143,14 +143,9 @@ This file declares all bower dependencies for our application. Now install them 
 bower install
 ----
 
-After that, in your project root you should have `bower_components` directory with all elements declared by bower.json together with the elements’ requirements. Verify that:
+After that, in your project root you should have `bower_components` directory with all elements declared by bower.json together with the elements’ requirements. List contents of the `bower_components` directory to verify that, it should contain these subdirectories:
 
-[source,bash]
-----
-ls bower_components
-----
-
-.Output
+.Contents of the bower_components directory
 ----
 app-layout
 font-roboto
@@ -204,7 +199,7 @@ bower_components
 
 === Npm dependency
 
-Alongside with bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular component templates. Run this command to install the package and save the dependency in `package.json` at the same time:
+Alongside with bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run this command to install the package and save the dependency in `package.json` at the same time:
 
 [source,bash]
 ----
@@ -295,7 +290,7 @@ The order of loading Polymer elements and the rest of the Angular application co
 
 
 Style changes::
-Polymer elements come with nice builtin styles in the way of Material Desing. Angular 2 also provides style encapsulation mechanisms for our application components.
+Polymer elements come with nice builtin styles in the way of Material Design. Angular 2 also provides style encapsulation mechanisms for our application components.
 +
 So the global styles are not needed anymore. Therefore we removed the `styles.css` external stylesheet and replaced it with `iron-flex-layout` and `paper-styles` style mixins imports and one embedded global style rule for body.
 +
@@ -303,14 +298,14 @@ The body style is the only global style that remains in our application. We need
 +
 [TIP]
 ====
-Instead of feaguring out the exact rules and values for the body style, here we import and reuse CSS mixins and CSS custom properties declared in `iron-flex-layout` and `paper-styles`.
+Instead of figuring out the exact rules and values for the body style, here we import and reuse CSS mixins and CSS custom properties declared in `iron-flex-layout` and `paper-styles`.
 ====
 +
 [IMPORTANT]
 ====
 When using custom CSS mixins and custom CSS properties in your main document styles, wrap your styles inside `<style is="custom-style"></style>` tag.
 
-See https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling section of the Polymer Developer Guide] for more information on styling Polymer lements and the document, custom CSS mixins and properties usage and limitations.
+See https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling section of the Polymer Developer Guide] for more information on styling Polymer elements and the document, custom CSS mixins and properties usage and limitations.
 ====
 
 Delete `styles.css` file from your project directory since it is no longer in use.
@@ -320,10 +315,10 @@ Delete `styles.css` file from your project directory since it is no longer in us
 ====
 Duplicated fetch of the same file is prevented in HTML Imports by checking the file location.
 
-For example, in our tutorial application, we:
+For example, in our tutorial application:
 
-* Have `<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">` in our `index.html` file.
-* Also we have `<link rel="import" href="bower_components/paper-input/paper-input.html">` Polymer Element later in `index.html` file.
+* We have `<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">` in our `index.html` file.
+* Also we have `<link rel="import" href="bower_components/paper-input/paper-input.html">` Polymer element later in the `index.html` file.
 * Inside `paper-input.html`, there’s `<link rel="import" href="paper-input-container.html">`, which contains the relative path that resolves to `bower_components/paper-input/paper-input-container.html`
 * And inside `paper-input-container.html` there is an import of `iron-flex-layout.html`, once again from a relative path, with `<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">`. In our case, it resolves to `bower_components/iron-flex-layout/iron-flex-layout.html`
 
@@ -682,7 +677,7 @@ image::img/heroes-list.png[width="432",height="644"]
 
 == Hero editor and routing
 
-Previosly we added the heroes list in our application. In this step we are going to add the editing feature. After that, the user should be able to navigate to the hero details by clicking a row in the heroes list, edit the details and get back to the list with the back button in the toolbar.
+Previously we added the heroes list in our application. In this step we are going to add the editing feature. After that, the user should be able to navigate to the hero details by clicking a row in the heroes list, edit the details and get back to the list with the back button in the toolbar.
 
 [NOTE]
 .Some parts are explained in the Tour of Heroes
@@ -895,28 +890,6 @@ Note that the first route has `useAsDefault: true;` option in order to open the 
 
 The second route path features `:id` parameter. It is received inside `HeroDetailComponent` and used there to retrive the hero object, as described above in this step.
 
-=== Nice touches in the AppComponent
-
-Here are the UX-related changes to AppComponent explained.
-
-==== Dynamic toolbar title
-
-We add the `title` property to the `AppComponent` and bind it to the text content of `<div title spacer></div>` inside the toolbar in the template.
-
-Instead of a static title, the title is now updated dynamically. We subscribe to the `Router` in `AppComponent` and use `RouteData` in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the `Router` event is dispatched so the `title` property is updated.
-
-==== The back icon in the toolbar
-
-We add `<paper-icon-button>` to have a back icon inside the `<app-toolbar>` in the template. The icon has a click event binding, which calls `goBack()` method of `AppComponent`. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
-
-When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added `isInChildView` property to `AppComponent`, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the `<paper-icon-button>`.
-
-We also add a few positioning style rules for the `paper-icon-button`.
-
-==== Dynamic toolbar shadow
-
-To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the `<app-toolbar>` to `isInChildView` property and add a style rule which applies the shadow mixin from `paper-styles` to the `<app-toolbar>` when it has the `raised` class.
-
 === Navigation from list to detail
 
 The last feature to implement in this step is navigation from the heroes list to the hero detail by clicking a row. Open `app/heroes.component.ts` and change it to contain the following code:
@@ -995,6 +968,28 @@ After opening the application, click the first row in the heroes list. You shoul
 image::img/hero-detail.png[width="432",height="644"]
 
 Click the back icon in the toolbar to navigate back to the heroes list. If you made any changes in the hero detail editor, they should be shown in the heroes list right away.
+
+=== Nice touches in the AppComponent
+
+Here are the UX-related changes to AppComponent explained.
+
+==== Dynamic toolbar title
+
+We add the `title` property to the `AppComponent` and bind it to the text content of `<div title spacer></div>` inside the toolbar in the template.
+
+Instead of a static title, the title is now updated dynamically. We subscribe to the `Router` in `AppComponent` and use `RouteData` in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the `Router` event is dispatched so the `title` property is updated.
+
+==== The back icon in the toolbar
+
+We add `<paper-icon-button>` to have a back icon inside the `<app-toolbar>` in the template. The icon has a click event binding, which calls `goBack()` method of `AppComponent`. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
+
+When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added `isInChildView` property to `AppComponent`, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the `<paper-icon-button>`.
+
+We also add a few positioning style rules for the `paper-icon-button`.
+
+==== Dynamic toolbar shadow
+
+To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the `<app-toolbar>` to `isInChildView` property and add a style rule which applies the shadow mixin from `paper-styles` to the `<app-toolbar>` when it has the `raised` class.
 
 == Wrap-up
 
