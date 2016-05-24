@@ -1,5 +1,7 @@
+[[vaadin-angular2-polymer.tutorial]]
 = Angular 2 with Polymer Elements Tutorial
 
+[[vaadin-angular2-polymer.tutorial.introduction]]
 == Introduction
 
 TODO: Link the resulting application code repository in this section when it gets published.
@@ -18,18 +20,19 @@ If you are not yet familiar with Angular 2, please walk through the Angular 2 Qu
 
 In our heroes management application there will be two UI screens. This is the first screen with the list of all heroes made with Vaadin Grid of https://vaadin.com/elements[Vaadin Elements]:
 
-[[figure.heroes.list]]
+[[figure.vaadin-angular2-polymer.tutorial.result-heroes-list]]
 .A Screenshot of the List of Heroes
 image::img/heroes-list-default.png[width="432",height="644"]
 
 By clicking on a grid row, the user can open the the hero detail editor screen. It is made using Paper Input and Vaadin DatePicker:
 
-[[figure.hero.detail]]
+[[figure.vaadin-angular2-polymer.tutorial.result-hero-detail]]
 .A Screenshot of Hero Detail View
 image::img/hero-detail.png[width="432",height="644"]
 
 Both screens have a context-sensitive toolbar at the top, containing the title and the optional back icon button.
 
+[[vaadin-angular2-polymer.tutorial.creating-project]]
 == Creating Project
 
 This tutorial is based on the Angular 2 QuickStart TypeScript source code. In this step, we create a new project on top of the QuickStart source code.
@@ -97,6 +100,7 @@ Press `Ctrl+C` to stop the development server.
 See the https://github.com/angular/quickstart/blob/master/README.md[QuickStart README] for more information about creating a new project and other useful [command]#npm# commands.
 ====
 
+[[vaadin-angular2-polymer.tutorial.dependencies]]
 == Adding and Installing Dependencies
 
 After the previous step, we have an empty Angular 2 application source with all the Angular dependencies installed. In this step, we are going to add the Polymer library and some elements as dependencies of our application, and install them.
@@ -220,6 +224,7 @@ Alongside with bower dependencies, we also need to add one npm dependency to the
 [prompt]#$# [command]#npm# install @vaadin/angular2-polymer --save
 ----
 
+[[vaadin-angular2-polymer.tutorial.polymer]]
 == Adding Polymer Elements to Our Application
 
 In the previous step, we downloaded elements to bower_components directory. Now we are going to import these elements in our application.
@@ -331,6 +336,7 @@ Our HTML imports also import their dependencies. As In the resulting dependency 
 See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
 ====
 
+[[vaadin-angular2-polymer.tutorial.application-layout]]
 == Building the Application Layout with Paper Elements
 
 After the previous step we have some Polymer elements imported in [filename]#index.html# of our application. In this step, we are going to use them to create an application layout with a toolbar in [classname]#AppComponent#.
@@ -434,7 +440,7 @@ export class AppComponent { }
 
 Save changes and launch the development server to see the results in your browser. After loading, your application should have this look:
 
-[[figure.app.layout]]
+[[figure.vaadin-angular2-polymer.tutorial.app-layout]]
 .A Screenshot of Empty Application Layout
 image::img/app-layout.png[width="432",height="644"]
 
@@ -464,6 +470,7 @@ Apart from the colors, it inherits the font family declared for the body. We hav
 In order to enable all features of Polymer elements used inside your Angular component templates, remember to import [classname]#PolymerElement# in the component file and add `PolymerElement('element-name')` line for each Polymer element you use to the [propertyname]#directives# array of your component metadata.
 ====
 
+[[vaadin-angular2-polymer.tutorial.list-heroes]]
 == List Heroes with Vaadin Grid
 
 In the previous step we added the application layout with [elementname]#app-layout# elements. Next we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
@@ -656,10 +663,11 @@ Here is what have changed in [filename]#app/app.component.ts#:
 
 Now it’s time to look at the browser window again to the heroes list in our application. Here is how it should look like:
 
-[[figure.heroes.list]]
+[[figure.vaadin-angular2-polymer.tutorial.heroes-list]]
 .A Screenshot of the Application with the List of Heroes
 image::img/heroes-list.png[width="432",height="644"]
 
+[[vaadin-angular2-polymer.tutorial.hero-editor]]
 == Hero Editor and Routing
 
 Previously we added the heroes list in our application. In this step, we are going to add the editing feature. After that, the user should be able to navigate to the hero details by clicking a row in the heroes list, edit the details and get back to the list with the back button in the toolbar.
@@ -949,7 +957,7 @@ All the changes for this step are done. Now launch your application again and tr
 
 After opening the application, click the first row in the heroes list. You should see the detail view like in the following screenshot:
 
-[[figure.hero.detail]]
+[[figure.vaadin-angular2-polymer.tutorial.hero-detail]]
 .A Screenshot of Hero Detail View
 image::img/hero-detail.png[width="432",height="644"]
 
@@ -977,6 +985,7 @@ We also add a few positioning style rules for the [elementname]#paper-icon-butto
 
 To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the [elementname]#app-toolbar# to [propertyname]#isInChildView# property and add a style rule which applies the shadow mixin from [elementname]#paper-styles# to the [elementname]#app-toolbar# when it has the `raised` class.
 
+[[vaadin-angular2-polymer.tutorial.wrap-up]]
 == Wrap Up
 
 All the tutorial steps are complete. Now you can use all powers of Polymer elements in your Angular 2 applications and know how to do it.
