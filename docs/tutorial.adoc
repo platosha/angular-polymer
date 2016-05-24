@@ -154,7 +154,7 @@ Create [filename]#bower.json# file in your project root with the following conte
 }
 ----
 
-This file declares all bower dependencies for our application. Now install them with this command:
+This file declares all Bower dependencies for our application. Now install them with this command:
 
 [subs="normal"]
 ----
@@ -207,7 +207,7 @@ webcomponentsjs
 ====
 It is ususally a good practice to exclude external dependencies from your source control. Angular 2 QuickStart source code already contains a [filename]#.gitignore# file, which excludes [filename]#node_modules# directory with npm dependencies from git repository of your application.
 
-Please add the following line to the [filename]#.gitignore# file to also prevent bower dependencies from being tracked by your source control:
+Please add the following line to the [filename]#.gitignore# file to also prevent Bower dependencies from being tracked by your source control:
 
 [source]
 ----
@@ -217,7 +217,7 @@ bower_components
 
 === Npm Dependency
 
-Alongside with bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run this command to install the package and save the dependency in [filename]#package.json# at the same time:
+Alongside with Bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run this command to install the package and save the dependency in [filename]#package.json# at the same time:
 
 [subs="normal"]
 ----
@@ -312,7 +312,7 @@ Polymer elements come with nice builtin styles in the way of Material Design. An
 +
 So the global styles are not needed anymore. Therefore we removed the [filename]#styles.css# external stylesheet and replaced it with [elementname]#iron-flex-layout# and [elementname]#paper-styles# style mixins imports and one embedded global style rule for body.
 +
-The body style is the only global style that remains in our application. We need it to stretch the body container to occupy full height of the browser viewport, and also to specity default font styles and line height, default background and text colors.
+The body style is the only global style that remains in our application. The body styles are needed to occupy the full height of the browser viewport, and also to specify default font styles, line height, background, and text colors.
 +
 [TIP]
 ====
@@ -457,9 +457,9 @@ Now your application has a layout made by using [elementname]#app-header-layout#
 [NOTE]
 .app-layout Elements are Design-Agnostic
 ====
-Polymer elements from [elementname]#app-layout# set, including [elementname]#app-toolbar# that we use, are design-agnostic. They do not enforce have Material Design look by default. Therefore we need to adjust [elementname]#app-toolbar# styles a bit.
+Polymer elements from [elementname]#app-layout# set, including [elementname]#app-toolbar# that we use, are design-agnostic. They do not have Material Design look by default. We need to adjust [elementname]#app-toolbar# styles a bit.
 
-Therefore we added color rules for the [elementname]#app-toolbar# in the styles of the [classname]#AppComponent#. We reuse the color values of default theme from [elementname]#paper-styles#.
+Therefore we added color rules for the [elementname]#app-toolbar# in the styles of the [classname]#AppComponent#. Here we reuse the color values of default theme from [elementname]#paper-styles#.
 
 Apart from the colors, it inherits the font family declared for the body. We have already decleared our font settings for the body in [filename]#index.html# earliear during this step.
 ====
