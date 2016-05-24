@@ -6,11 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc && concurrently \"npm run tsc:w\" \"live-server --open=tests.html\"",
-    "postinstall": "typings install",
-    "prepublish": "tsc",
     "typings": "typings",
     "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "tsc:w": "tsc -w",
+    "prepublish": "typings install && tsc"
   },
   "files": ["index.d.ts", "src/*.js", "src/*.d.ts"],
   "typescript": {
