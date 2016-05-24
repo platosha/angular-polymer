@@ -8,29 +8,29 @@ This tutorial explains how to use Polymer elements in Angular 2 applications wit
 
 For this purpose we are going to create a staff management application similar to the https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] example. Bun unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we’ll use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application will have a nice-looking mobile-first Material designed UI.
 
-=== The start point
+=== The Start Point
 
 This tutorial is based on the https://angular.io/docs/ts/latest/quickstart.html[Angular 2 5 min QuickStart] and the https://angular.io/docs/ts/latest/tutorial/[Angular 2 Tour of Heroes]. We are going to start from the empty application source from the https://angular.io/docs/ts/latest/quickstart.html[QuickStart repository].
 
 If you are not yet familiar with Angular 2, please walk through the Angular 2 QuickStart and the Tour of Heroes first. In this tutorial we are going to skip the explanations that are already given in the Angular 2 tutorials.
 
-=== The end result
+=== The End Result
 
 In our heroes management application there will be two UI screens. This is the first screen with the list of all heroes made with Vaadin Grid of https://vaadin.com/elements[Vaadin Elements]:
 
 [[figure.heroes.list]]
-.A screenshot of the list of heroes
+.A Screenshot of the List of Heroes
 image::img/heroes-list-default.png[width="432",height="644"]
 
 By clicking a grid row, the user can open the second screen, the hero detail editor made using Paper Input and Vaadin DatePicker:
 
 [[figure.hero.detail]]
-.A screenshot of hero detail view
+.A Screenshot of Hero Detail View
 image::img/hero-detail.png[width="432",height="644"]
 
 Both screens have a context-sensitive toolbar at the top with the title and the optional back icon button.
 
-== Creating project
+== Creating Project
 
 This tutorial is based on the Angular 2 QuickStart TypeScript source code. In this step, we create new project on top of the QuickStart source code.
 
@@ -39,7 +39,7 @@ This tutorial is based on the Angular 2 QuickStart TypeScript source code. In th
 If you are not yet familiar with Angular 2, please go through the https://angular.io/docs/ts/latest/quickstart.html[Angular 2 QuickStart] tutorial, which explains every step of starting a new Angular 2 application from scratch.
 ====
 
-=== Starting from the QuickStart repository
+=== Starting from the QuickStart Repository
 
 Clone the https://github.com/angular/quickstart[QuickStart repository] into the tutorial project folder:
 
@@ -56,11 +56,11 @@ We are not going to contribute to the quickstart repository itself, so the origi
 rm -rf .git
 ----
 
-=== Starting from the QuickStart ZIP package
+=== Starting from the QuickStart ZIP Package
 
 Alternatively, instead of using git to clone the QuickStart repository, you can download and extract the https://github.com/angular/quickstart/archive/master.zip[QuickStart ZIP package].
 
-=== Remove the AppComponent tests
+=== Remove the AppComponent Tests
 
 The QuickStart respository contains tests for `AppComponent`. Unfortunately, some changes to `AppComponent` in the following steps are going to break the compilation for these tests.
 
@@ -74,7 +74,7 @@ Testing is out of the scope of this tutorial.
 See the https://angular.io/docs/ts/latest/guide/testing.html[Testing chapter] in the Angular 2 Developer Guide for more information on the topic.
 ====
 
-=== Installing npm packages and starting the development server
+=== Installing Npm Packages and Starting the Development Server
 
 Install npm dependencies:
 
@@ -97,13 +97,13 @@ Press `Ctrl+C` to stop the development server.
 See the https://github.com/angular/quickstart/blob/master/README.md[QuickStart README] for more information about creating a new project and other useful npm commands.
 ====
 
-== Adding and installing dependencies
+== Adding and Installing Dependencies
 
 After the previous step, we have an empty Angular 2 application source with all the Angular dependencies installed. In this step we are going to add Polymer with some elements as dependencies to our application and install them.
 
 Vaadin Elements and other Polymer elements are mainly distributed through http://bower.io/[Bower]. In this step we are going to use Bower to declare and install our element dependencies.
 
-=== Adding Bower dependencies
+=== Adding Bower Dependencies
 
 [IMPORTANT]
 ====
@@ -159,7 +159,7 @@ bower install
 
 After that, in your project root you should have `bower_components` directory with all elements declared by bower.json together with the elements’ requirements. List contents of the `bower_components` directory to verify that, it should contain these subdirectories:
 
-.Contents of the bower_components directory
+.Contents of the bower_components Directory
 ----
 app-layout
 font-roboto
@@ -211,7 +211,7 @@ bower_components
 ----
 ====
 
-=== Npm dependency
+=== Npm Dependency
 
 Alongside with bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run this command to install the package and save the dependency in `package.json` at the same time:
 
@@ -220,7 +220,7 @@ Alongside with bower dependencies, we also need to add one npm dependency to the
 npm install @vaadin/angular2-polymer --save
 ----
 
-== Adding Polymer elements to our application
+== Adding Polymer Elements to Our Application
 
 In the previous step, we downloaded elements to bower_components directory. Now we are going to import these elements in our application.
 
@@ -284,26 +284,25 @@ In your project root, edit index.html file and replace the contents with these l
 
 Here’s the list of important changes explained:
 
-Doctype declaration::
+Doctype Declaration::
 We added `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use Standards mode, as required by the internals of `vaadin-grid`.
 
-webcomponentsjs-lite.min.js polyfills::
+webcomponentsjs-lite.min.js Polyfills::
 The technology stack behind Web Components (namely, HTML Imports, Shadow DOM and Custom Elements) is not yet natively supported in all browses. We added webcomponentsjs-lite.js set of polyfills that enables using Web Components in browsers that lack native support.
 
-Importing Polymer elements::
+Importing Polymer Elements::
 We added imports of Polymer elements that we are going to use in our application to the head section of `index.html`.
 
-SystemJS app import change::
+SystemJS App Import Change::
 In some browsers, HTML Imports are loaded asynchronously. But we need them to be completely loaded before we import our Angular application. Hence we wrapped `System.import('app')...` call in the listener callback of the `WebComponentsReady` event, which is fired by the polyfill after all imports are loaded and elements have been registered.
 +
 [IMPORTANT]
-.Load order
+.Load Order
 ====
 The order of loading Polymer elements and the rest of the Angular application code does matter. It is required to have Polymer elements loaded and registered before importing the Angular application. `@vaadin/angular2-polymer` package strictly depends on that.
 ====
 
-
-Style changes::
+Style Changes::
 Polymer elements come with nice builtin styles in the way of Material Design. Angular 2 also provides style encapsulation mechanisms for our application components.
 +
 So the global styles are not needed anymore. Therefore we removed the `styles.css` external stylesheet and replaced it with `iron-flex-layout` and `paper-styles` style mixins imports and one embedded global style rule for body.
@@ -325,7 +324,7 @@ See https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling secti
 Delete `styles.css` file from your project directory since it is no longer in use.
 
 [NOTE]
-.Duplicated imports handling
+.Duplicated Imports Handling
 ====
 Duplicated fetch of the same file is prevented in HTML Imports by checking the file location.
 
@@ -341,11 +340,11 @@ As you see, we have two imports of `iron-flex-layout.html`. You might think that
 See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
 ====
 
-== Building the application layout with Paper Elements
+== Building the Application Layout with Paper Elements
 
 After the previous step we have some Polymer elements imported in `index.html` of our application. In this step we are going to use them to create an application layout with a toolbar in `AppComponent`.
 
-=== Updating SystemJS configuration
+=== Updating SystemJS Configuration
 
 For using Polymer elements in our Angular components we need to import `PolymerElement` directives from `@vaadin/angular2-polymer`. Thus we need to make the module loader (SystemJS, in our case) aware of how to load the `@vaadin/angular2-polymer` package.
 
@@ -425,7 +424,7 @@ Here is how your `systemjs.config.js` should look like after the change:
 })(this);
 ----
 
-=== AppComponent changes
+=== AppComponent Changes
 
 Open `app/app.component.ts` and replace the contents with the following code:
 
@@ -465,12 +464,12 @@ export class AppComponent { }
 Save changes and launch the development server to see the results in your browser. After loading, your application have this look:
 
 [[figure.app.layout]]
-.A screenshot of empty application layout
+.A Screenshot of Empty Application Layout
 image::img/app-layout.png[width="432",height="644"]
 
 Now your application has a layout made by using `app-header-layout`, `app-header` and `app-toolbar`.
 
-=== Elements used in this step
+=== Elements Used in This Step
 
 `app-header-layout`:: The application layout consisting of the `app-header` and the main contents. In our case, it adds a scrollable container for the application contents as well.
 
@@ -479,7 +478,7 @@ Now your application has a layout made by using `app-header-layout`, `app-header
 `app-toolbar`:: Provides a toolbar wrapper.
 
 [NOTE]
-.app-layout elements are design-agnostic
+.app-layout Elements are Design-Agnostic
 ====
 Polymer elements from `app-layout` set, including `app-toolbar` that we use, are design-agnostic. They do not enforce have Material Design look by default, though still support it. Therefore we need to adjust `app-toolbar` styles a bit.
 
@@ -489,24 +488,24 @@ Apart from the colors, it inherits the font family declared for the body. We hav
 ====
 
 [IMPORTANT]
-.PolymerElement directives
+.PolymerElement Directives
 ====
 In order to enable all features of Polymer elements used inside your Angular component templates, remember to import `PolymerElement` in the component file and add `PolymerElement('element-name')` line for each Polymer element you use to the `directives` array of your component metadata.
 ====
 
-== List heroes with Vaadin Grid
+== List Heroes with Vaadin Grid
 
 In the previous step we added the application layout with `app-layout` elements. Next we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
 
 [NOTE]
-.Some parts are explained in the Tour of Heroes
+.Some Parts are Explained in the Tour of Heroes
 ====
 This step partly follows the Angular 2 Tour of Heroes Tutorial. Therefore here we skip explaining the parts of the code that are similar in both this tutorial and the Tour of Heroes, like the `Hero` class and the `HeroService`.
 
 See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for the detailed explainations of these parts.
 ====
 
-=== Hero class
+=== Hero Class
 
 Let us start with creating the `Hero` class. Add `app/hero.ts` file with the following contents:
 
@@ -523,7 +522,7 @@ export class Hero {
 Unlike in Angular 2 Tour of Heroes, in our application we are about to store and expose birthday of each hero for the user. Here we add `birthday: string;` property to our `Hero` class.
 
 [NOTE]
-.Using strings to store dates
+.Using Strings to Store Dates
 ====
 Why are we using tye `string` type and not `Date` to store dates? There are two reasons:
 
@@ -532,7 +531,7 @@ Why are we using tye `string` type and not `Date` to store dates? There are two 
 . `Vaadin DatePicker`, as well as native HTML5 `<input type="date">`, gives the date value as an ISO-formatted `string`. To keep the simplicity, in our application we also store dates as strings, avoiding conversions.
 ====
 
-=== Mock heroes data
+=== Mock Heroes Data
 
 Add `app/mock-heroes.ts` file with some heroes data:
 
@@ -555,7 +554,7 @@ export var HEROES: Hero[] = [
 ];
 ----
 
-=== The hero service
+=== The Hero Service
 
 We also need a `HeroService` to be able to retrive the heroes list in our Angular application. Add `app/hero.service.ts` file:
 
@@ -575,7 +574,7 @@ export class HeroService {
 }
 ----
 
-=== Heroes list component
+=== Heroes List Component
 
 Add the heroes list component file `app/heroes.component.ts` with the following code:
 
@@ -630,12 +629,12 @@ Here in `HeroesComponent` we have the `<vaadin-grid>` element in the template. I
 Also in the template, the `items` property of `<vaadin-grid>` is bound to the `heroes` array property of `HeroesComponent`. At the same time, we import and use `HeroService` to get the list of heroes and assign the `heroes` property. Angular component data binding takes care of updating `items` property of `<vaadin-grid>` with the list of heroes for us.
 
 [NOTE]
-.PolymerElement directives
+.PolymerElement Directives
 ====
 Once again, we import `PolymerElement` in this file and add `PolymerElement('vaadin-grid')` to the `directives` of the component to enable all features for Vaadin Grid Polymer element in our `HeroesComponent`.
 ====
 
-=== Displaying heroes list
+=== Displaying Heroes List
 
 Finally in this step, change `app/app.component.ts` to provide `HeroService` for our application and display the heroes list component:
 
@@ -687,22 +686,22 @@ Here is what have changed in `app/app.component.ts`:
 Now it’s time to look at the browser window again to the heroes list in our application. Here is how it should look like:
 
 [[figure.heroes.list]]
-.A screenshot of the application with the list of heroes
+.A Screenshot of the Application with the List of Heroes
 image::img/heroes-list.png[width="432",height="644"]
 
-== Hero editor and routing
+== Hero Editor and Routing
 
 Previously we added the heroes list in our application. In this step we are going to add the editing feature. After that, the user should be able to navigate to the hero details by clicking a row in the heroes list, edit the details and get back to the list with the back button in the toolbar.
 
 [NOTE]
-.Some parts are explained in the Tour of Heroes
+.Some Parts are Explained in the Tour of Heroes
 ====
 This step partly follows the Angular 2 Tour of Heroes Tutorial. Therefore here we skip explaining the parts of the code that are similar in both this tutorial and the Tour of Heroes, like the routing requirements and configuration.
 
 See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for the detailed explainations of the similar parts.
 ====
 
-=== Add the hero get method to the service
+=== Add the Hero Get Method to the Service
 
 Let us add the `getHero(id: number)` method to the `HeroService`, that would be used to retrive a single hero in our application components. Open the `app/hero.service.ts` file and change its contents to the following code:
 
@@ -728,7 +727,7 @@ export class HeroService {
 }
 ----
 
-=== Add the hero editor component
+=== Add the Hero Editor Component
 
 Create the file `app/hero-detail.component.ts` and place these lines inside:
 
@@ -783,7 +782,7 @@ So, here we have just created `HeroDetailComponent`, the heroes editor for our a
 Since we use two-way binding, the `hero.name` and the `hero.birthday` subproperty values are automatically displayed in the corresponding elements, and when the user edits these values in the elements, the subproperties of `hero` property are updated automatically.
 
 [IMPORTANT]
-.Use ngIf when loading content
+.Use ngIf When Loading Content
 ====
 The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the `hero` is not loaded yet, so we can not use `hero.name` and `hero.birthday` subproperties. Using them at this moment would result in errors.
 
@@ -792,12 +791,12 @@ That is why we wrap `<paper-input>` and `<vaadin-date-picker>` elements with `<d
 
 Unlike with Vaadin Grid in the heroes list, we don’t want our editor contents to touch the edges of the browser window. It’s nice to have some spacing around them. For that reason we add `display: block;` and `padding: 16px;` rules in the styles section of our component metadata.
 
-=== Add routing
+=== Add Routing
 
 The Angular 2 Component Router uses `history.pushState` API for navigation. This requires us to declare the base `href` for the main document. Add this line to the `index.html` file in the project root just after the `<head>` opening tag:
 
 [source,html]
-.index.html <head> section
+.index.html <head> Section
 ----
   <base href="/">
 ----
@@ -905,7 +904,7 @@ Note that the first route has `useAsDefault: true;` option in order to open the 
 
 The second route path features `:id` parameter. It is received inside `HeroDetailComponent` and used there to retrive the hero object, as described above in this step.
 
-=== Navigation from list to detail
+=== Navigation from List to Detail
 
 The last feature to implement in this step is navigation from the heroes list to the hero detail by clicking a row. Open `app/heroes.component.ts` and change it to contain the following code:
 
@@ -972,29 +971,29 @@ export class HeroesComponent implements OnInit {
 
 Now when the user clicks a row inside the heroes list, `<vaadin-grid>` fires `selected-items-changed` event. We bound the event to the `onSelectedItemsChanged` method of the `HeroesComponent`. In listener method, we read the selected item index, get the `id` property of the corresponding `heroes` array item and call `goToHeroDetailById`, which uses `Router` to navigate to the hero detail of the selected hero.
 
-=== Try it out
+=== Try It Out
 
 All the changes for this step are done. Now launch your application again and try how the navigation works.
 
 After opening the application, click the first row in the heroes list. You should see the detail view like in the following screenshot:
 
 [[figure.hero.detail]]
-.A screenshot of hero detail view
+.A Screenshot of Hero Detail View
 image::img/hero-detail.png[width="432",height="644"]
 
 Click the back icon in the toolbar to navigate back to the heroes list. If you made any changes in the hero detail editor, they should be shown in the heroes list right away.
 
-=== Nice touches in the AppComponent
+=== Nice Touches in the AppComponent
 
 Here are the UX-related changes to AppComponent explained.
 
-==== Dynamic toolbar title
+==== Dynamic Toolbar Title
 
 We add the `title` property to the `AppComponent` and bind it to the text content of `<div title spacer></div>` inside the toolbar in the template.
 
 Instead of a static title, the title is now updated dynamically. We subscribe to the `Router` in `AppComponent` and use `RouteData` in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the `Router` event is dispatched so the `title` property is updated.
 
-==== The back icon in the toolbar
+==== The Back Icon in the Toolbar
 
 We add `<paper-icon-button>` to have a back icon inside the `<app-toolbar>` in the template. The icon has a click event binding, which calls `goBack()` method of `AppComponent`. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
 
@@ -1002,17 +1001,17 @@ When the heroes list is shown, the back icon is useless, so we need to hide it. 
 
 We also add a few positioning style rules for the `paper-icon-button`.
 
-==== Dynamic toolbar shadow
+==== Dynamic Toolbar Shadow
 
 To make the toolbar look better, we make the application toolbar to have a shadow that is shown only for the hero detail view, but not for the heroes list view. For this purpose we bind the `raised` class of the `<app-toolbar>` to `isInChildView` property and add a style rule which applies the shadow mixin from `paper-styles` to the `<app-toolbar>` when it has the `raised` class.
 
-== Wrap-up
+== Wrap Up
 
 All the tutorial steps are complete. Now you can use all powers of Polymer elements in your Angular 2 applications and know how to do it.
 
 TODO: Link the resulting application code repository in this section when it gets published.
 
-=== Next steps
+=== Next Steps
 
 There are several ways of improvement for our application. For example, you might want to add an explicit “Save” button to the hero detail editor and make the user able to intentionally submit or discard their changes. To do that, use the `ngForm` directive. See the https://angular.io/docs/ts/latest/guide/forms.html[Forms Chapter] in the Angular 2 Basics guide for the detailed instructions.
 
