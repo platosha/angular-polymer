@@ -674,7 +674,7 @@ See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for the detailed
 
 === Add the Hero Get Method to the Service
 
-Let us add the `getHero(id: number)` method to the [classname]#HeroService#, that would be used to retrive a single hero in our application components. Open the [filename]#app/hero.service.ts# file and change its contents to the following code:
+Let us add the [methodname]#getHero(id: number)# method to the [classname]#HeroService#, that would be used to retrive a single hero in our application components. Open the [filename]#app/hero.service.ts# file and change its contents to the following code:
 
 [source,typescript]
 .app/hero.service.ts
@@ -748,7 +748,7 @@ export class HeroDetailComponent implements OnInit {
 
 So, here we have just created [classname]#HeroDetailComponent#, the heroes editor for our application. It uses [elementname]#paper-input# bound to the [propertyname]#hero.name# and Vaadin DatePicker bound to the [propertyname]#hero.birthday# property this time with two-way data binding (i.e. with `[(value)]` syntax).
 
-[classname]#HeroDetailComponent# gets the hero [propertyname]#id# from [classname]#RouteParams# and calls `getHero(id: number)` method from [classname]#HeroService# with the hero id argument to retrive the hero object. After the retrieval, the hero object is assigned to the [propertyname]#hero# property of [classname]#HeroDetailComponent#.
+[classname]#HeroDetailComponent# gets the hero [propertyname]#id# from [classname]#RouteParams# and calls [methodname]#getHero(id: number)# method from [classname]#HeroService# with the hero id argument to retrive the hero object. After the retrieval, the hero object is assigned to the [propertyname]#hero# property of [classname]#HeroDetailComponent#.
 
 Since we use two-way binding, the [propertyname]#hero.name# and the [propertyname]#hero.birthday# subproperty values are automatically displayed in the corresponding elements, and when the user edits these values in the elements, the subproperties of [propertyname]#hero# property are updated automatically.
 
@@ -941,7 +941,7 @@ export class HeroesComponent implements OnInit {
 }
 ----
 
-Now when the user clicks a row inside the heroes list, [elementname]#vaadin-grid# fires [eventname]#selected-items-changed# event. We bound the event to the `onSelectedItemsChanged` method of the [classname]#HeroesComponent#. In listener method, we read the selected item index, get the [propertyname]#id# property of the corresponding [propertyname]#heroes# array item and call `goToHeroDetailById`, which uses [classname]#Router# to navigate to the hero detail of the selected hero.
+Now when the user clicks a row inside the heroes list, [elementname]#vaadin-grid# fires [eventname]#selected-items-changed# event. We bound the event to the [methodname]#onSelectedItemsChanged(event: any)# method of the [classname]#HeroesComponent#. In listener method, we read the selected item index, get the [propertyname]#id# property of the corresponding [propertyname]#heroes# array item and call [methodname]#goToHeroDetailById(id: number)#, which uses [classname]#Router# to navigate to the hero detail of the selected hero.
 
 === Try It Out
 
@@ -967,7 +967,7 @@ Instead of a static title, the title is now updated dynamically. We subscribe to
 
 ==== The Back Icon in the Toolbar
 
-We add [elementname]#paper-icon-button# to have a back icon inside the [elementname]#app-toolbar# in the template. The icon has a click event binding, which calls `goBack()` method of [classname]#AppComponent#. In the method, we invoke `navigate` method of the router to navigate back to the heroes list from the hero detail.
+We add [elementname]#paper-icon-button# to have a back icon inside the [elementname]#app-toolbar# in the template. The icon has a click event binding, which calls [methodname]#goBack()# method of [classname]#AppComponent#. In the method, we invoke [methodname]#navigate(linkParams: any[])# method of the [classname]#Router# to navigate back to the heroes list from the hero detail.
 
 When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added [propertyname]#isInChildView# property to [classname]#AppComponent#, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the [elementname]#paper-icon-button#.
 
