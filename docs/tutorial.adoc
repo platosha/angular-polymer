@@ -60,6 +60,20 @@ rm -rf .git
 
 Alternatively, instead of using git to clone the QuickStart repository, you can download and extract the https://github.com/angular/quickstart/archive/master.zip[QuickStart ZIP package].
 
+=== Remove the AppComponent tests
+
+The QuickStart respository contains tests for `AppComponent`. Unfortunately, some changes to `AppComponent` in the following steps are going to break the compilation for these tests.
+
+Please remove the `app/app.component.spec.ts` file to prevent its compilation errors introduced later in this tutorial.
+
+[NOTE]
+.Testing in Angular 2
+====
+Testing is out of the scope of this tutorial.
+
+See the https://angular.io/docs/ts/latest/guide/testing.html[Testing chapter] in the Angular 2 Developer Guide for more information on the topic.
+====
+
 === Installing npm packages and starting the development server
 
 Install npm dependencies:
