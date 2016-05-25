@@ -1,5 +1,7 @@
 [[vaadin-angular2-polymer.tutorial]]
 = Angular 2 with Polymer Elements Tutorial
+:linkattrs:
+:experimental:
 
 [[vaadin-angular2-polymer.tutorial.introduction]]
 == Introduction
@@ -93,7 +95,7 @@ At this point you should be able to compile TypeScript source code and launch th
 [prompt]#$# [command]#npm# start
 ----
 
-Press `Ctrl+C` to stop the development server.
+Press kbd:[Ctrl+C] to stop the development server.
 
 [TIP]
 ====
