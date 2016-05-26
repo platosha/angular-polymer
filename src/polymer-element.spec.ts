@@ -230,7 +230,7 @@ describe('PolymerElement', () => {
     it('should support ngif', () => {
       testComponent.barVisible = true;
       fixture.detectChanges();
-      // expect(containsChild('selected', 'bar')).toEqual(true);
+      expect(containsChild('selected', 'bar')).toEqual(true);
       expect(containsChild('all', 'bar2')).toEqual(true);
     });
 
