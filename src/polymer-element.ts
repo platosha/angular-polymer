@@ -272,15 +272,14 @@ export function PolymerElement(name: string): any[] {
     }
   });
 
-  const chartsConfigurationDirective = Directive({
+  const reloadConfigurationDirective = Directive({
     selector: name
   }).Class({
     constructor: [ElementRef, NgZone, function(el: ElementRef, zone: NgZone) {
       if (!Polymer.Settings.useShadow) {
         el.nativeElement.async(() => {
-          // Reload Chart if needed.
-          if (el.nativeElement.isInitialized && el.nativeElement.isInitialized()) {
-            // Reload outside of Angular to prevent DataSeries.ngDoCheck being called on every mouse event.
+          if (el.nativeElement.isInitialized()) {
+            // Reload outside of Angular to prevent unnecessary ngDoCheck calls
             zone.runOutsideAngular(() => {
               el.nativeElement.reloadConfiguration();
             });
@@ -290,11 +289,17 @@ export function PolymerElement(name: string): any[] {
     }],
   });
 
-  var directives = [changeEventsAdapterDirective, notifyForDiffersDirective, chartsConfigurationDirective];
+  var directives = [changeEventsAdapterDirective, notifyForDiffersDirective];
 
   if (isFormElement) {
     directives.push(formElementDirective);
     directives.push(validationDirective);
+  }
+
+  // If the element has isInitialized and reloadConfiguration methods (e.g., Charts)
+  if (typeof proto.isInitialized === 'function' &&
+      typeof proto.reloadConfiguration === 'function') {
+    directives.push(reloadConfigurationDirective);
   }
 
   return directives;
