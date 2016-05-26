@@ -1,0 +1,57 @@
+
+[[vaadin-angular2-polymer.testing]]
+= Testing Angular 2 with Polymer Apps
+
+[[vaadin-angular2-polymer.testing.introduction]]
+== Introduction
+
+Apart from other components, Angular 2 comes with a https://angular.io/docs/ts/latest/testing/[testing library] based on the https://karma-runner.github.io[karma.js] test runner.
+
+Karma needs to be configured appropriately in order to import all needed polymer elements, before running any test.
+
+[[vaadin-angular2-polymer.testing.preparation]]
+== Preparation
+
+Since we want to re-use the application import configuration in the tests, we create a separated [filename]#elements.html# file with all the polymer dependencies.
+
+[source,html]
+----
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
+...
+----
+
+Then we only have to import this file, and the web components polyfill, in our [filename]#index.html# file.
+
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+  <head>
+    ...
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="elements.html">
+    ...
+  </head>
+  <body>
+    ...
+  </body>
+</html>
+----
+
+[[vaadin-angular2-polymer.testing.configuration]]
+== Test Configuration
+
+Finally we only have to indicate to Karma to import both the polyfill and the elements bundle. This is done in the [propertyname]#files# section of the [filename]#karma.conf.js# file as follows:
+
+[source,javascript]
+----
+  files: [
+      ...
+      'dist/bower_components/webcomponentsjs/webcomponents-lite.js',
+      'dist/elements.html'
+    ]
+----
+
+[NOTE]
+You can remove the polyfill line if you are only testing in Chrome browsers.
