@@ -3,6 +3,7 @@
 :linkattrs:
 :experimental:
 :sectnums:
+:toc:
 
 include::tutorial/introduction.adoc[]
 
