@@ -2,6 +2,7 @@
 = Angular 2 with Polymer Elements Tutorial
 :linkattrs:
 :experimental:
+:sectnums:
 
 include::tutorial/introduction.adoc[]
 
