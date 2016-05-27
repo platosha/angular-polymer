@@ -61,7 +61,7 @@ In your project root, edit the [filename]#index.html# file and replace the conte
 </html>
 ----
 
-Here is the list of important changes explained:
+We applied some important changes in the [filename]#index.html# file. They are explained in the following list:
 
 The Doctype Declaration::
 We added the `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use Standards mode, as required by the internals of [vaadinelement]#vaadin-grid#.
