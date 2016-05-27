@@ -18,8 +18,8 @@ import { __platform_browser_private__ } from '@angular/platform-browser';
 const Polymer:any = (<any>window).Polymer;
 
 class PolymerDomAdapter extends __platform_browser_private__.BrowserDomAdapter {
-  createStyleElement(css, doc = document) {
-    var style = doc.createElement.call(doc, 'style', 'custom-style');
+  createStyleElement(css:any, doc:Document = document) {
+    var style:any = doc.createElement.call(doc, 'style', 'custom-style');
     this.appendChild(style, this.createTextNode(css));
     return style;
   }
@@ -64,6 +64,7 @@ if (Polymer.Settings.useShadow) {
 } else {
   __platform_browser_private__.setDOM(new PolymerShadyDomAdapter());
 }
+
 
 export function PolymerElement(name: string): any[] {
   const propertiesWithNotify: Array<any> = [];
@@ -197,7 +198,7 @@ export function PolymerElement(name: string): any[] {
     }],
 
     ngOnInit() {
-      var elm = this._element;
+      var elm = (<any>this)._element;
       // In case the element has a default value and the directive doesn't have any value set for a property,
       // we need to make sure the element value is set to the directive.
       arrayAndObjectProperties.filter(property => elm[property] && !this[property])
@@ -212,12 +213,12 @@ export function PolymerElement(name: string): any[] {
         var target:any = event.target;
         if (this[property] !== target[property]) {
           this[property] = target[property];
-          this._differs[property] = this._createDiffer(this[property]);
+          (<any>this)._differs[property] = this._createDiffer(this[property]);
         }
     },
 
     _createDiffer(value: string) {
-      var differ = Array.isArray(value) ? this._iterableDiffers.find(value).create(null) : this._keyValueDiffers.find(value || {}).create(null);
+      var differ = Array.isArray(value) ? (<any>this)._iterableDiffers.find(value).create(null) : (<any>this)._keyValueDiffers.find(value || {}).create(null);
 
       // initial diff with the current value to make sure the differ is synced
       // and doesn't report any outdated changes on the next ngDoCheck call.
