@@ -13,12 +13,63 @@ import {
 } from '@angular/core';
 import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
 
+import { __platform_browser_private__ } from '@angular/platform-browser';
+
+const Polymer:any = (<any>window).Polymer;
+
+class PolymerDomAdapter extends __platform_browser_private__.BrowserDomAdapter {
+  createStyleElement(css, doc = document) {
+    var style = doc.createElement.call(doc, 'style', 'custom-style');
+    this.appendChild(style, this.createTextNode(css));
+    return style;
+  }
+}
+
+class PolymerShadyDomAdapter extends PolymerDomAdapter {
+  parentElement(el) { return Polymer.dom(el).parentNode; }
+
+  appendChild(el, node) { Polymer.dom(el).appendChild(node); Polymer.dom.flush(); }
+  insertBefore(el, node) { Polymer.dom(this.parentElement(el)).insertBefore(node, el); Polymer.dom.flush(); }
+  insertAllBefore(el, nodes) { var elParentDom = Polymer.dom(this.parentElement(el)); nodes.forEach(n => elParentDom.insertBefore(n, el)); Polymer.dom.flush(); }
+  insertAfter(el, node) { this.insertBefore(this.nextSibling(el), node); }
+  removeChild(el, node) { Polymer.dom(el).removeChild(node); Polymer.dom.flush(); }
+  childNodes(el) { return Polymer.dom(el).childNodes; }
+  remove(node) { if (this.parentElement(node)) { this.removeChild(this.parentElement(node), node); } return node; }
+  clearNodes(el) { while(Polymer.dom(el).firstChild) { Polymer.dom(el).removeChild(Polymer.dom(el).firstChild); } Polymer.dom.flush(); }
+
+  firstChild(el) { return Polymer.dom(el).firstChild; }
+  lastChild(el) { return Polymer.dom(el).lastChild; }
+  previousSibling(el) { return Polymer.dom(el).previousSibling; }
+  nextSibling(el) { return Polymer.dom(el).nextSibling; }
+
+  getInnerHTML(el) { return Polymer.dom(el).innerHTML; }
+  setInnerHTML(el, value) { Polymer.dom(el).innerHTML = value; }
+
+  querySelector(el, selector) { return Polymer.dom(el).querySelector(selector); }
+  querySelectorAll(el, selector) { return Polymer.dom(el).querySelectorAll(selector); }
+
+  getDistributedNodes(el) { return Polymer.dom(el).getDistributedNodes(); }
+
+  classList(el) { return Polymer.dom(el).classList; }
+  addClass(el, className) { this.classList(el).add(className); }
+  removeClass(el, className) { this.classList(el).remove(className); }
+  hasClass(el, className) { return this.classList(el).contains(className); }
+
+  setAttribute(el, name, value) { Polymer.dom(el).setAttribute(name, value); }
+  removeAttribute(el, name) { Polymer.dom(el).removeAttribute(name); }
+}
+
+if (Polymer.Settings.useShadow) {
+  __platform_browser_private__.setDOM(new PolymerDomAdapter());
+} else {
+  __platform_browser_private__.setDOM(new PolymerShadyDomAdapter());
+}
+
 export function PolymerElement(name: string): any[] {
   const propertiesWithNotify: Array<any> = [];
   const arrayAndObjectProperties: Array<any> = [];
 
   const proto:any = Object.getPrototypeOf(document.createElement(name));
-  const Polymer:any = (<any>window).Polymer;
   const isFormElement:boolean = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
   proto.behaviors.forEach((behavior:any) => configureProperties(behavior.properties));
   configureProperties(proto.properties);
@@ -221,74 +272,34 @@ export function PolymerElement(name: string): any[] {
     }
   });
 
-  const lightDomObserverDirective = Directive({
+  const reloadConfigurationDirective = Directive({
     selector: name
   }).Class({
     constructor: [ElementRef, NgZone, function(el: ElementRef, zone: NgZone) {
-      this._element = el.nativeElement;
-      this.zone = zone;
-
       if (!Polymer.Settings.useShadow) {
-        el.nativeElement.async(this._observeMutations.bind(this));
+        el.nativeElement.async(() => {
+          if (el.nativeElement.isInitialized()) {
+            // Reload outside of Angular to prevent unnecessary ngDoCheck calls
+            zone.runOutsideAngular(() => {
+              el.nativeElement.reloadConfiguration();
+            });
+          }
+        });
       }
     }],
-
-    _observeMutations: function() {
-      const lightDom = Polymer.dom(this._element);
-      const observerConfig = { childList: true, subtree: true };
-
-      // Move all the misplaced nodes to light dom
-      [].slice.call(this._element.childNodes, 0).forEach((child: Element) => {
-        if (this._isLightDomChild(child)) {
-          lightDom.appendChild(child);
-        }
-      });
-
-      // TODO: split this into a separate directive
-      // Reload Chart if needed.
-      if (this._element.isInitialized && this._element.isInitialized()) {
-        // Reload outside of Angular to prevent DataSeries.ngDoCheck being called on every mouse event.
-        this.zone.runOutsideAngular(() => {
-          this._element.reloadConfiguration();
-        });
-      }
-
-      // Add a mutation observer for further additions / removals
-      const observer = new MutationObserver((mutations) => {
-        observer.disconnect();
-
-        mutations.forEach((mutation) => {
-          [].forEach.call(mutation.addedNodes, (added: Element) => {
-            if (this._isLightDomChild(added) && added.parentElement === this._element) {
-              lightDom.appendChild(added);
-            }
-          });
-
-          [].forEach.call(mutation.removedNodes, (removed: Element) => {
-            if (lightDom.children.indexOf(removed) > -1) {
-              lightDom.removeChild(removed);
-            }
-          });
-        });
-
-        setTimeout(() => {
-          observer.observe(this._element, observerConfig);
-        }, 0);
-      });
-
-      observer.observe(this._element, observerConfig);
-    },
-
-    _isLightDomChild: function(node: Element) {
-      return !node.tagName || !node.classList.contains(name);
-    }
   });
 
-  var directives = [changeEventsAdapterDirective, notifyForDiffersDirective, lightDomObserverDirective];
+  var directives = [changeEventsAdapterDirective, notifyForDiffersDirective];
 
   if (isFormElement) {
     directives.push(formElementDirective);
     directives.push(validationDirective);
+  }
+
+  // If the element has isInitialized and reloadConfiguration methods (e.g., Charts)
+  if (typeof proto.isInitialized === 'function' &&
+      typeof proto.reloadConfiguration === 'function') {
+    directives.push(reloadConfigurationDirective);
   }
 
   return directives;
