@@ -1,0 +1,112 @@
+[[vaadin-angular2-polymer.tutorial.polymer]]
+== Adding Polymer Elements to Our Application
+
+In the previous step, we downloaded elements to bower_components directory. Now we are going to import these elements in our application.
+
+In your project root, edit the [filename]#index.html# file and replace the contents with these lines:
+
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Angular 2 with Polymer Elements QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Polyfills -->
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+
+    <!-- JavaScript libraries -->
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+
+    <!-- Styles -->
+    <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+    <link rel="import" href="bower_components/paper-styles/color.html">
+    <link rel="import" href="bower_components/paper-styles/default-theme.html">
+    <link rel="import" href="bower_components/paper-styles/typography.html">
+    <link rel="import" href="bower_components/paper-styles/shadow.html">
+    <style is="custom-style">
+      body {
+        @apply(--layout-fullbleed);
+        @apply(--paper-font-body1);
+        background: var(--primary-background-color);
+        color: var(--primary-text-color);
+      }
+    </style>
+
+    <!-- Polymer Elements -->
+    <link rel="import" href="bower_components/iron-icons/iron-icons.html">
+    <link rel="import" href="bower_components/app-layout/app-layout.html">
+    <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/vaadin-grid/vaadin-grid.html">
+    <link rel="import" href="bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
+    <!-- SystemJS Configuration -->
+    <script src="systemjs.config.js"></script>
+    <script>
+      document.addEventListener('WebComponentsReady', function() {
+        System.import('app').catch(function(err){ console.error(err); });
+      });
+    </script>
+  </head>
+
+  <body>
+    <my-app>Loading...</my-app>
+  </body>
+</html>
+----
+
+Here’s the list of important changes explained:
+
+The Doctype Declaration::
+We added the `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use Standards mode, as required by the internals of [vaadinelement]#vaadin-grid#.
+
+The Web Components Polyfill::
+The technology stack behind Web Components (namely, HTML Imports, Shadow DOM and Custom Elements) is not yet natively supported in all browses. Therefore we added the [filename]#webcomponents-lite.min.js# polyfill.
+
+Importing Polymer Elements::
+We added imports of Polymer elements that we are going to use in our application to the head section of the [filename]#index.html# file.
+
+SystemJS App Import Change::
+In some browsers, HTML Imports are loaded asynchronously. But we need them to be completely loaded before we import our Angular application. Hence we wrapped `System.import('app')...` call in the listener callback of the [eventname]#WebComponentsReady# event, which is fired by the polyfill after all imports are loaded and elements have been registered.
++
+[IMPORTANT]
+.Load Order
+====
+The order of loading Polymer elements and the rest of the Angular application code does matter. It is required to have Polymer elements loaded and registered before importing the Angular application. `@vaadin/angular2-polymer` package strictly depends on that.
+====
+
+Style Changes::
+Polymer elements come with nice builtin styles in the way of Material Design. Angular 2 also provides style encapsulation mechanisms for our application components.
++
+So the global styles are not needed anymore. Therefore we removed the [filename]#styles.css# external stylesheet and replaced it with [elementname]#iron-flex-layout# and [elementname]#paper-styles# style mixins imports and one embedded global style rule for body.
++
+The body style is the only global style that remains in our application. The body styles are needed to occupy the full height of the browser viewport, and also to specify default font styles, line height, background, and text colors.
++
+[TIP]
+====
+Instead of figuring out the exact rules and values for the body style, here we import and reuse CSS mixins and CSS custom properties declared in [elementname]#iron-flex-layout# and [elementname]#paper-styles#.
+====
++
+[IMPORTANT]
+====
+When using custom CSS mixins and custom CSS properties in your main document styles, wrap your styles inside a `<style is="custom-style"></style>` tag.
+
+See the https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling section of the Polymer Developer Guide] for more information on styling Polymer elements and the document, custom CSS mixins and properties usage and limitations.
+====
+
+Delete the [filename]#styles.css# file from your project directory since it is no longer in use.
+
+[NOTE]
+.Duplicated Imports Handling
+====
+Our HTML imports also import their dependencies. As In the resulting dependency tree there might be multiple imports of the the same file. In this case, the duplicated fetch of the same file is prevented in browsers by checking the file location.
+
+See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
+====
+
