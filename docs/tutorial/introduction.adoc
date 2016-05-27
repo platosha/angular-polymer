@@ -5,26 +5,26 @@ TODO: Link the resulting application code repository in this section when it get
 
 This tutorial explains how to use Polymer elements in Angular 2 applications with the help of the [literal]`https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]` directives.
 
-For this purpose we are going to create a staff management application similar to the https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] example. But unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we’ll use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application will have a nice-looking mobile-first Material designed UI.
+For this purpose, we will to create a staff management application similar to the https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] example. But unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we’ll use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application will have a nice-looking mobile-first Material designed UI.
 
 === The Start Point
 
-This tutorial is based on the https://angular.io/docs/ts/latest/quickstart.html[Angular 2 5 min QuickStart] and the https://angular.io/docs/ts/latest/tutorial/[Angular 2 Tour of Heroes]. We are going to start from the empty application source from the https://angular.io/docs/ts/latest/quickstart.html[QuickStart repository].
+This tutorial is based on the https://angular.io/docs/ts/latest/quickstart.html[5 min QuickStart] for Angular 2 and the https://angular.io/docs/ts/latest/tutorial/[Angular 2 Tour of Heroes]. We start from the QuickStart application source.
 
-If you are not yet familiar with Angular 2, please walk through the Angular 2 QuickStart and the Tour of Heroes first. In this tutorial we are going to skip the explanations that are already given in Angular 2 tutorials.
+If you are not yet familiar with Angular 2, please first walk through the Angular 2 QuickStart and the Tour of Heroes. In this tutorial, we are going to skip the explanations that are already given in Angular 2 tutorials.
 
-=== The End Result
+=== The Goal
 
-In our heroes management application there will be two UI screens. This is the first screen with the list of all heroes made with Vaadin Grid of https://vaadin.com/elements[Vaadin Elements]:
+In our heroes management application, there will be two UI screens. The first screen, as illustrated in <<figure.vaadin-angular2-polymer.tutorial.result-heroes-list>>, uses https://vaadin.com/elements/-/element/vaadin-grid[Vaadin Grid] to show a list of all the heroes.
 
 [[figure.vaadin-angular2-polymer.tutorial.result-heroes-list]]
-.A Screenshot of the List of Heroes
+.The first screen with the list of heroes
 image::img/heroes-list-default.png[width="432",height="644"]
 
-By clicking on a grid row, the user can open the the hero detail editor screen. It is made using Paper Input and Vaadin DatePicker:
+By clicking on a grid row, the user can open the hero detail editor screen. It is made using Paper Input and Vaadin DatePicker:
 
 [[figure.vaadin-angular2-polymer.tutorial.result-hero-detail]]
-.A Screenshot of Hero Detail View
+.The second screen with the hero detail view
 image::img/hero-detail.png[width="432",height="644"]
 
 Both screens have a context-sensitive toolbar at the top, containing the title and the optional back icon button.

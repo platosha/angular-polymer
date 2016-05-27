@@ -1,9 +1,9 @@
 [[vaadin-angular2-polymer.tutorial.polymer]]
 == Adding Polymer Elements to Our Application
 
-In the previous step, we downloaded elements to bower_components directory. Now we are going to import these elements in our application.
+In the previous step, we downloaded elements to the [filename]#bower_components# directory. Now we are going to import these elements in our application.
 
-In your project root, edit the [filename]#index.html# file and replace the contents with these lines:
+In your project root, edit the [filename]#index.html# file and replace the contents with the following lines:
 
 [source,html]
 ----
@@ -61,7 +61,7 @@ In your project root, edit the [filename]#index.html# file and replace the conte
 </html>
 ----
 
-Here’s the list of important changes explained:
+Here is the list of important changes explained:
 
 The Doctype Declaration::
 We added the `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use Standards mode, as required by the internals of [vaadinelement]#vaadin-grid#.

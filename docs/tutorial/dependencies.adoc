@@ -52,14 +52,14 @@ Create [filename]#bower.json# file in your project root with the following conte
 }
 ----
 
-This file declares all Bower dependencies for our application. Now install them with this command:
+The following file declares all Bower dependencies for our application. Now install them with this command:
 
 [subs="normal"]
 ----
 [prompt]#$# [command]#bower# install
 ----
 
-After that, in your project root you should have the [filename]#bower_components# directory with all elements declared in the [filename]#bower.json#, together with the elements’ requirements. List the contents of the [filename]#bower_components# directory to verify that, it should contain these subdirectories:
+After that, you should have the [filename]#bower_components# directory in your project root, with all elements declared in the [filename]#bower.json# file, and their requirements. List the contents of the [filename]#bower_components# directory to verify that it contains the following subdirectories:
 
 .Contents of the bower_components Directory
 ----
@@ -101,9 +101,9 @@ webcomponentsjs
 ----
 
 [TIP]
-.Add bower_components to .gitignore
+.Ignore Bower Components in the Source Control
 ====
-It is ususally a good practice to exclude external dependencies from your source control. Angular 2 QuickStart source code already contains a [filename]#.gitignore# file, which excludes [filename]#node_modules# directory with npm dependencies from git repository of your application.
+It is usually a good practice to exclude external dependencies from your source control. The Angular 2 QuickStart project already contains a [filename]#.gitignore# file that excludes the [filename]#node_modules# directory with npm dependencies from the Git repository of your application.
 
 Please add the following line to the [filename]#.gitignore# file to also prevent Bower dependencies from being tracked by your source control:
 
@@ -113,9 +113,9 @@ bower_components
 ----
 ====
 
-=== Npm Dependency
+=== The Npm Dependency
 
-Alongside with Bower dependencies, we also need to add one npm dependency to the project. `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run this command to install the package and save the dependency in [filename]#package.json# at the same time:
+Alongside with Bower dependencies, we also need to add one npm dependency to the project. The `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run the following command to install the package and save the dependency in [filename]#package.json# at the same time:
 
 [subs="normal"]
 ----
