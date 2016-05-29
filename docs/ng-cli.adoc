@@ -7,7 +7,7 @@
 
 https://github.com/angular/angular-cli[Angular-CLI] is a command line tool for Angular 2. It is not only an scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
 
-In this document we will describe all the modifications you have to make to your Angular-CLI project to use polymer elements.
+In this document we will describe all the modifications you have to make to your Angular-CLI project to use Polymer elements.
 
 
 [[vaadin-angular2-polymer.ng2cli.preparation]]
@@ -21,7 +21,7 @@ Install the Angular-CLI in your system, and create a new Angular 2 project.
 [prompt]#$# [command]#ng# new [replaceable]#my-project#
 ----
 
-Check that everything works, compiling, testing and running your project running the following commands:
+Check that everything works by compiling, testing, and running your project:
 
 [subs="normal"]
 ----
@@ -54,7 +54,7 @@ By default, Bower installs dependencies in the [filename]#bower_components# fold
 
 Now, you can install all the polymer elements that you need in your application.
 
-For instance, to install all the elements in the https://elements.polymer-project.org/browse?package=paper-elements[Polymer Paper] collection, and the [element-name]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaadin-combo-box]# element, run the following:
+For instance, to install all the elements in the https://elements.polymer-project.org/browse?package=paper-elements[Polymer Paper] collection, and the [elementname]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaadin-combo-box]# element, run the following:
 
 [subs="normal"]
 ----
@@ -95,16 +95,16 @@ And finally, we modify our [filename]#src/index.html# file to load the web compo
 
 Now you can run `ng serve`, open the application in your browser, and everything should work with no errors in the console.
 
-[NOTE]
-The [filename]#webcomponents.js# polyfill is not necessary for browsers that fully implement the Web Components Spec (Only Chrome does so far).
+[TIP]
+The [filename]#webcomponents.js# polyfill is not necessary for browsers that fully implement the Web Components Spec like Chrome.
 
 [NOTE]
-Although we can add polymer dependencies to the [filename]#index.html# file, we do prefer to maintain the auxiliary [filename]#elements.html#, so as we can reuse in tests as is described below.
+Although we can add polymer dependencies to the [filename]#index.html# file, we do prefer to maintain the auxiliary [filename]#elements.html# file, so as we can reuse them in tests as is described below.
 
 [[vaadin-angular2-polymer.ng2cli.directive]]
 == Adding The Polymer Elements Directive
 
-For using Polymer elements in Angular we need to import the [classname]#PolymerElement# directive from https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]. Thus we need to install the dependency by typing:
+For using Polymer elements in the Angular 2 application, we need to import the [classname]#PolymerElement# directive from https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]. Thus we need to install the dependency by typing:
 
 [subs="normal"]
 ----
@@ -173,7 +173,7 @@ import { PolymerElement } from '@vaadin/angular2-polymer';
   directives: [
     PolymerElement('paper-toolbar'),
     PolymerElement('vaadin-combo-box'),
-    PolymerElement('paper-input'),
+    PolymerElement('paper-input')
   ]
 })
 export class MyProjectAppComponent {
@@ -189,12 +189,15 @@ Finally, you can use Polymer custom CSS properties and custom CSS mixins either:
 [source,html]
 .src/index.html
 ----
-<style is="custom-style">
-  body {
-    @apply(--layout-fullbleed);
-    @apply(--paper-font-body1);
-  }
-</style>
+<head>
+  ...
+  <style is="custom-style">
+    body {
+      @apply(--layout-fullbleed);
+      @apply(--paper-font-body1);
+    }
+  </style>
+</head>
 ----
 
 [source,css]
@@ -206,13 +209,12 @@ paper-toolbar {
 }
 ----
 
-
 [[vaadin-angular2-polymer.ng2cli.testing]]
 == Testing Polymer Elements
 
-Angular 2 comes with a https://angular.io/docs/ts/latest/testing/[testing library] based on the https://karma-runner.github.io[karma.js] test runner.
+Angular-CLI projects come with https://karma-runner.github.io[Karma] tests.
 
-Karma needs to be configured appropriately to import all needed polymer elements, before running any test.
+Karma needs to be configured appropriately to import all needed Polymer elements, before running any test.
 
 This is done in the [propertyname]#files# section of the [filename]#config/karma.conf.js# file as follows:
 
