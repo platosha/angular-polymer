@@ -5,7 +5,7 @@
 [[vaadin-angular2-polymer.ng2cli.introduction]]
 == Introduction
 
-https://github.com/angular/angular-cli[Angular-CLI] is a command line tool for Angular 2. It is not only an scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
+https://github.com/angular/angular-cli[Angular-CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
 
 In this document we will describe all the modifications you have to make to your Angular-CLI project to use Polymer elements.
 
@@ -52,7 +52,7 @@ By default, Bower installs dependencies in the [filename]#bower_components# fold
 }
 ----
 
-Now, you can install all the polymer elements that you need in your application.
+Now, you can install all the Polymer elements that you need in your application.
 
 For instance, to install all the elements in the https://elements.polymer-project.org/browse?package=paper-elements[Polymer Paper] collection, and the [elementname]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaadin-combo-box]# element, run the following:
 
@@ -68,21 +68,22 @@ Next, we will create the [filename]#src/elements.html# file, where we put all th
 .src/elements.html
 ----
 <link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/paper-styles/paper-styles.html">
-<link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="bower_components/paper-input/paper-input.html">
 ----
 
-And finally, we modify our [filename]#src/index.html# file to load the web components polyfill and the new created file, and to wait for the [eventname]#WebComponentsReady# event before bootstrapping the application.
+And finally, we modify our [filename]#src/index.html# file to load the web components polyfill and the new created file, and to wait for the [eventname]#WebComponentsReady# event before bootstrapping the application. Replace your [elementname]#body# with the following content:
 
 [source,html]
 .src/index.html
 ----
 <body>
-  ...
+  <my-project-app>Loading...</my-project-app>
+  {{#each scripts.polyfills}}<script src="{{.}}"></script>{{/each}}
+
   <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="elements.html">
+
   <script>
     document.addEventListener('WebComponentsReady', function() {
       System.import('system-config.js').then(function () {
@@ -125,7 +126,7 @@ const packages: any = {
 ...
 ----
 
-And make `ng` builder include the directive package by modifying the [propertyname]#vendorNpmFiles# property in the [filename]#angular-cli-build.js# file.
+And make the `ng` builder include the directive package by modifying the [propertyname]#vendorNpmFiles# property in the [filename]#angular-cli-build.js# file.
 
 [source,javascript]
 .angular-cli-build.js
@@ -146,15 +147,9 @@ For example, modify the [filename]#src/app#my-project.component.html# to have th
 [source,html]
 .src/app/my-project.component.html
 ----
-<div class="fit">
-  <paper-toolbar>
-    <div>{{title}}</div>
-  </paper-toolbar>
-  <div class="flex">
-    <vaadin-combo-box [label]="myLabel" [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
-    <paper-input [(value)]="myValue"></paper-input>
-  </div>
-</div>
+<h3>{{title}}</h3>
+<vaadin-combo-box [label]="myLabel" [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
+<paper-input [(value)]="myValue"></paper-input>
 ----
 
 And set the code in the [filename]#src/app/my-project.component.ts# file to use the new elements:
@@ -171,7 +166,6 @@ import { PolymerElement } from '@vaadin/angular2-polymer';
   templateUrl: 'my-project.component.html',
   styleUrls: ['my-project.component.css'],
   directives: [
-    PolymerElement('paper-toolbar'),
     PolymerElement('vaadin-combo-box'),
     PolymerElement('paper-input')
   ]
@@ -193,8 +187,8 @@ Finally, you can use Polymer custom CSS properties and custom CSS mixins either:
   ...
   <style is="custom-style">
     body {
-      @apply(--layout-fullbleed);
       @apply(--paper-font-body1);
+      font-family: 'Roboto', 'Noto', sans-serif;
     }
   </style>
 </head>
@@ -203,9 +197,10 @@ Finally, you can use Polymer custom CSS properties and custom CSS mixins either:
 [source,css]
 .src/app/my-project.component.css
 ----
-paper-toolbar {
-  background: var(--paper-teal-500);
-  color: var(--paper-yellow-500);
+paper-input,
+vaadin-combo-box {
+  background: var(--paper-grey-200);
+  padding: 8px;
 }
 ----
 
