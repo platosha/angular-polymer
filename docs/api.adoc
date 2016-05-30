@@ -1,0 +1,65 @@
+[[vaadin-angular2-polymer.api]]
+= Angular2-Polymer API
+
+Native Angular 2 directive for Polymer.
+
+[[vaadin-angular2-polymer.api.introduction]]
+== Introduction
+
+This module consists on one generic Angular 2 directive named [classname]#PolymerElement# which is able to handle any Polymer element for easy integrating on Angular apps.
+
+== Features
+
+The [classname]#PolymerElement# directive is composed by a set of low level directives which would be added to the component dynamically.
+
+`changeEventsAdapterDirective`::
+This directive configures any public and notifiable [propertyname]#property# in a Polymer element to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html#!#outputs-anchor[output].
+So as any change made in a property in the polymer side, will be propagated to the Angular 2 parent component.
+
+`notifyForDiffersDirective`::
+Configures all public [propertyname]#properties# in a Polymer element to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html#!#inputs-anchor[input].
+It allows to notify changes from the Angular side to Polymer. It supports primitive types, as well as both Array and Object properties, but not it's children.
+If you want to notify nested object changes, you can still do it by calling the Polymer's [methodname]#notifyPath# method on the native element.
+
+`formElementDirective`::
+If the element has the Polymer Form Behavior, this directive is added to the component, and configures it to have a form control in Angular 2.
+
+`validationDirective`::
+It is another directive added in the case of the element has the Polymer Form behavior. It forwards Angular checks to Polymer validations.
+
+`reloadConfigurationDirective`::
+This directive is added to those Polymer elements that need to run a configuration function after they are initialized.
+It is added to all those Polymer elements having the [methodname]#isInitialized# and [methodname]#reloadConfiguration# methods in their prototype.
+
+== Usage
+
+Previously to use the [classname]#PolymerElement# in the [propertyname]#directives# block of your [classname]#Component#, you have to import it as is shown in the example below.
+
+The only public API is the [classname]#PolymerElement(tagName: string): Array<Directive># factory method.
+The argument [propertyname]#tagName# is mandatory, and must match the tag name of the Polymer element to wrap.
+Hence, you have to add the [classname]#PolymerElement# directive as many times as different Polymer elements you are using in your Angular 2 component.
+It returns the set of directives necessary for the given Polymer element.
+
+[source,typescript]
+----
+import { Component } from '@angular/core';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+@Component({
+  selector: 'my-project-app',
+  template: `
+    <iron-icon icon="attachment"></iron-icon>
+    <paper-input [(value)]="myValue"></paper-input>
+    <vaadin-combo-box [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
+  `,
+  directives: [
+    PolymerElement('iron-icon'),
+    PolymerElement('paper-input'),
+    PolymerElement('vaadin-combo-box')
+  ]
+})
+export class MyProjectAppComponent {
+   myValue = 'A';
+   myItems = ['A', 'B', 'C'];
+}
+----
