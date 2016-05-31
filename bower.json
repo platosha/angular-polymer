@@ -2,7 +2,7 @@
   "name": "angular2-polymer",
   "description": "Angular 2 support for Polymer elements",
   "main": "index.js",
-  "version": "1.0.0-alpha5",
+  "version": "1.0.0-alpha6",
   "authors": [
     "Vaadin Ltd"
   ],
