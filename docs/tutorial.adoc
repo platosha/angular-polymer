@@ -3,6 +3,7 @@
 :linkattrs:
 :experimental:
 :sectnums:
+:imagesdir: tutorial
 :toc:
 
 include::tutorial/introduction.adoc[]
