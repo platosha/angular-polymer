@@ -25,7 +25,7 @@ export class Hero {
 }
 ----
 
-Unlike in Angular 2 Tour of Heroes, in our application we store and expose the birthday of each hero for the user. Here we add `birthday: string;` property to our [classname]#Hero# class.
+Unlike in Angular 2 Tour of Heroes, in our application we store and expose the birthday of each hero for the user. Here we add the `birthday: string;` property to our [classname]#Hero# class.
 
 [NOTE]
 .Using Strings to Store Dates
