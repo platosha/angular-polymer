@@ -210,7 +210,7 @@ export class AppComponent implements OnInit {
 }
 ----
 
-Now we import [classname]#RouteConfig# decorator and some other Angular 2 Component Router parts. We also add [classname]#HeroDetailComponent# import alongside with [classname]#HeroesComponent#.
+Now we import the [classname]#RouteConfig# decorator and some other Angular 2 Component Router parts. We also add the [classname]#HeroDetailComponent# import alongside with the [classname]#HeroesComponent# import.
 
 As usual with routing in Angular 2, we add [classname]#ROUTER_DIRECTIVES# to the [propertyname]#directives# array of [classname]#AppComponent# component metadata, as well as [classname]#ROUTER_PROVIDERS# to the [propertyname]#providers# array.
 
