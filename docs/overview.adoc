@@ -1,0 +1,49 @@
+---
+title: Overview
+order: 1
+layout: page
+---
+
+[[vaadin-angular2-polymer.overview]]
+= Angular 2 Integration
+
+While Vaadin Elements are built using Polymer, you need the [literal]#https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]# directive to enable seamless usage within Angular 2 applications.
+
+The `angular2-polymer` is a directive factory that aims at bridging the gaps between using link:https://www.polymer-project.org[Polymer] based Web Components in link:https://angular.io/[Angular 2] applications.
+
+It is able to scrap the Polymer element public API in order to define Angular 2 `outputs` and `inputs`, to apply the `ngControl` and the `ngForm` directives, and to observe DOM changes updating the element's DOM tree appropriately.
+
+== Quick Start
+
+. Install the `angular2-polymer` directive, and the Polymer element you want to use.
++
+[source,subs="normal"]
+----
+[prompt]#$# [command]#npm# install @vaadin/angular2-polymer
+[prompt]#$# [command]#bower# install [replaceable]#element-name#
+----
+
+. Load the Web Components polyfill for non Chrome browsers, and import the element.
++
+[source,html,subs="normal"]
+.index.html
+----
+<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="bower_components/[replaceable]#element-name#/[replaceable]#element-name#.html">
+----
+
+. Use the Angular 2 directive in your code.
++
+[source,typescript,subs="normal"]
+.my-component.ts
+----
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+@Component({
+  selector: 'my-component',
+  template: `+++<+++[replaceable]#element-name#></[replaceable]#element-name#>`,
+  directives: +++[+++ PolymerElement('[replaceable]#element-name#') +++]+++
+})
+export class MyComponent {
+}
+----
