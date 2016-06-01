@@ -105,7 +105,7 @@ Delete the [filename]#styles.css# file from your project directory since it is n
 [NOTE]
 .Duplicated Imports
 ====
-The HTML imports we have in the [filename]#index.html# file also import any possible dependencies. Imports having the same dependencies result in multiple imports of the same file. In such case, bowsers prevent fetching the same file multiple times by checking the file location.
+The HTML imports we have in the [filename]#index.html# file also import any possible dependencies. Imports having the same dependencies result in multiple imports of the same file. In such case, browsers prevent fetching the same file multiple times by checking the file location.
 
 See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
 ====
