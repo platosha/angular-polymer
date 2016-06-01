@@ -94,7 +94,7 @@ Since we use two-way binding, the [propertyname]#hero.name# and the [propertynam
 [IMPORTANT]
 .Use ngIf When Loading Content
 ====
-The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the [propertyname]#hero# is not loaded yet, so we can not use [propertyname]#hero.name# and [propertyname]#hero.birthday# sub-properties. Using them at this moment would result in errors.
+The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the [propertyname]#hero# is not loaded yet, so we can not use [propertyname]#hero.name# and [propertyname]#hero.birthday# sub-properties. Using them at this time would result in errors.
 
 That is why we wrap the [elementname]#paper-input# and the [elementname]#vaadin-date-picker# elements with `<div *ngIf="hero"></div>` in the component template. The `ngIf` structural directive not only hides the content, but also stops the hidden part of the template from being evaluated and rendered. This effectively prevents errors of accessing non-existant sub-properties during the loading.
 ====
