@@ -1,3 +1,8 @@
+---
+title: Polymer in Angular-CLI Apps
+order: 3
+layout: page
+---
 
 [[vaadin-angular2-polymer.ng2cli]]
 = Using Polymer Elements with Angular-CLI Apps
