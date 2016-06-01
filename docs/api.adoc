@@ -1,3 +1,9 @@
+---
+title: API Reference
+order: 4
+layout: page
+---
+
 [[vaadin-angular2-polymer.api]]
 = Angular2-Polymer API
 
