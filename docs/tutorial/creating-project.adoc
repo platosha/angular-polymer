@@ -10,7 +10,7 @@ If you are not yet familiar with Angular 2, please go through the https://angula
 
 === Starting from the QuickStart Repository
 
-Clone the https://github.com/angular/quickstart[QuickStart repository] into the tutorial project folder:
+Clone the https://github.com/angular/quickstart[Angular 2 QuickStart repository] into the tutorial project folder:
 
 [subs="normal"]
 ----
@@ -26,7 +26,7 @@ Alternatively, instead of using Git to clone the QuickStart repository, you can 
 
 === Remove the AppComponent Tests
 
-The QuickStart respository contains tests for [classname]#AppComponent#. Unfortunately, some changes to [classname]#AppComponent#, that will be done in this tutorial, would break the compilation of these tests.
+The QuickStart respository contains tests for the [classname]#AppComponent# class. Unfortunately, some changes that will be done to [classname]#AppComponent# in this tutorial would break the compilation of these tests.
 
 Please remove the [filename]#app/app.component.spec.ts# file to prevent compilation errors later in this tutorial.
 
@@ -47,7 +47,7 @@ Install npm dependencies:
 [prompt]#$# [command]#npm# install
 ----
 
-At this point, you should be able to compile the TypeScript source code and launch the development server. Let us start the server to verify:
+At this point, you should be able to compile the TypeScript source code and launch the development server. You can start the server to check that everything is fine:
 
 [subs="normal"]
 ----

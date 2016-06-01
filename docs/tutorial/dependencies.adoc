@@ -17,18 +17,18 @@ You should install Bower before we start using it. Use [command]#npm# to install
 ----
 ====
 
-Create [filename]#bower.json# file in your project root with the following contents:
+Create the [filename]#bower.json# file in your project root with the following contents:
 
-[source,json]
-.bower.json
+[source,json,subs="verbatim,quotes,macros"]
+.[filename]#bower.json#
 ----
 {
-  "name": "my-project",
+  "name": "[replaceable]#my-project#",
   "description": "",
   "main": "",
-  "authors": [
-    "Your Name"
-  ],
+  "authors": +[+
+    "[replaceable]#Your Name#"
+  +]+,
   "license": "ISC",
   "homepage": "",
   "private": true,
@@ -52,16 +52,16 @@ Create [filename]#bower.json# file in your project root with the following conte
 }
 ----
 
-The following file declares all Bower dependencies for our application. Now install them with this command:
+The [filename]#bower.json# file declares all Bower dependencies for our application. Now install them with the following command:
 
 [subs="normal"]
 ----
 [prompt]#$# [command]#bower# install
 ----
 
-After that, you should have the [filename]#bower_components# directory in your project root, with all elements declared in the [filename]#bower.json# file, and their requirements. List the contents of the [filename]#bower_components# directory to verify that it contains the following subdirectories:
+After that, you should have a [filename]#bower_components# directory in your project root, with all elements declared in the [filename]#bower.json# file, and their requirements. List the contents of the [filename]#bower_components# directory to verify that it contains the following subdirectories:
 
-.Contents of the bower_components Directory
+.Contents of the [filename]#bower_components# Directory
 ----
 app-layout
 font-roboto
@@ -101,11 +101,13 @@ webcomponentsjs
 ----
 
 [TIP]
-.Ignore Bower Components in the Source Control
+.Ignore the Bower Dependencies in a Version Control System
 ====
-It is usually a good practice to exclude external dependencies from your source control. The Angular 2 QuickStart project already contains a [filename]#.gitignore# file that excludes the [filename]#node_modules# directory with npm dependencies from the Git repository of your application.
+It is usually a good practice to exclude external dependencies from a version control system. In this tip, we assume that you plan to use Git, though the same principle applies to any version control system.
 
-Please add the following line to the [filename]#.gitignore# file to also prevent Bower dependencies from being tracked by your source control:
+The Angular 2 QuickStart project already contains a [filename]#.gitignore# file, that will exclude the [filename]#node_modules# directory with the npm dependencies.
+
+You can add the following line to the [filename]#.gitignore# file to prevent the Bower dependencies from being tracked by Git in future:
 
 [source]
 ----
@@ -113,7 +115,7 @@ bower_components
 ----
 ====
 
-=== The Npm Dependency
+=== The npm Dependency
 
 Alongside with Bower dependencies, we also need to add one npm dependency to the project. The `@vaadin/angular2-polymer` package adds support for Polymer elements in Angular 2 component templates. Run the following command to install the package and save the dependency in [filename]#package.json# at the same time:
 

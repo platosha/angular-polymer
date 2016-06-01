@@ -1,17 +1,17 @@
 [[vaadin-angular2-polymer.tutorial.wrap-up]]
 == Wrap Up
 
-All the tutorial steps are complete. Now you can use all powers of Polymer elements in your Angular 2 applications and know how to do it.
+You have now finished all the tutorial steps and know how to use all the powers of Polymer elements in your Angular 2 applications.
 
 TODO: Link the resulting application code repository in this section when it gets published.
 
-=== Next Steps
+=== Further Steps
 
-There are several ways of improvement for our application. For example, you might want to add an explicit “Save” button to the hero detail editor and make the user able to intentionally submit or discard their changes. To do that, use the `ngForm` directive. See the https://angular.io/docs/ts/latest/guide/forms.html[Forms Chapter] in the Angular 2 Basics guide for the detailed instructions.
+There are several ways to improve the application you created in this tutorial. For example, you might want to add an explicit [guibutton]#Save# button to the hero detail editor and make the user able to intentionally submit or discard their changes. To do that, you can use the `ngForm` directive. See the https://angular.io/docs/ts/latest/guide/forms.html[Forms Chapter] in the Angular 2 Basics guide for the detailed instructions.
 
-In the tutorial, we did not consider the topic of storing your application data. For simplicity, our application uses mock in-memory data and relies on data binding to make temporary changes, that are not saved anywhere. You might want to move the heroes data to a server and add some HTTP API calls in your application. See the Angular 2 https://angular.io/docs/ts/latest/guide/server-communication.html[Http Client] documentation to know how to do that.
+In the tutorial, we did not consider the topic of storing your application data. For simplicity, our application uses mock in-memory data and relies on data binding to make temporary changes, which are not saved anywhere. You might want to move the heroes data to a server and add some HTTP API calls in your application. See the Angular 2 https://angular.io/docs/ts/latest/guide/server-communication.html[Http Client] documentation to know how to do that.
 
 Read the https://www.polymer-project.org/1.0/[Polymer Project] website to know about other features that Polymer provides you with. There is also the https://www.polymer-project.org/1.0/start/[Getting Started] guide, where you can learn how to create your own elements and apps based on Polymer.
 
-Don’t forget to find out other elements you can use for building your applications on the https://vaadin.com/elements[Vaadin Elements] page and in the https://elements.polymer-project.org/[Polymer Catalog].
+Don’t forget to find out abouth other elements that you can use for building your applications from the https://vaadin.com/elements[Vaadin Elements] page and the https://elements.polymer-project.org/[Polymer Catalog].
 

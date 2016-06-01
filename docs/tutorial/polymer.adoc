@@ -1,7 +1,7 @@
 [[vaadin-angular2-polymer.tutorial.polymer]]
 == Adding Polymer Elements to Our Application
 
-In the previous step, we downloaded elements to the [filename]#bower_components# directory. Now we are going to import these elements in our application.
+In the previous step, we downloaded the needed elements to the [filename]#bower_components# directory. Next, we will import these elements in our application.
 
 In your project root, edit the [filename]#index.html# file and replace the contents with the following lines:
 
@@ -61,41 +61,41 @@ In your project root, edit the [filename]#index.html# file and replace the conte
 </html>
 ----
 
-We applied some important changes in the [filename]#index.html# file. They are explained in the following list:
+We have made the following important changes to the original Angular 2 tutorial file:
 
 The Doctype Declaration::
-We added the `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use Standards mode, as required by the internals of [vaadinelement]#vaadin-grid#.
+We added the `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use the Standards mode, as required by the internals of [vaadinelement]#vaadin-grid#.
 
 The Web Components Polyfill::
-The technology stack behind Web Components (namely, HTML Imports, Shadow DOM and Custom Elements) is not yet natively supported in all browses. Therefore we added the [filename]#webcomponents-lite.min.js# polyfill.
+The technology stack behind Web Components (namely, HTML Imports, Shadow DOM, and Custom Elements) is not yet natively supported in all browsers. Therefore, we added the [filename]#webcomponents-lite.min.js# polyfill.
 
 Importing Polymer Elements::
 We added imports of Polymer elements that we are going to use in our application to the head section of the [filename]#index.html# file.
 
 SystemJS App Import Change::
-In some browsers, HTML Imports are loaded asynchronously. But we need them to be completely loaded before we import our Angular application. Hence we wrapped `System.import('app')...` call in the listener callback of the [eventname]#WebComponentsReady# event, which is fired by the polyfill after all imports are loaded and elements have been registered.
+In some browsers, HTML Imports are loaded asynchronously, but we need them to be completely loaded before we import our Angular application. Hence we wrapped the `System.import('app')...` call in the listener callback of the [eventname]#WebComponentsReady# event, which is fired by the polyfill after all imports are loaded and elements have been registered.
 +
 [IMPORTANT]
 .Load Order
 ====
-The order of loading Polymer elements and the rest of the Angular application code does matter. It is required to have Polymer elements loaded and registered before importing the Angular application. `@vaadin/angular2-polymer` package strictly depends on that.
+The order in which the Polymer elements and the rest of the Angular application code are loaded does matter. It is required that the Polymer elements are loaded and registered before importing the Angular application. The `@vaadin/angular2-polymer` package strictly depends on that.
 ====
 
 Style Changes::
-Polymer elements come with nice builtin styles in the way of Material Design. Angular 2 also provides style encapsulation mechanisms for our application components.
+Polymer elements come with nice built-in styles in the way of Material Design. Angular 2 also provides style encapsulation mechanisms for our application components.
 +
-So the global styles are not needed anymore. Therefore we removed the [filename]#styles.css# external stylesheet and replaced it with [elementname]#iron-flex-layout# and [elementname]#paper-styles# style mixins imports and one embedded global style rule for body.
+Therefore, the global styles are not needed anymore. We removed the external [filename]#styles.css# stylesheet and replaced it with [elementname]#iron-flex-layout# and [elementname]#paper-styles# style mixin imports and an embedded global style rule for the body element.
 +
-The body style is the only global style that remains in our application. The body styles are needed to occupy the full height of the browser viewport, and also to specify default font styles, line height, background, and text colors.
+The body style rule is the only global style rule that remains in our application. The body element needs to be styled to take the full height of the browser viewport, and also to specify default font styles, line height, background, and text colors.
 +
 [TIP]
 ====
-Instead of figuring out the exact rules and values for the body style, here we import and reuse CSS mixins and CSS custom properties declared in [elementname]#iron-flex-layout# and [elementname]#paper-styles#.
+Instead of figuring out the exact rules and values for the body style, we import and reuse CSS mixins and CSS custom properties declared in [elementname]#iron-flex-layout# and [elementname]#paper-styles#.
 ====
 +
 [IMPORTANT]
 ====
-When using custom CSS mixins and custom CSS properties in your main document styles, wrap your styles inside a `<style is="custom-style"></style>` tag.
+When using custom CSS mixins and custom CSS properties in your main document styles, you need to wrap your styles inside a `<style is="custom-style"></style>` tag.
 
 See the https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling section of the Polymer Developer Guide] for more information on styling Polymer elements and the document, custom CSS mixins and properties usage and limitations.
 ====
@@ -103,9 +103,9 @@ See the https://www.polymer-project.org/1.0/docs/devguide/styling.html[Styling s
 Delete the [filename]#styles.css# file from your project directory since it is no longer in use.
 
 [NOTE]
-.Duplicated Imports Handling
+.Duplicated Imports
 ====
-Our HTML imports also import their dependencies. As In the resulting dependency tree there might be multiple imports of the the same file. In this case, the duplicated fetch of the same file is prevented in browsers by checking the file location.
+The HTML imports we have in the [filename]#index.html# file also import any possible dependencies. Imports having the same dependencies result in multiple imports of the same file. In such case, bowsers prevent fetching the same file multiple times by checking the file location.
 
 See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
 ====

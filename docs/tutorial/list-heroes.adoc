@@ -1,22 +1,22 @@
 [[vaadin-angular2-polymer.tutorial.list-heroes]]
 == List Heroes with Vaadin Grid
 
-In the previous step we added the application layout with [elementname]#app-layout# elements. Next we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
+In the previous step, we added the application layout with [elementname]#app-layout# elements. Next, we are going add actual application content. Our plan is to use Vaadin Grid to list Heroes.
 
 [NOTE]
 .Some Parts are Explained in the Tour of Heroes
 ====
-This step partly follows the Angular 2 Tour of Heroes Tutorial. Therefore here we skip explaining the parts of the code that are similar in both this tutorial and the Tour of Heroes, like the [classname]#Hero# class and the [classname]#HeroService#.
+This step partly follows the Angular 2 Tour of Heroes Tutorial. Therefore, we skip explaining the parts of the code that are similar in both this tutorial and the Tour of Heroes, such as the [classname]#Hero# class and the [classname]#HeroService#.
 
-See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for the detailed explainations of these parts.
+See https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] for a detailed explaination of such similar parts.
 ====
 
 === Hero Class
 
-Let us start with creating the [classname]#Hero# class. Add [filename]#app/hero.ts# file with the following contents:
+Let us start by creating the [classname]#Hero# class. Create a [filename]#app/hero.ts# file with the following contents:
 
 [source,typescript]
-.app/hero.ts
+.[filename]#app/hero.ts#
 ----
 export class Hero {
   id: number;
@@ -25,24 +25,24 @@ export class Hero {
 }
 ----
 
-Unlike in Angular 2 Tour of Heroes, in our application we are about to store and expose birthday of each hero for the user. Here we add `birthday: string;` property to our [classname]#Hero# class.
+Unlike in Angular 2 Tour of Heroes, in our application we store and expose the birthday of each hero for the user. Here we add `birthday: string;` property to our [classname]#Hero# class.
 
 [NOTE]
 .Using Strings to Store Dates
 ====
 Why are we using the [classname]#string# type and not [classname]#Date# to store dates? There are two reasons:
 
-. Builtin JavaScript [classname]#Date# type is always stored as a timestamp, so it always contains the exact time information. This is not only redundant, but also harder to use than a plain string in case of storing just a date. It requires extra care about the correct time and timezone when storing the value and displaying it to the user, otherwise we might get incorrect dates because of timezone mismatches.
+. The built-in JavaScript [classname]#Date# type is always stored as a timestamp, so it always contains the exact time information. This is not only redundant, but also harder to use than a plain string in case of storing just a date. It requires extra care about the correct time and timezone when storing the value and displaying it to the user; otherwise we might get incorrect dates because of timezone mismatches.
 
-. `Vaadin DatePicker`, as well as native HTML5 `<input type="date">`, gives the date value as an ISO-formatted [classname]#string#. To keep the simplicity, in our application we also store dates as strings, avoiding conversions.
+. [vaadinelement]#vaadin-date-picker#, as well as native HTML5 `<input type="date">`, gives the date value as an ISO-formatted [classname]#string#. To preserve the simplicity in our application, we also store dates as strings, avoiding conversions.
 ====
 
 === Mock Heroes Data
 
-Add [filename]#app/mock-heroes.ts# file with some heroes data:
+Create a [filename]#app/mock-heroes.ts# file with some heroes data:
 
 [source,typescript]
-.app/mock-heroes.ts
+.[filename]#app/mock-heroes.ts#
 ----
 import { Hero } from './hero';
 
@@ -62,10 +62,10 @@ export var HEROES: Hero[] = [
 
 === The Hero Service
 
-We also need a [classname]#HeroService# to be able to retrive the heroes list in our Angular application. Add [filename]#app/hero.service.ts# file:
+We also need a [classname]#HeroService# to be able to retrive the heroes list in our Angular application. Create a [filename]#app/hero.service.ts# file:
 
 [source,typescript]
-.app/hero.service.ts
+.[filename]#app/hero.service.ts#
 ----
 import { Injectable } from '@angular/core';
 
@@ -85,7 +85,7 @@ export class HeroService {
 Add the heroes list component file [filename]#app/heroes.component.ts# with the following code:
 
 [source,typescript]
-.app/heroes.component.ts
+.[filename]#app/heroes.component.ts#
 ----
 import { Component, OnInit } from '@angular/core';
 import { PolymerElement } from '@vaadin/angular2-polymer';
@@ -130,22 +130,22 @@ export class HeroesComponent implements OnInit {
 }
 ----
 
-Here in [classname]#HeroesComponent# we have the [elementname]#vaadin-grid# element in the template. In styles, there is a `height: 100%;` rule for [elementname]#vaadin-grid#. In the template, inside [elementname]#vaadin-grid# there are three columns specified with their corresponding item property names.
+Here in the [classname]#HeroesComponent#, we have the [elementname]#vaadin-grid# element in the template. In the styles, we have a `height: 100%;` rule for the [elementname]#vaadin-grid# element. In the template, there are three columns inside the [vaadinelement]#vaadin-grid#, specified with their corresponding item property names.
 
-Also in the template, the [propertyname]#items# property of [elementname]#vaadin-grid# is bound to the [propertyname]#heroes# array property of [classname]#HeroesComponent#. At the same time, we import and use [classname]#HeroService# to get the list of heroes and assign the [propertyname]#heroes# property. Angular component data binding takes care of updating [propertyname]#items# property of [elementname]#vaadin-grid# with the list of heroes for us.
+Also in the template, the [propertyname]#items# property of the [elementname]#vaadin-grid# is bound to the [propertyname]#heroes# array property of [classname]#HeroesComponent#. At the same time, we import and use [classname]#HeroService# to get the list of heroes and assign the [propertyname]#heroes# property. Data binding of the Angular component takes care of updating the [propertyname]#items# property of [elementname]#vaadin-grid# with the list of heroes for us.
 
 [NOTE]
-.PolymerElement Directives
+.The [classname]#PolymerElement# Directives
 ====
 Once again, we import [classname]#PolymerElement# in this file and add `PolymerElement('vaadin-grid')` to the [propertyname]#directives# of the component to enable all features for Vaadin Grid Polymer element in our [classname]#HeroesComponent#.
 ====
 
 === Displaying Heroes List
 
-Finally in this step, change [filename]#app/app.component.ts# to provide [classname]#HeroService# for our application and display the heroes list component:
+Finally in this step, you need to edit the [filename]#app/app.component.ts# file to provide [classname]#HeroService# for our application and display the heroes list component:
 
 [source,typescript]
-.app/app.component.ts
+.[filename]#app/app.component.ts#
 ----
 import { Component } from '@angular/core';
 import { PolymerElement } from '@vaadin/angular2-polymer';
@@ -184,14 +184,14 @@ import { HeroesComponent } from './heroes.component';
 export class AppComponent { }
 ----
 
-Here is what have changed in [filename]#app/app.component.ts#:
+We did the following changes in the [filename]#app/app.component.ts# file:
 
-* We import [classname]#HeroService# and list it in [propertyname]#providers#
-* We also import [classname]#HeroesComponent#, append it to [propertyname]#directives# and replace `<div>My application content</div>` to `<my-heroes></my-heroes>`
+* We imported [classname]#HeroService# and listed it in [propertyname]#providers#
+* We also imported [classname]#HeroesComponent#, appended it to [propertyname]#directives#, and replaced `<div>My application content</div>` with `<my-heroes></my-heroes>`
 
-Now it’s time to look at the browser window again to the heroes list in our application. Here is how it should look like:
+Now it is again time to look in the browser window, to see how the heroes list looks in our application. It should look as in <<figure.vaadin-angular2-polymer.tutorial.heroes-list>>:
 
 [[figure.vaadin-angular2-polymer.tutorial.heroes-list]]
-.A Screenshot of the Application with the List of Heroes
+.The list of heroes
 image::img/heroes-list.png[width="432",height="644"]
 
