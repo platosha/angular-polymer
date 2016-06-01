@@ -313,7 +313,7 @@ Instead of a static title, the title is now updated dynamically. We subscribed t
 
 We added [elementname]#paper-icon-button# to have a back icon inside the [elementname]#app-toolbar# in the template. The icon has a click event binding, which calls the [methodname]#goBack()# method of the [classname]#AppComponent# class. In the method, we invoke the [methodname]#navigate(linkParams: any[])# method of the [classname]#Router# to navigate back to the heroes list from the hero details.
 
-When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added [propertyname]#isInChildView# property to [classname]#AppComponent#, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the [elementname]#paper-icon-button#.
+When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added [propertyname]#isInChildView# property to [classname]#AppComponent#, which is updated from the route data in the navigation event callback. In the template, we added `*ngIf="isInChildView"` for the [elementname]#paper-icon-button#.
 
 We also added a few positioning style rules for the [elementname]#paper-icon-button#.
 
