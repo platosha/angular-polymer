@@ -12,19 +12,19 @@ Native Angular 2 directive for Polymer.
 [[vaadin-angular2-polymer.api.introduction]]
 == Introduction
 
-This module consists of one generic Angular 2 directives factory method named [classname]#PolymerElement#, which is able to handle any Polymer element for easy integrating on Angular apps.
+This module consists of one generic Angular 2 directive factory method named [classname]#PolymerElement#, which is able to handle any Polymer element for easy integrating on Angular apps.
 
 == Features
 
 The [classname]#PolymerElement# is composed of a set of low level directives which would be added to the component dynamically.
 
 `changeEventsAdapterDirective`::
-This directive configures all the the public [propertyname]#properties#, that notify for their value change in a Polymer element, to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html#!#outputs-anchor[output].
+This directive configures all the the public [propertyname]#properties#, that notify for their value change in a Polymer element, to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html+++#+++!+++#+++outputs-anchor[output].
 So as any change made in a property in the polymer side, will be propagated to the Angular 2 parent component.
 
 `notifyForDiffersDirective`::
-Configures all the public [propertyname]#properties# in a Polymer element to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html#!#inputs-anchor[input].
-It allows to notify changes from the Angular side to Polymer. It supports primitive types, as well as both Array and Object properties, but not it's children.
+Configures all the public [propertyname]#properties# in a Polymer element to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html+++#+++!+++#+++inputs-anchor[input].
+It allows to notify changes from the Angular side to Polymer. It supports primitive types, as well as both Array and Object properties, but not its children.
 If you want to notify nested object changes, you can still do it by calling the Polymer's [methodname]#notifyPath# method on the element.
 
 `formElementDirective`::
@@ -35,7 +35,7 @@ It is another directive added in the case of the element has the Polymer Form El
 
 `reloadConfigurationDirective`::
 This directive is added to those Polymer elements that need to run a configuration function after they are initialized.
-It is added to all those Polymer elements having the [methodname]#isInitialized# and [methodname]#reloadConfiguration# methods in their prototype.
+It is added if the element has the [methodname]#isInitialized# and the [methodname]#reloadConfiguration# methods in its prototype.
 
 == Usage
 
