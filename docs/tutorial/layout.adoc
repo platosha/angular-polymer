@@ -7,7 +7,7 @@ After the previous step, we have some Polymer elements imported in the [filename
 
 For using Polymer elements in our Angular components, we need to import the [classname]#PolymerElement# directives from `@vaadin/angular2-polymer`. Therefore, we need to make the module loader (SystemJS, in our case) aware of how to load the `@vaadin/angular2-polymer` package.
 
-Angular 2 TypeScript QuickStart contains the SystemJS configuration in the [filename]#systemjs.config.js# file in the project root. Please edit this file and add mapping for the `@vaadin` scope and the `@vaadin/angular2-polymer` package there as follows:
+Angular 2 TypeScript QuickStart contains the SystemJS configuration in the [filename]#systemjs.config.js# file in the project root. Please edit this file and add a mapping for the `@vaadin` scope and the `@vaadin/angular2-polymer` package there as follows:
 
 [source,javascript]
 .[filename]#systemjs.config.js#

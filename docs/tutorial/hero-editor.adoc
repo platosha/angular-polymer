@@ -94,7 +94,7 @@ Since we use two-way binding, the [propertyname]#hero.name# and the [propertynam
 [IMPORTANT]
 .Use ngIf When Loading Content
 ====
-The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the [propertyname]#hero# is not loaded yet, so we can not use [propertyname]#hero.name# and [propertyname]#hero.birthday# sub-properties. Using them at this moment would result in errors.
+The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the [propertyname]#hero# is not loaded yet, so we can not use [propertyname]#hero.name# and [propertyname]#hero.birthday# sub-properties. Using them at this time would result in errors.
 
 That is why we wrap the [elementname]#paper-input# and the [elementname]#vaadin-date-picker# elements with `<div *ngIf="hero"></div>` in the component template. The `ngIf` structural directive not only hides the content, but also stops the hidden part of the template from being evaluated and rendered. This effectively prevents errors of accessing non-existant sub-properties during the loading.
 ====
@@ -210,7 +210,7 @@ export class AppComponent implements OnInit {
 }
 ----
 
-Now we import [classname]#RouteConfig# decorator and some other Angular 2 Component Router parts. We also add [classname]#HeroDetailComponent# import alongside with [classname]#HeroesComponent#.
+Now we import the [classname]#RouteConfig# decorator and some other Angular 2 Component Router parts. We also add the [classname]#HeroDetailComponent# import alongside with the [classname]#HeroesComponent# import.
 
 As usual with routing in Angular 2, we add [classname]#ROUTER_DIRECTIVES# to the [propertyname]#directives# array of [classname]#AppComponent# component metadata, as well as [classname]#ROUTER_PROVIDERS# to the [propertyname]#providers# array.
 
@@ -313,7 +313,7 @@ Instead of a static title, the title is now updated dynamically. We subscribed t
 
 We added [elementname]#paper-icon-button# to have a back icon inside the [elementname]#app-toolbar# in the template. The icon has a click event binding, which calls the [methodname]#goBack()# method of the [classname]#AppComponent# class. In the method, we invoke the [methodname]#navigate(linkParams: any[])# method of the [classname]#Router# to navigate back to the heroes list from the hero details.
 
-When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added [propertyname]#isInChildView# property to [classname]#AppComponent#, which is updated from the route data in the navigation event callback. In the template we add `*ngIf="isInChildView"` for the [elementname]#paper-icon-button#.
+When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added [propertyname]#isInChildView# property to [classname]#AppComponent#, which is updated from the route data in the navigation event callback. In the template, we added `*ngIf="isInChildView"` for the [elementname]#paper-icon-button#.
 
 We also added a few positioning style rules for the [elementname]#paper-icon-button#.
 

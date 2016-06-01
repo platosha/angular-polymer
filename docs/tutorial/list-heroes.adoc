@@ -25,7 +25,7 @@ export class Hero {
 }
 ----
 
-Unlike in Angular 2 Tour of Heroes, in our application we store and expose the birthday of each hero for the user. Here we add `birthday: string;` property to our [classname]#Hero# class.
+Unlike in Angular 2 Tour of Heroes, in our application we store and expose the birthday of each hero for the user. Here we add the `birthday: string;` property to our [classname]#Hero# class.
 
 [NOTE]
 .Using Strings to Store Dates
@@ -189,7 +189,7 @@ We did the following changes in the [filename]#app/app.component.ts# file:
 * We imported [classname]#HeroService# and listed it in [propertyname]#providers#
 * We also imported [classname]#HeroesComponent#, appended it to [propertyname]#directives#, and replaced `<div>My application content</div>` with `<my-heroes></my-heroes>`
 
-Now it is again time to look in the browser window, to see how the heroes list looks in our application. It should look as in <<figure.vaadin-angular2-polymer.tutorial.heroes-list>>:
+Now it is again time to look in the browser window, to see how the heroes list looks in our application. It should look about as in <<figure.vaadin-angular2-polymer.tutorial.heroes-list>>:
 
 [[figure.vaadin-angular2-polymer.tutorial.heroes-list]]
 .The list of heroes
