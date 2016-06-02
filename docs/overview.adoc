@@ -7,15 +7,15 @@ layout: page
 [[vaadin-angular2-polymer.overview]]
 = Angular 2 Integration
 
-While Vaadin Elements are built using Polymer, you need the [literal]#https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]# directive to enable seamless usage within Angular 2 applications.
+Since Vaadin Elements are built using Polymer, you need the [literal]#https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]# directive to enable seamless usage within Angular 2 applications.
 
 The `angular2-polymer` is a directive factory that aims at bridging the gaps between using link:https://www.polymer-project.org[Polymer] based Web Components in link:https://angular.io/[Angular 2] applications.
 
-It is able to scrap the Polymer element public API in order to define Angular 2 `outputs` and `inputs`, to apply the `ngControl` and the `ngForm` directives, and to observe DOM changes updating the element's DOM tree appropriately.
+It scraps the Polymer element API in order to define Angular 2 `outputs` and `inputs`, to apply the `ngControl` and the `ngForm` directives, and to observe DOM changes updating the element's DOM tree appropriately.
 
 == Quick Start
 
-. Install the `angular2-polymer` directive, and the Polymer element you want to use.
+. Install the `angular2-polymer` package and the Polymer element you want to use.
 +
 [source,subs="normal"]
 ----
@@ -32,7 +32,7 @@ It is able to scrap the Polymer element public API in order to define Angular 2 
 <link rel="import" href="bower_components/[replaceable]#element-name#/[replaceable]#element-name#.html">
 ----
 
-. Use the Angular 2 directive in your code.
+. Import the Angular 2 directives and use them in your code.
 +
 [source,typescript,subs="normal"]
 .my-component.ts
