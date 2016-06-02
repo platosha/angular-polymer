@@ -104,7 +104,7 @@ Save the changes and launch the development server to see the results in your br
 
 [[figure.vaadin-angular2-polymer.tutorial.app-layout]]
 .The empty application layout
-image::img/app-layout.png[width="432",height="644"]
+image::img/app-layout.png[width="320"]
 
 Now your application has a layout made by using the [elementname]#app-header-layout#, [elementname]#app-header#, and [elementname]#app-toolbar# elements.
 

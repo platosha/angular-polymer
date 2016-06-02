@@ -193,5 +193,5 @@ Now it is again time to look in the browser window, to see how the heroes list l
 
 [[figure.vaadin-angular2-polymer.tutorial.heroes-list]]
 .The list of heroes
-image::img/heroes-list.png[width="432",height="644"]
+image::img/heroes-list.png[width="320"]
 

@@ -19,13 +19,13 @@ In our heroes management application, there will be two UI screens. The first sc
 
 [[figure.vaadin-angular2-polymer.tutorial.result-heroes-list]]
 .The first screen with the list of heroes
-image::img/heroes-list-default.png[width="432",height="644"]
+image::img/heroes-list-default.png[width="320"]
 
 By clicking on a grid row, the user can open the hero details editor screen. It is made using [elementname]#paper-input# and [vaadinelement]#vaadin-date-picker#:
 
 [[figure.vaadin-angular2-polymer.tutorial.result-hero-detail]]
 .The second screen with the hero details view
-image::img/hero-detail.png[width="432",height="644"]
+image::img/hero-details.png[width="320"]
 
 Both screens have a context-sensitive toolbar at the top, containing the title and the optional back icon button.
 

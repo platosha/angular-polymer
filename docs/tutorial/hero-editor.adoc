@@ -295,7 +295,7 @@ After opening the application, click the first row in the heroes list. You shoul
 
 [[figure.vaadin-angular2-polymer.tutorial.hero-detail]]
 .The hero detail view
-image::img/hero-detail.png[width="432",height="644"]
+image::img/hero-details.png[width="320"]
 
 Click the back icon in the toolbar to navigate back to the heroes list. If you made any changes in the hero detail editor, they should be shown in the heroes list right away.
 
