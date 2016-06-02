@@ -1,0 +1,63 @@
+[[vaadin-angular2-polymer.tutorial.creating-project]]
+== Creating Project
+
+We begin by creating a new project based on the source code from the Angular 2 QuickStart project. You can either clone it from the GitHub repository or extract it from a ZIP package, as described next.
+
+[NOTE]
+====
+If you are not yet familiar with Angular 2, please go through the https://angular.io/docs/ts/latest/quickstart.html[Angular 2 QuickStart] tutorial, which explains every step of starting a new Angular 2 application from scratch.
+====
+
+=== Starting from the QuickStart Repository
+
+Clone the https://github.com/angular/quickstart[Angular 2 QuickStart repository] into the tutorial project folder:
+
+[subs="normal"]
+----
+[prompt]#$# [command]#git# clone https://github.com/angular/quickstart [replaceable]#my-project#
+[prompt]#$# [command]#cd# [replaceable]#my-project#
+----
+
+We are not going to contribute to the quickstart repository itself, so the original repository data is not needed. Remove the [filename]#.git# repository data folder.
+
+=== Starting from the QuickStart ZIP Package
+
+Alternatively, instead of using Git to clone the QuickStart repository, you can download and extract the https://github.com/angular/quickstart/archive/master.zip[QuickStart zip package].
+
+=== Remove the AppComponent Tests
+
+The QuickStart respository contains tests for the [classname]#AppComponent# class. Unfortunately, some changes that will be done to [classname]#AppComponent# in this tutorial would break the compilation of these tests.
+
+Please remove the [filename]#app/app.component.spec.ts# file to prevent compilation errors later in this tutorial.
+
+[NOTE]
+.Testing in Angular 2
+====
+Testing is out of the scope of this tutorial.
+
+See the https://angular.io/docs/ts/latest/guide/testing.html[Testing chapter] in the Angular 2 Developer Guide for more information on the topic.
+====
+
+=== Installing npm Packages and Starting the Development Server
+
+Install npm dependencies:
+
+[subs="normal"]
+----
+[prompt]#$# [command]#npm# install
+----
+
+At this point, you should be able to compile the TypeScript source code and launch the development server. You can start the server to check that everything is fine:
+
+[subs="normal"]
+----
+[prompt]#$# [command]#npm# start
+----
+
+Press kbd:[Ctrl+C] to stop the development server.
+
+[TIP]
+====
+See the Angular 2 https://github.com/angular/quickstart/blob/master/README.md[QuickStart README] for more information about creating a new project and other useful [command]#npm# commands.
+====
+
