@@ -7,11 +7,6 @@ layout: page
 [[vaadin-angular2-polymer.api]]
 = Angular2-Polymer API
 
-Native Angular 2 directive for Polymer.
-
-[[vaadin-angular2-polymer.api.introduction]]
-== Introduction
-
 This module consists of one generic Angular 2 directive factory method named [classname]#PolymerElement#, which is able to handle any Polymer element for easy integrating on Angular apps.
 
 == Features
