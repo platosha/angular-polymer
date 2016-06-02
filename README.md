@@ -24,7 +24,7 @@ export class MyComponent {
 
 ## Getting started
 
-See the tutorial for instructions on how to use `angular2-polymer`.
+See the [tutorial](docs/tutorial.adoc) for instructions on how to use `angular2-polymer`.
 
 If you are using [Angular-CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](docs/ng-cli.adoc) for projects created with the `ng` command line utility.
 
