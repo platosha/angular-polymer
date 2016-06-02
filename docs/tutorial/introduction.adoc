@@ -1,11 +1,11 @@
 [[vaadin-angular2-polymer.tutorial.introduction]]
 == Introduction
 
-TODO: Link the resulting application code repository in this section when it gets published.
-
 This tutorial explains how to use Polymer elements in Angular 2 applications with the help of the [literal]`https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]` directives.
 
 For this purpose, we show how to create a staff management application similar to the https://angular.io/docs/ts/latest/tutorial/[Tour of Heroes] example. But unlike in the Angular 2 Tour of Heroes, instead of implementing the UI elements in place, we will use the ready-made UI elements that are built on top of the Web Components technology stack. The resulting application will have a nice-looking mobile-first Material designed UI.
+
+The https://github.com/vaadin/angular2-polymer-quickstart[resulting application source] is published on GitHub.
 
 === The Start Point
 

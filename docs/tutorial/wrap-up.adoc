@@ -3,7 +3,7 @@
 
 You have now finished all the tutorial steps and know how to use all the powers of Polymer elements in your Angular 2 applications.
 
-TODO: Link the resulting application code repository in this section when it gets published.
+You can see the https://github.com/vaadin/angular2-polymer-quickstart[resulting application source] on GitHub.
 
 === Further Steps
 
