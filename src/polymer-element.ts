@@ -13,11 +13,12 @@ import {
 } from '@angular/core';
 import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
 
-import { __platform_browser_private__ } from '@angular/platform-browser';
+import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
+import { setDOM } from '@angular/platform-browser/src/dom/dom_adapter';
 
 const Polymer:any = (<any>window).Polymer;
 
-class PolymerDomAdapter extends __platform_browser_private__.BrowserDomAdapter {
+class PolymerDomAdapter extends BrowserDomAdapter {
   createStyleElement(css:any, doc:Document = document) {
     var style:any = doc.createElement.call(doc, 'style', 'custom-style');
     this.appendChild(style, this.createTextNode(css));
@@ -60,9 +61,9 @@ class PolymerShadyDomAdapter extends PolymerDomAdapter {
 }
 
 if (Polymer.Settings.useShadow) {
-  __platform_browser_private__.setDOM(new PolymerDomAdapter());
+  setDOM(new PolymerDomAdapter());
 } else {
-  __platform_browser_private__.setDOM(new PolymerShadyDomAdapter());
+  setDOM(new PolymerShadyDomAdapter());
 }
 
 
