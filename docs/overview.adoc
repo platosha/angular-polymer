@@ -11,7 +11,7 @@ Since Vaadin Elements are built using Polymer, you need the [literal]#https://gi
 
 The `angular2-polymer` is a directive factory that aims at bridging the gaps between using link:https://www.polymer-project.org[Polymer] based Web Components in link:https://angular.io/[Angular 2] applications.
 
-It scraps the Polymer element API in order to define Angular 2 `outputs` and `inputs`, to apply the `ngControl` and the `ngForm` directives, and to observe DOM changes updating the element's DOM tree appropriately.
+It scrapes the Polymer element API in order to define Angular 2 `outputs` and `inputs`, to apply the `ngControl` and the `ngForm` directives, and to observe DOM changes updating the element's DOM tree appropriately.
 
 == Quick Start
 
