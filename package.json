@@ -1,6 +1,6 @@
 {
   "name": "@vaadin/angular2-polymer",
-  "version": "1.0.0-alpha6",
+  "version": "1.0.0-beta1",
   "description": "Angular 2 support for Polymer elements",
   "repository": "https://github.com/vaadin/angular2-polymer.git",
   "main": "index.js",
