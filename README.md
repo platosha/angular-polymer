@@ -24,9 +24,22 @@ export class MyComponent {
 
 ## Getting started
 
-See the [tutorial](docs/tutorial.adoc) for instructions on how to use `angular2-polymer`.
+See the overview for a [quick start](https://vaadin.com/docs/-/part/elements/angular2-polymer/overview.html).
 
-If you are using [Angular-CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](docs/ng-cli.adoc) for projects created with the `ng` command line utility.
+See the [tutorial](https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html) for complete instructions on how to use `angular2-polymer` and how to build a working application with Angular 2 data binding and routes.
+
+If you are using [Angular-CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](https://vaadin.com/docs/-/part/elements/angular2-polymer/ng-cli.html) for projects created with the `ng` command line utility.
+
+## Demo app
+
+The Expense Manager demo is an example of a real world application built using Angular 2 and Polymer web components.
+
+- [Live demo](http://demo.vaadin.com/expense-manager-ng)
+- [Source code](https://github.com/vaadin/expense-manager-ng2-demo)
+
+## Where to get Polymer web components
+
+For high quality Polymer web components, see [Vaadin Elements](https://vaadin.com/elements) and the [Polymer Element Catalog](https://elements.polymer-project.org).
 
 ## Contributing
 
