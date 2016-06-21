@@ -1,5 +1,6 @@
 *.js
 *.d.ts
+!ng-cli/*.js
 
 # Created by https://www.gitignore.io/api/node,bower,typings
 
