@@ -54,6 +54,18 @@ describe('PolymerElement', () => {
     }
   });
 
+  describe('Developer experience', () => {
+
+    it('should throw an error for non-registered elements', () => {
+      try {
+        PolymerElement('non-registered');
+      } catch (error) {
+        expect(error.message).toContain('element "non-registered" has not been registered');
+      }
+    });
+
+  });
+
   describe('Two-way data binding', () => {
 
     beforeAll(() => {

@@ -72,6 +72,9 @@ export function PolymerElement(name: string): any[] {
   const arrayAndObjectProperties: Array<any> = [];
 
   const proto:any = Object.getPrototypeOf(document.createElement(name));
+  if (proto.is !== name) {
+    throw new Error(`The Polymer element "${name}" has not been registered. Please check that the element is imported correctly.`);
+  }
   const isFormElement:boolean = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
   proto.behaviors.forEach((behavior:any) => configureProperties(behavior.properties));
   configureProperties(proto.properties);
