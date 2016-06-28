@@ -1,3 +1,27 @@
+---
+title: Tutorial
+order: 2
+layout: page
+subnav_auto_list_numbers: true
+subnav:
+  - title: Introduction
+    href: '#vaadin-angular2-polymer.tutorial.creating-project'
+  - title: Creating Project
+    href: '#vaadin-angular2-polymer.tutorial.creating-project'
+  - title: Adding and Installing Dependencies
+    href: '#vaadin-angular2-polymer.tutorial.dependencies'
+  - title: Adding Polymer Elements to Our Application
+    href: '#vaadin-angular2-polymer.tutorial.polymer'
+  - title: Building the Application Layout with Paper Elements
+    href: '#vaadin-angular2-polymer.tutorial.layout'
+  - title: List Heroes with Vaadin Grid
+    href: '#vaadin-angular2-polymer.tutorial.list-heroes'
+  - title: Hero Editor and Routing
+    href: '#vaadin-angular2-polymer.tutorial.hero-editor'
+  - title: Wrap Up
+    href: '#vaadin-angular2-polymer.tutorial.wrap-up'
+---
+
 [[vaadin-angular2-polymer.tutorial]]
 = Angular 2 with Polymer Elements Tutorial
 :linkattrs:
