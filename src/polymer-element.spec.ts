@@ -201,13 +201,8 @@ describe('PolymerElement', () => {
     });
 
     function contentParentChildren(contentParentId) {
-      var root = Polymer.dom(testElement.root);
-      var selected = root.querySelector('#' + contentParentId);
-      if (Polymer.Settings.useShadow) {
-        return selected.firstElementChild.getDistributedNodes();
-      } else {
-        return selected.childNodes;
-      }
+      var selected = testElement.$[contentParentId];
+      return Polymer.dom(selected).getDistributedNodes();
     }
 
     function containsChild(contentParentId, childClassName) {
@@ -236,11 +231,51 @@ describe('PolymerElement', () => {
       expect(Polymer.dom(testElement).querySelector('.foo')).not.toEqual(null);
     });
 
-    it('should support ngif', () => {
+    it('should support ngif', (done) => {
       testComponent.barVisible = true;
       fixture.detectChanges();
-      expect(containsChild('selected', 'bar')).toEqual(true);
-      expect(containsChild('all', 'bar2')).toEqual(true);
+      // Distribution with polyfills is done with MutationObservers, so it is asynchronous
+      setTimeout(function() {
+        expect(containsChild('selected', 'bar')).toEqual(true);
+        expect(containsChild('all', 'bar2')).toEqual(true);
+        done();
+      }, 0);
+    });
+
+  });
+
+  describe('DOM API', () => {
+
+    beforeAll(() => {
+      template = `
+        <test-element [(value)]="value" class="hascontent">
+          <div class="foo" *ngFor="let item of arrayObject">Foo {{item}}</div>
+          <div class="bar selected" *ngIf="barVisible">Bar</div>
+          <div class="bar2" *ngIf="barVisible">Bar2</div>
+          <div class="baz selected">Baz</div>
+        </test-element>
+        `;
+    });
+
+    it('should trigger one mutation after multiple operations', (done) => {
+      var observerSpy = jasmine.createSpy('observerSpy');
+      var domApi = Polymer.dom(testElement).observeNodes(observerSpy);
+      testComponent.arrayObject = [1, 2, 3];
+      fixture.detectChanges();
+      testComponent.arrayObject.push(4);
+      fixture.detectChanges();
+      testComponent.arrayObject.pop();
+      fixture.detectChanges();
+      testComponent.arrayObject = [0, 1, 2];
+      fixture.detectChanges();
+      testComponent.barVisible = true;
+      fixture.detectChanges();
+      testComponent.barVisible = false;
+      fixture.detectChanges();
+      setTimeout(function() {
+        expect(observerSpy).toHaveBeenCalledTimes(1);
+        done();
+      }, 0);
     });
 
   });
