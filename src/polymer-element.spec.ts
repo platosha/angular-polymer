@@ -2,16 +2,13 @@ import {
 describe,
 expect,
 it,
-injectAsync,
 inject,
-async,
 setBaseTestProviders
 } from '@angular/core/testing';
 import { PolymerElement } from './polymer-element';
 import { TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { ControlGroup, Control } from '@angular/common';
-import { dispatchEvent } from '@angular/platform-browser/testing';
 import { By } from '@angular/platform-browser/src/dom/debug/by';
 
 import {
