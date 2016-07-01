@@ -201,13 +201,8 @@ describe('PolymerElement', () => {
     });
 
     function contentParentChildren(contentParentId) {
-      var root = Polymer.dom(testElement.root);
-      var selected = root.querySelector('#' + contentParentId);
-      if (Polymer.Settings.useShadow) {
-        return selected.firstElementChild.getDistributedNodes();
-      } else {
-        return selected.childNodes;
-      }
+      var selected = testElement.$[contentParentId];
+      return Polymer.dom(selected).getDistributedNodes();
     }
 
     function containsChild(contentParentId, childClassName) {
@@ -236,11 +231,15 @@ describe('PolymerElement', () => {
       expect(Polymer.dom(testElement).querySelector('.foo')).not.toEqual(null);
     });
 
-    it('should support ngif', () => {
+    it('should support ngif', (done) => {
       testComponent.barVisible = true;
       fixture.detectChanges();
-      expect(containsChild('selected', 'bar')).toEqual(true);
-      expect(containsChild('all', 'bar2')).toEqual(true);
+      // Distribution with polyfills is done with MutationObservers, so it is asynchronous
+      setTimeout(function() {
+        expect(containsChild('selected', 'bar')).toEqual(true);
+        expect(containsChild('all', 'bar2')).toEqual(true);
+        done();
+      }, 0);
     });
 
   });

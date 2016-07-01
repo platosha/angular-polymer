@@ -29,14 +29,14 @@ class PolymerDomAdapter extends BrowserDomAdapter {
 class PolymerShadyDomAdapter extends PolymerDomAdapter {
   parentElement(el) { return Polymer.dom(el).parentNode; }
 
-  appendChild(el, node) { Polymer.dom(el).appendChild(node); Polymer.dom.flush(); }
-  insertBefore(el, node) { Polymer.dom(this.parentElement(el)).insertBefore(node, el); Polymer.dom.flush(); }
-  insertAllBefore(el, nodes) { var elParentDom = Polymer.dom(this.parentElement(el)); nodes.forEach(n => elParentDom.insertBefore(n, el)); Polymer.dom.flush(); }
+  appendChild(el, node) { Polymer.dom(el).appendChild(node); }
+  insertBefore(el, node) { Polymer.dom(this.parentElement(el)).insertBefore(node, el); }
+  insertAllBefore(el, nodes) { var elParentDom = Polymer.dom(this.parentElement(el)); nodes.forEach(n => elParentDom.insertBefore(n, el)); }
   insertAfter(el, node) { this.insertBefore(this.nextSibling(el), node); }
-  removeChild(el, node) { Polymer.dom(el).removeChild(node); Polymer.dom.flush(); }
+  removeChild(el, node) { Polymer.dom(el).removeChild(node); }
   childNodes(el) { return Polymer.dom(el).childNodes; }
   remove(node) { if (this.parentElement(node)) { this.removeChild(this.parentElement(node), node); } return node; }
-  clearNodes(el) { while(Polymer.dom(el).firstChild) { Polymer.dom(el).removeChild(Polymer.dom(el).firstChild); } Polymer.dom.flush(); }
+  clearNodes(el) { while(Polymer.dom(el).firstChild) { Polymer.dom(el).removeChild(Polymer.dom(el).firstChild); } }
 
   firstChild(el) { return Polymer.dom(el).firstChild; }
   lastChild(el) { return Polymer.dom(el).lastChild; }
