@@ -4,12 +4,8 @@
 <dom-module id="test-element">
   <template>
     <div id="nested" nested-object-value$=[[nestedObject.value]] array-object-value$=[[arrayObject.0]]></div>
-    <div id="selected">
-      <content select=".selected"></content>
-    </div>
-    <div id="all">
-      <content></content>
-    </div>
+    <content id="selected" select=".selected"></content>
+    <content id="all"></content>
   </template>
 </dom-module>
 
