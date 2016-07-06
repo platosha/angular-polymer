@@ -10,6 +10,7 @@ import { TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing
 import { Component } from '@angular/core';
 import { ControlGroup, Control } from '@angular/common';
 import { By } from '@angular/platform-browser/src/dom/debug/by';
+import { __platform_browser_private__ } from '@angular/platform-browser';
 
 import {
 TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS,
@@ -276,6 +277,24 @@ describe('PolymerElement', () => {
         expect(observerSpy).toHaveBeenCalledTimes(1);
         done();
       }, 0);
+    });
+
+    it('should have the correct adapter', () => {
+      const functionName = (fun) => {
+        var ret = fun.toString();
+        ret = ret.substr('function '.length);
+        ret = ret.substr(0, ret.indexOf('('));
+        return ret;
+      };
+
+      var dom = __platform_browser_private__.getDOM();
+      const adapterName = functionName(dom.constructor);
+
+      if (Polymer.Settings.useShadow) {
+        expect(adapterName).toEqual("PolymerDomAdapter");
+      } else {
+        expect(adapterName).toEqual("PolymerShadyDomAdapter");
+      }
     });
 
   });
