@@ -14,7 +14,7 @@ import {
 import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
 
 import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
-import { setDOM } from '@angular/platform-browser/src/dom/dom_adapter';
+import { __platform_browser_private__ } from '@angular/platform-browser';
 
 const Polymer:any = (<any>window).Polymer;
 
@@ -61,9 +61,9 @@ class PolymerShadyDomAdapter extends PolymerDomAdapter {
 }
 
 if (Polymer.Settings.useShadow) {
-  setDOM(new PolymerDomAdapter());
+  __platform_browser_private__.setRootDomAdapter(new PolymerDomAdapter());
 } else {
-  setDOM(new PolymerShadyDomAdapter());
+  __platform_browser_private__.setRootDomAdapter(new PolymerShadyDomAdapter());
 }
 
 
