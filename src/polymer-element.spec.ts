@@ -182,6 +182,62 @@ describe('PolymerElement', () => {
     });
   });
 
+  describe('Checked Element inside Form', () => {
+    var form: ControlGroup;
+
+    beforeAll(() => {
+      // test-element added to make the global test setup not crash.
+      template = `
+        <form [ngFormModel]="form">
+          <paper-checkbox ngControl="value"></paper-checkbox>
+        </form>
+        <test-element></test-element>
+      `;
+    });
+
+    describe('initially false', () => {
+      beforeEach(() => {
+        form = new ControlGroup({ 'value': new Control(false) });
+        fixture.debugElement.componentInstance.form = form;
+        fixture.detectChanges();
+      });
+
+      it('should set default value', () => {
+        var checkedElement = fixture.debugElement.query(By.css('paper-checkbox')).nativeElement;
+
+        expect(checkedElement.checked).toEqual(false);
+      });
+
+      it('should set form value', () => {
+        var checkedElement = fixture.debugElement.query(By.css('paper-checkbox')).nativeElement;
+        checkedElement.checked = true;
+
+        expect(form.value.value).toEqual(true);
+      });
+    });
+
+    describe('initially true', () => {
+      beforeEach(() => {
+        form = new ControlGroup({ 'value': new Control(true) });
+        fixture.debugElement.componentInstance.form = form;
+        fixture.detectChanges();
+      });
+
+      it('should set default value', () => {
+        var checkedElement = fixture.debugElement.query(By.css('paper-checkbox')).nativeElement;
+
+        expect(checkedElement.checked).toEqual(true);
+      });
+
+      it('should set form value', () => {
+        var checkedElement = fixture.debugElement.query(By.css('paper-checkbox')).nativeElement;
+        checkedElement.checked = false;
+
+        expect(form.value.value).toEqual(false);
+      });
+    });
+  });
+
   describe('Light dom content', () => {
 
     beforeAll(() => {
@@ -304,7 +360,7 @@ describe('PolymerElement', () => {
 @Component({
   selector: 'test-component',
   template: ``,
-  directives: [PolymerElement('test-element')]
+  directives: [PolymerElement('test-element'), PolymerElement('paper-checkbox')]
 })
 class TestComponent {
 
