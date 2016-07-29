@@ -75,6 +75,7 @@ export function PolymerElement(name: string): any[] {
   if (proto.is !== name) {
     throw new Error(`The Polymer element "${name}" has not been registered. Please check that the element is imported correctly.`);
   }
+  const isCheckedElement:boolean = Polymer && Polymer.IronCheckedElementBehaviorImpl && proto.behaviors.indexOf(Polymer.IronCheckedElementBehaviorImpl) > -1;
   const isFormElement:boolean = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
   proto.behaviors.forEach((behavior:any) => configureProperties(behavior.properties));
   configureProperties(proto.properties);
@@ -144,6 +145,38 @@ export function PolymerElement(name: string): any[] {
       if(this._control) {
         this._element.invalid = !this._control.pristine && !this._control.valid;
       }
+    }
+  });
+
+  const checkedElementDirective:any = Directive({
+    selector: name,
+    providers: [provide(
+      NG_VALUE_ACCESSOR, {
+        useExisting: forwardRef(() => checkedElementDirective),
+        multi: true
+      })],
+    host: {
+      '(checkedChange)': 'onCheckedChanged($event)'
+    }
+  }).Class({
+    constructor: [Renderer, ElementRef, function(renderer: Renderer, el: ElementRef) {
+      this._renderer = renderer;
+      this._element = el.nativeElement;
+      this._element.addEventListener('blur', () => this.onTouched(), true);
+    }],
+
+    onChange: (_: any) => { },
+    onTouched: () => { },
+
+    writeValue: function(value: any): void {
+      this._renderer.setElementProperty(this._element, 'checked', value);
+    },
+
+    registerOnChange: function(fn: (_: any) => void): void { this.onChange = fn; },
+    registerOnTouched: function(fn: () => void): void { this.onTouched = fn; },
+
+    onCheckedChanged: function(value: Boolean) {
+      this.onChange(value);
     }
   });
 
@@ -296,7 +329,10 @@ export function PolymerElement(name: string): any[] {
 
   var directives = [changeEventsAdapterDirective, notifyForDiffersDirective];
 
-  if (isFormElement) {
+  if (isCheckedElement) {
+    directives.push(checkedElementDirective);
+    directives.push(validationDirective);
+  } else if (isFormElement) {
     directives.push(formElementDirective);
     directives.push(validationDirective);
   }
