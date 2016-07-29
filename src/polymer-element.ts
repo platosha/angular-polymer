@@ -11,7 +11,8 @@ import {
   IterableDiffers,
   DefaultIterableDiffer
 } from '@angular/core';
-import { NgControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/common';
+import { NgControl as OldNgControl, NG_VALUE_ACCESSOR as OLD_NG_VALUE_ACCESSOR } from '@angular/common';
+import { FormControlName, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
 import { __platform_browser_private__ } from '@angular/platform-browser';
@@ -137,10 +138,14 @@ export function PolymerElement(name: string): any[] {
   }).Class({
     constructor: [ElementRef, Injector, function(el: ElementRef, injector: Injector) {
       this._element = el.nativeElement;
-      this._control = injector.get(NgControl, null);
+      this._oldControl = injector.get(OldNgControl, null);
+      this._control = injector.get(FormControlName, null);
     }],
 
     ngDoCheck: function() {
+      if(this._oldControl) {
+        this._element.invalid = !this._oldControl.pristine && !this._oldControl.valid;
+      }
       if(this._control) {
         this._element.invalid = !this._control.pristine && !this._control.valid;
       }
@@ -149,11 +154,16 @@ export function PolymerElement(name: string): any[] {
 
   const formElementDirective:any = Directive({
     selector: name,
-    providers: [provide(
-      NG_VALUE_ACCESSOR, {
+    providers: [
+      provide(OLD_NG_VALUE_ACCESSOR, {
         useExisting: forwardRef(() => formElementDirective),
         multi: true
-      })],
+      }),
+      provide(NG_VALUE_ACCESSOR, {
+        useExisting: forwardRef(() => formElementDirective),
+        multi: true
+      })
+    ],
     host: {
       '(valueChange)': 'onValueChanged($event)'
     }

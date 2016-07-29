@@ -20,6 +20,7 @@
   "dependencies": {
     "@angular/common":"^2.0.0-rc.0",
     "@angular/core": "^2.0.0-rc.0",
+    "@angular/forms": "^0.2.0",
     "@angular/platform-browser": "^2.0.0-rc.0",
     "rxjs": "5.0.0-beta.6",
     "zone.js": "^0.6.12"

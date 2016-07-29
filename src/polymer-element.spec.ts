@@ -3,13 +3,14 @@ describe,
 expect,
 it,
 inject,
+addProviders,
 setBaseTestProviders
 } from '@angular/core/testing';
 import { PolymerElement } from './polymer-element';
 import { TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { ControlGroup, Control } from '@angular/common';
-import { By } from '@angular/platform-browser/src/dom/debug/by';
+import { FormGroup, FormControl, disableDeprecatedForms, provideForms, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 import { __platform_browser_private__ } from '@angular/platform-browser';
 
 import {
@@ -17,17 +18,47 @@ TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS,
 TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
 } from '@angular/platform-browser-dynamic/testing';
 
-setBaseTestProviders(TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS, TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
-
 const Polymer: any = (<any>window).Polymer;
 
 describe('PolymerElement', () => {
 
   var tcb: TestComponentBuilder;
   var template: any;
+  var directives: Array<any>;
   var testElement: any;
   var testComponent: TestComponent;
   var fixture: ComponentFixture<any>;
+
+  function createTestComponent(done: (error?: any) => void) {
+
+    if (template) {
+
+      addProviders([
+        TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
+        TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS
+      ]);
+
+      fixture = null;
+      testElement = null;
+      testComponent = null;
+
+      inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+        tcb
+          .overrideTemplate(TestComponent, template)
+          .createAsync(TestComponent)
+          .then((_fixture) => {
+            fixture = _fixture;
+            testElement = _fixture.debugElement.query((el) => el.name == 'test-element').nativeElement;
+            testComponent = _fixture.componentInstance;
+            done();
+          })
+          .catch(done);
+      })();
+
+    } else {
+      done();
+    }
+  }
 
   it('is defined', () => {
     expect(PolymerElement).toBeDefined();
@@ -35,21 +66,6 @@ describe('PolymerElement', () => {
 
   it('is function', () => {
     expect(typeof PolymerElement).toBe('function');
-  });
-
-  beforeEach((done) => {
-    if (template) {
-      inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-        tcb.overrideTemplate(TestComponent, template).createAsync(TestComponent).then((_fixture) => {
-          fixture = _fixture;
-          testElement = _fixture.debugElement.query(By.css('test-element')).nativeElement;
-          testComponent = _fixture.componentInstance;
-          done();
-        });
-      })();
-    } else {
-      done();
-    }
   });
 
   describe('Developer experience', () => {
@@ -75,6 +91,8 @@ describe('PolymerElement', () => {
         </test-element>
         `;
     });
+
+    beforeEach(createTestComponent);
 
     it('should have initial bound value', () => {
       fixture.detectChanges();
@@ -110,76 +128,117 @@ describe('PolymerElement', () => {
 
   describe('Form field', () => {
 
-    var form: ControlGroup;
+    var form: any;
 
-    beforeAll(() => {
-      template = `
-        <form [ngFormModel]="form">
-          <test-element ngControl="value" required></test-element>
-        </form>
+    function formTests(): void {
+
+      describe('Initial state', () => {
+
+        it('should be initially pristine', () => {
+          expect(testElement.classList.contains('ng-pristine')).toEqual(true);
+        });
+
+        it('should be initially untouched', () => {
+          expect(testElement.classList.contains('ng-untouched')).toEqual(true);
+        });
+
+        it('should be invalid', () => {
+          expect(testElement.classList.contains('ng-invalid')).toEqual(true);
+        });
+
+        it('should be an invalid form', () => {
+          expect(form.valid).toEqual(false);
+        });
+
+        it('should not reflect invalid state to element initially', () => {
+          expect(testElement.invalid).toEqual(false);
+        });
+
+      });
+
+      describe('after value has changed', () => {
+
+        beforeEach(() => {
+          testElement.value = 'qux';
+          fixture.detectChanges();
+        });
+
+        it('should be dirty on value change', () => {
+          expect(testElement.classList.contains('ng-dirty')).toEqual(true);
+        });
+
+        it('should be a valid form', () => {
+          expect(form.valid).toEqual(true);
+        });
+
+        it('should have correct value', () => {
+          expect(form.value.value).toEqual('qux');
+        });
+
+        it('should be valid', () => {
+          expect(testElement.classList.contains('ng-valid')).toEqual(true);
+        });
+
+        it('should reflect invalid state to testElement when value changed', () => {
+          testElement.value = '';
+          fixture.detectChanges();
+          expect(testElement.invalid).toEqual(true);
+        });
+
+      });
+
+    }
+
+    describe('Deprecated forms API', () => {
+
+      beforeAll(() => {
+        template = `
+          <form [ngFormModel]="form">
+            <test-element ngControl="value" required></test-element>
+          </form>
         `;
-    });
-
-    beforeEach(() => {
-      form = new ControlGroup({ "value": new Control() });
-      fixture.debugElement.componentInstance.form = form;
-      fixture.detectChanges();
-    });
-
-    describe('Initial state', () => {
-
-      it('should be initially pristine', () => {
-        expect(testElement.classList.contains('ng-pristine')).toEqual(true);
       });
 
-      it('should be initially untouched', () => {
-        expect(testElement.classList.contains('ng-untouched')).toEqual(true);
+      beforeEach((done: ()=>void) => {
+        createTestComponent((error?: any) => {
+          form = new ControlGroup({value: new Control()});
+          fixture.debugElement.componentInstance.form = form;
+          fixture.detectChanges();
+          done(error);
+        });
       });
 
-      it('should be invalid', () => {
-        expect(testElement.classList.contains('ng-invalid')).toEqual(true);
-      });
-
-      it('should be an invalid form', () => {
-        expect(form.valid).toEqual(false);
-      });
-
-      it('should not reflect invalid state to element initially', () => {
-        expect(testElement.invalid).toEqual(false);
-      });
+      formTests();
 
     });
 
-    describe('after value has changed', () => {
+    describe('New forms API', () => {
 
-      beforeEach(() => {
-        testElement.value = 'qux';
-        fixture.detectChanges();
+      beforeAll(() => {
+        template = `
+          <form [formGroup]="form">
+            <test-element formControlName="value" required></test-element>
+          </form>
+        `;
       });
 
-      it('should be dirty on value change', () => {
-        expect(testElement.classList.contains('ng-dirty')).toEqual(true);
+      beforeEach((done) => {
+        addProviders([
+          disableDeprecatedForms(),
+          provideForms()
+        ]);
+        createTestComponent((error?: any) => {
+          form = new FormGroup({value: new FormControl()});
+          fixture.debugElement.componentInstance.form = form;
+          fixture.detectChanges();
+          done(error);
+        });
       });
 
-      it('should be a valid form', () => {
-        expect(form.valid).toEqual(true);
-      });
-
-      it('should have correct value', () => {
-        expect(form.value.value).toEqual('qux');
-      });
-
-      it('should be valid', () => {
-        expect(testElement.classList.contains('ng-valid')).toEqual(true);
-      });
-
-      it('should reflect invalid state to testElement when value changed', () => {
-        testElement.value = '';
-        fixture.detectChanges();
-        expect(testElement.invalid).toEqual(true);
-      });
+      formTests();
 
     });
+
   });
 
   describe('Light dom content', () => {
@@ -196,6 +255,8 @@ describe('PolymerElement', () => {
         </test-element>
         `;
     });
+
+    beforeEach(createTestComponent);
 
     beforeEach((done) => {
       setTimeout(done, 0);
@@ -258,6 +319,8 @@ describe('PolymerElement', () => {
         `;
     });
 
+    beforeEach(createTestComponent);
+
     it('should trigger one mutation after multiple operations', (done) => {
       var observerSpy = jasmine.createSpy('observerSpy');
       var domApi = Polymer.dom(testElement).observeNodes(observerSpy);
@@ -304,7 +367,10 @@ describe('PolymerElement', () => {
 @Component({
   selector: 'test-component',
   template: ``,
-  directives: [PolymerElement('test-element')]
+  directives: [
+    REACTIVE_FORM_DIRECTIVES,
+    PolymerElement('test-element')
+  ]
 })
 class TestComponent {
 
