@@ -138,16 +138,18 @@ export function PolymerElement(name: string): any[] {
   }).Class({
     constructor: [ElementRef, Injector, function(el: ElementRef, injector: Injector) {
       this._element = el.nativeElement;
-      this._oldControl = injector.get(OldNgControl, null);
-      this._control = injector.get(FormControlName, null);
+      this._injector = injector;
     }],
 
     ngDoCheck: function() {
-      if(this._oldControl) {
-        this._element.invalid = !this._oldControl.pristine && !this._oldControl.valid;
+      const oldControl = this._injector.get(OldNgControl, null);
+      const control = this._injector.get(FormControlName, null);
+
+      if (oldControl && oldControl.pristine !== null && oldControl.valid !== null) {
+        this._element.invalid = !oldControl.pristine && !oldControl.valid;
       }
-      if(this._control) {
-        this._element.invalid = !this._control.pristine && !this._control.valid;
+      if (control) {
+        this._element.invalid = !control.pristine && !control.valid;
       }
     }
   });
@@ -185,11 +187,7 @@ export function PolymerElement(name: string): any[] {
     registerOnTouched: function(fn: () => void): void { this.onTouched = fn; },
 
     onValueChanged: function(value: String) {
-      if (this._initialValueSet) {
-        this.onChange(value);
-      } else {
-        this._initialValueSet = true;
-      }
+      this.onChange(value);
     }
   });
 
