@@ -21,10 +21,12 @@ describe('PolymerElement', () => {
       declarations: [
         TestComponent,
         TestComponentForm,
+        TestComponentCheckboxForm,
         TestComponentDeprecatedForm,
         TestComponentLightDom,
         TestComponentDomApi,
-        PolymerElement('test-element')
+        PolymerElement('test-element'),
+        PolymerElement('paper-checkbox')
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
@@ -186,6 +188,52 @@ describe('PolymerElement', () => {
 
   });
 
+
+  describe('Checked Element inside Form', () => {
+
+    var form: FormGroup;
+
+    describe('initially false', () => {
+      beforeEach(() => {
+        createTestComponent(TestComponentCheckboxForm);
+        form = new FormGroup({value: new FormControl(false)});
+        fixture.debugElement.componentInstance.form = form;
+        fixture.detectChanges();
+      });
+
+      it('should set default value', () => {
+        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
+        expect(checkedElement.checked).toEqual(false);
+      });
+
+      it('should set form value', () => {
+        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
+        checkedElement.checked = true;
+        expect(form.value.value).toEqual(true);
+      });
+    });
+
+    describe('initially true', () => {
+      beforeEach(() => {
+        createTestComponent(TestComponentCheckboxForm);
+        form = new FormGroup({value: new FormControl(true)});
+        fixture.debugElement.componentInstance.form = form;
+        fixture.detectChanges();
+      });
+
+      it('should set default value', () => {
+        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
+        expect(checkedElement.checked).toEqual(true);
+      });
+
+      it('should set form value', () => {
+        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
+        checkedElement.checked = false;
+        expect(form.value.value).toEqual(false);
+      });
+    });
+  });
+
   describe('Light dom content', () => {
 
     beforeEach((done) => {
@@ -314,6 +362,16 @@ class TestComponentDeprecatedForm {
 class TestComponentForm {
   value = 'foo';
 }
+
+@Component({
+  // test-element added to make the global test setup not crash.
+  template: `
+    <form [formGroup]="form">
+      <paper-checkbox formControlName="value"></paper-checkbox>
+    </form>
+    <test-element></test-element>`
+})
+class TestComponentCheckboxForm { }
 
 @Component({
   template: `

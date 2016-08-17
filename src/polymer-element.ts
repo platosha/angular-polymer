@@ -77,6 +77,7 @@ export function PolymerElement(name: string): any[] {
     throw new Error(`The Polymer element "${name}" has not been registered. Please check that the element is imported correctly.`);
   }
   const isFormElement:boolean = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
+  const isCheckedElement:boolean = Polymer && Polymer.IronCheckedElementBehaviorImpl && proto.behaviors.indexOf(Polymer.IronCheckedElementBehaviorImpl) > -1;
   proto.behaviors.forEach((behavior:any) => configureProperties(behavior.properties));
   configureProperties(proto.properties);
 
@@ -166,9 +167,7 @@ export function PolymerElement(name: string): any[] {
         multi: true
       })
     ],
-    host: {
-      '(valueChange)': 'onValueChanged($event)'
-    }
+    host: (isCheckedElement ? { '(checkedChange)': 'onValueChanged($event)' } : { '(valueChange)': 'onValueChanged($event)' })
   }).Class({
     constructor: [Renderer, ElementRef, function(renderer: Renderer, el: ElementRef) {
       this._renderer = renderer;
@@ -180,13 +179,13 @@ export function PolymerElement(name: string): any[] {
     onTouched: () => { },
 
     writeValue: function(value: any): void {
-      this._renderer.setElementProperty(this._element, 'value', value);
+      this._renderer.setElementProperty(this._element, (isCheckedElement ? 'checked' : 'value'), value);
     },
 
     registerOnChange: function(fn: (_: any) => void): void { this.onChange = fn; },
     registerOnTouched: function(fn: () => void): void { this.onTouched = fn; },
 
-    onValueChanged: function(value: String) {
+    onValueChanged: function(value: any) {
       this.onChange(value);
     }
   });
