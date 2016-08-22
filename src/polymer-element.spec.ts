@@ -1,33 +1,45 @@
 import {
-describe,
-expect,
-it,
-inject,
-setBaseTestProviders
+  async,
+  TestBed,
+  ComponentFixture
 } from '@angular/core/testing';
 import { PolymerElement } from './polymer-element';
-import { TestComponentBuilder, ComponentFixture} from '@angular/compiler/testing';
-import { Component } from '@angular/core';
-import { ControlGroup, Control } from '@angular/common';
-import { By } from '@angular/platform-browser/src/dom/debug/by';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FORM_DIRECTIVES, ControlGroup, Control } from '@angular/common';
+import { ReactiveFormsModule, FormGroup, FormControl, disableDeprecatedForms, provideForms } from '@angular/forms';
 import { __platform_browser_private__ } from '@angular/platform-browser';
-
-import {
-TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS,
-TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS,
-} from '@angular/platform-browser-dynamic/testing';
-
-setBaseTestProviders(TEST_BROWSER_DYNAMIC_PLATFORM_PROVIDERS, TEST_BROWSER_DYNAMIC_APPLICATION_PROVIDERS);
 
 const Polymer: any = (<any>window).Polymer;
 
 describe('PolymerElement', () => {
 
-  var tcb: TestComponentBuilder;
-  var template: any;
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule
+      ],
+      declarations: [
+        TestComponent,
+        TestComponentForm,
+        TestComponentDeprecatedForm,
+        TestComponentLightDom,
+        TestComponentDomApi,
+        PolymerElement('test-element')
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    });
+    TestBed.compileComponents();
+  }));
+
   var testElement: any;
   var testComponent: TestComponent;
   var fixture: ComponentFixture<any>;
+
+  function createTestComponent(type: any) {
+    fixture = TestBed.createComponent(type);
+    testElement = fixture.debugElement.query((el) => el.name == 'test-element').nativeElement;
+    testComponent = fixture.componentInstance;
+  }
 
   it('is defined', () => {
     expect(PolymerElement).toBeDefined();
@@ -35,21 +47,6 @@ describe('PolymerElement', () => {
 
   it('is function', () => {
     expect(typeof PolymerElement).toBe('function');
-  });
-
-  beforeEach((done) => {
-    if (template) {
-      inject([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-        tcb.overrideTemplate(TestComponent, template).createAsync(TestComponent).then((_fixture) => {
-          fixture = _fixture;
-          testElement = _fixture.debugElement.query(By.css('test-element')).nativeElement;
-          testComponent = _fixture.componentInstance;
-          done();
-        });
-      })();
-    } else {
-      done();
-    }
   });
 
   describe('Developer experience', () => {
@@ -66,15 +63,7 @@ describe('PolymerElement', () => {
 
   describe('Two-way data binding', () => {
 
-    beforeAll(() => {
-      template = `
-        <test-element
-          [(value)]="value"
-          [(nestedObject)]="nestedObject"
-          [(arrayObject)]="arrayObject">
-        </test-element>
-        `;
-    });
+    beforeEach(() => { createTestComponent(TestComponent); });
 
     it('should have initial bound value', () => {
       fixture.detectChanges();
@@ -110,94 +99,97 @@ describe('PolymerElement', () => {
 
   describe('Form field', () => {
 
-    var form: ControlGroup;
+    var form: any;
 
-    beforeAll(() => {
-      template = `
-        <form [ngFormModel]="form">
-          <test-element ngControl="value" required></test-element>
-        </form>
-        `;
-    });
+    function formTests(): void {
 
-    beforeEach(() => {
-      form = new ControlGroup({ "value": new Control() });
-      fixture.debugElement.componentInstance.form = form;
-      fixture.detectChanges();
-    });
+      describe('Initial state', () => {
 
-    describe('Initial state', () => {
+        it('should be initially pristine', () => {
+          expect(testElement.classList.contains('ng-pristine')).toEqual(true);
+        });
 
-      it('should be initially pristine', () => {
-        expect(testElement.classList.contains('ng-pristine')).toEqual(true);
+        it('should be initially untouched', () => {
+          expect(testElement.classList.contains('ng-untouched')).toEqual(true);
+        });
+
+        it('should be invalid', () => {
+          expect(testElement.classList.contains('ng-invalid')).toEqual(true);
+        });
+
+        it('should be an invalid form', () => {
+          expect(form.valid).toEqual(false);
+        });
+
+        it('should not reflect invalid state to element initially', () => {
+          expect(testElement.invalid).toBeFalsy();
+        });
+
       });
 
-      it('should be initially untouched', () => {
-        expect(testElement.classList.contains('ng-untouched')).toEqual(true);
+      describe('after value has changed', () => {
+
+        beforeEach(() => {
+          testElement.value = 'qux';
+          fixture.detectChanges();
+        });
+
+        it('should be dirty on value change', () => {
+          expect(testElement.classList.contains('ng-dirty')).toEqual(true);
+        });
+
+        it('should be a valid form', () => {
+          expect(form.valid).toEqual(true);
+        });
+
+        it('should have correct value', () => {
+          expect(form.value.value).toEqual('qux');
+        });
+
+        it('should be valid', () => {
+          expect(testElement.classList.contains('ng-valid')).toEqual(true);
+        });
+
+        it('should reflect invalid state to testElement when value changed', () => {
+          testElement.value = '';
+          fixture.detectChanges();
+          expect(testElement.invalid).toEqual(true);
+        });
+
       });
 
-      it('should be invalid', () => {
-        expect(testElement.classList.contains('ng-invalid')).toEqual(true);
-      });
+    }
 
-      it('should be an invalid form', () => {
-        expect(form.valid).toEqual(false);
-      });
-
-      it('should not reflect invalid state to element initially', () => {
-        expect(testElement.invalid).toEqual(false);
-      });
-
-    });
-
-    describe('after value has changed', () => {
+    describe('Deprecated forms API', () => {
 
       beforeEach(() => {
-        testElement.value = 'qux';
+        createTestComponent(TestComponentDeprecatedForm);
+        form = new ControlGroup({value: new Control()});
+        fixture.debugElement.componentInstance.form = form;
         fixture.detectChanges();
       });
 
-      it('should be dirty on value change', () => {
-        expect(testElement.classList.contains('ng-dirty')).toEqual(true);
-      });
-
-      it('should be a valid form', () => {
-        expect(form.valid).toEqual(true);
-      });
-
-      it('should have correct value', () => {
-        expect(form.value.value).toEqual('qux');
-      });
-
-      it('should be valid', () => {
-        expect(testElement.classList.contains('ng-valid')).toEqual(true);
-      });
-
-      it('should reflect invalid state to testElement when value changed', () => {
-        testElement.value = '';
-        fixture.detectChanges();
-        expect(testElement.invalid).toEqual(true);
-      });
-
+      formTests();
     });
+
+    describe('New forms API', () => {
+
+      beforeEach(() => {
+        createTestComponent(TestComponentForm);
+        form = new FormGroup({value: new FormControl()});
+        fixture.debugElement.componentInstance.form = form;
+        fixture.detectChanges();
+      });
+
+      formTests();
+    });
+
   });
 
   describe('Light dom content', () => {
 
-    beforeAll(() => {
-      template = `
-        <test-element [(value)]="value" class="hascontent">
-          <div class="foo">Foo</div>
-          <div class="bar selected" *ngIf="barVisible">Bar</div>
-          <div class="bar2" *ngIf="barVisible">Bar2</div>
-          <div class="baz selected">Baz</div>
-          Qux
-
-        </test-element>
-        `;
-    });
-
     beforeEach((done) => {
+      createTestComponent(TestComponentLightDom);
       setTimeout(done, 0);
     });
 
@@ -247,16 +239,7 @@ describe('PolymerElement', () => {
 
   describe('DOM API', () => {
 
-    beforeAll(() => {
-      template = `
-        <test-element [(value)]="value" class="hascontent">
-          <div class="foo" *ngFor="let item of arrayObject">Foo {{item}}</div>
-          <div class="bar selected" *ngIf="barVisible">Bar</div>
-          <div class="bar2" *ngIf="barVisible">Bar2</div>
-          <div class="baz selected">Baz</div>
-        </test-element>
-        `;
-    });
+    beforeEach(() => { createTestComponent(TestComponentDomApi); });
 
     it('should trigger one mutation after multiple operations', (done) => {
       var observerSpy = jasmine.createSpy('observerSpy');
@@ -298,22 +281,59 @@ describe('PolymerElement', () => {
     });
 
   });
-
 });
 
+
 @Component({
-  selector: 'test-component',
-  template: ``,
-  directives: [PolymerElement('test-element')]
+  template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject"></test-element>`
 })
 class TestComponent {
-
   value = 'foo';
-
   nestedObject = { value: undefined };
-
   arrayObject = [];
-
   barVisible = false;
-
 }
+
+@Component({
+  directives: [FORM_DIRECTIVES],
+  template: `
+    <form [ngFormModel]="form">
+      <test-element ngControl="value" required></test-element>
+    </form>`
+})
+class TestComponentDeprecatedForm {
+  value = 'foo';
+}
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <test-element formControlName="value" required></test-element>
+    </form>`
+})
+class TestComponentForm {
+  value = 'foo';
+}
+
+@Component({
+  template: `
+    <test-element [(value)]="value" class="hascontent">
+      <div class="foo">Foo</div>
+      <div class="bar selected" *ngIf="barVisible">Bar</div>
+      <div class="bar2" *ngIf="barVisible">Bar2</div>
+      <div class="baz selected">Baz</div>
+      Qux
+    </test-element>`
+})
+class TestComponentLightDom { }
+
+@Component({
+  template: `
+    <test-element [(value)]="value" class="hascontent">
+      <div class="foo" *ngFor="let item of arrayObject">Foo {{item}}</div>
+      <div class="bar selected" *ngIf="barVisible">Bar</div>
+      <div class="bar2" *ngIf="barVisible">Bar2</div>
+      <div class="baz selected">Baz</div>
+    </test-element>`
+})
+class TestComponentDomApi { }
