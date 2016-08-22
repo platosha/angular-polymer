@@ -1,11 +1,11 @@
 ---
-title: Polymer in Angular-CLI Apps
+title: Using in Angular-CLI SystemJS Apps
 order: 3
 layout: page
 ---
 
 [[vaadin-angular2-polymer.ng2cli]]
-= Using Polymer Elements with Angular-CLI Apps
+= Using Polymer Elements in Angular-CLI SystemJS Applications
 
 [[vaadin-angular2-polymer.ng2cli.introduction]]
 == Introduction
@@ -13,6 +13,16 @@ layout: page
 https://github.com/angular/angular-cli[Angular-CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
 
 In this document we will describe all the modifications you have to make to your Angular-CLI project to use Polymer elements.
+
+////
+// TODO: Uncomment this paragraph after correcting the link below
+[[vaadin-angular2-polymer.ng2cli.webpack-note]]
+[NOTE]
+.Note for the Angular-CLI Webpack Version Users
+====
+If you are using the webpack version of the Angular-CLI tool, please use the link:ng-cli-webpack.adoc[Using Polymer Elements in Angular-CLI Webpack Applications] guide.
+====
+////
 
 
 [[vaadin-angular2-polymer.ng2cli.preparation]]
