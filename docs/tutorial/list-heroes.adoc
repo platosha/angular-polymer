@@ -88,7 +88,6 @@ Add the heroes list component file [filename]#app/heroes.component.ts# with the 
 .[filename]#app/heroes.component.ts#
 ----
 import { Component, OnInit } from '@angular/core';
-import { PolymerElement } from '@vaadin/angular2-polymer';
 
 import { Hero } from './hero';
 import { HeroService } from './hero.service';
@@ -110,10 +109,7 @@ import { HeroService } from './hero.service';
     vaadin-grid {
       height: 100%;
     }
-  `],
-  directives: [
-    PolymerElement('vaadin-grid')
-  ]
+  `]
 })
 export class HeroesComponent implements OnInit {
   heroes: Hero[];
@@ -130,28 +126,18 @@ export class HeroesComponent implements OnInit {
 }
 ----
 
-Here in the [classname]#HeroesComponent#, we have the [elementname]#vaadin-grid# element in the template. In the styles, we have a `height: 100%;` rule for the [elementname]#vaadin-grid# element. In the template, there are three columns inside the [vaadinelement]#vaadin-grid#, specified with their corresponding item property names.
+Here in the [classname]#HeroesComponent#, we have the [vaadinelement]#vaadin-grid# element in the template. In the styles, we have a `height: 100%;` rule for the [vaadinelement]#vaadin-grid# element. In the template, there are three columns inside the [vaadinelement]#vaadin-grid#, specified with their corresponding item property names.
 
-Also in the template, the [propertyname]#items# property of the [elementname]#vaadin-grid# is bound to the [propertyname]#heroes# array property of [classname]#HeroesComponent#. At the same time, we import and use [classname]#HeroService# to get the list of heroes and assign the [propertyname]#heroes# property. Data binding of the Angular component takes care of updating the [propertyname]#items# property of [elementname]#vaadin-grid# with the list of heroes for us.
-
-[NOTE]
-.The [classname]#PolymerElement# Directives
-====
-Once again, we import [classname]#PolymerElement# in this file and add `PolymerElement('vaadin-grid')` to the [propertyname]#directives# of the component to enable all features for Vaadin Grid Polymer element in our [classname]#HeroesComponent#.
-====
+Also in the template, the [propertyname]#items# property of the [vaadinelement]#vaadin-grid# is bound to the [propertyname]#heroes# array property of [classname]#HeroesComponent#. At the same time, we import and use [classname]#HeroService# to get the list of heroes and assign the [propertyname]#heroes# property. Data binding of the Angular component takes care of updating the [propertyname]#items# property of [vaadinelement]#vaadin-grid# with the list of heroes for us.
 
 === Displaying Heroes List
 
-Finally in this step, you need to edit the [filename]#app/app.component.ts# file to provide [classname]#HeroService# for our application and display the heroes list component:
+Next, we need to edit the [filename]#app/app.component.ts# file to display the heroes list in the [classname]#AppComponent# template. Replace `<div>My application content</div>` with `<my-heroes></my-heroes>`, as in the following code:
 
 [source,typescript]
 .[filename]#app/app.component.ts#
 ----
 import { Component } from '@angular/core';
-import { PolymerElement } from '@vaadin/angular2-polymer';
-
-import { HeroService } from './hero.service';
-import { HeroesComponent } from './heroes.component';
 
 @Component({
   selector: 'my-app',
@@ -170,24 +156,48 @@ import { HeroesComponent } from './heroes.component';
       background: var(--primary-color);
       color: var(--dark-theme-text-color);
     }
-  `],
-  directives: [
-    PolymerElement('app-header-layout'),
-    PolymerElement('app-header'),
-    PolymerElement('app-toolbar'),
-    HeroesComponent
-  ],
-  providers: [
-    HeroService
-  ]
+  `]
 })
 export class AppComponent { }
 ----
 
-We did the following changes in the [filename]#app/app.component.ts# file:
+=== Updating AppModule
+
+Finally in this step, we update the [classname]#AppModule#. Change the contents of [filename]#app/app.module.ts# as follows:
+
+[source,typescript]
+.[filename]#app/app.module.ts#
+----
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { AppComponent }  from './app.component';
+import { HeroService } from './hero.service';
+import { HeroesComponent } from './heroes.component';
+
+@NgModule({
+  imports: [ BrowserModule ],
+  declarations: [
+    AppComponent,
+    PolymerElement('app-header-layout'),
+    PolymerElement('app-header'),
+    PolymerElement('app-toolbar'),
+    PolymerElement('paper-icon-button'),
+    HeroesComponent,
+    PolymerElement('vaadin-grid')
+  ],
+  providers: [ HeroService ],
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+})
+export class AppModule { }
+----
+
+We did the following changes in the [filename]#app/app.module.ts# file:
 
 * We imported [classname]#HeroService# and listed it in [propertyname]#providers#
-* We also imported [classname]#HeroesComponent#, appended it to [propertyname]#directives#, and replaced `<div>My application content</div>` with `<my-heroes></my-heroes>`
+* We also imported [classname]#HeroesComponent#, and appended it the [propertyname]#declarations#, alongside with the [classname]#PolymerElement# directives for the [vaadinelement]#vaadin-grid# element, which is used in the [classname]#HeroesComponent# template.
 
 Now it is again time to look in the browser window, to see how the heroes list looks in our application. It should look about as in <<figure.vaadin-angular2-polymer.tutorial.heroes-list>>:
 

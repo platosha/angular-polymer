@@ -45,8 +45,8 @@ Create a file named [filename]#app/hero-detail.component.ts# and put the followi
 .[filename]#app/hero-detail.component.ts#
 ----
 import { Component, OnInit } from '@angular/core';
-import { RouteParams } from '@angular/router-deprecated';
-import { PolymerElement } from '@vaadin/angular2-polymer';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Hero } from './hero';
 import { HeroService } from './hero.service';
@@ -59,10 +59,6 @@ import { HeroService } from './hero.service';
       <vaadin-date-picker label="Birthday" [(value)]="hero.birthday"></vaadin-date-picker>
     </div>
   `,
-  directives: [
-    PolymerElement('paper-input'),
-    PolymerElement('vaadin-date-picker')
-  ],
   styles: [`
     :host {
       display: block;
@@ -72,22 +68,29 @@ import { HeroService } from './hero.service';
 })
 export class HeroDetailComponent implements OnInit {
   hero: Hero;
+  private _routeParamsSubscription: Subscription;
 
   constructor(
-    private _routeParams: RouteParams,
+    private _route: ActivatedRoute,
     private _heroService: HeroService
   ) { }
 
   ngOnInit() {
-    let id = +this._routeParams.get('id');
-    this._heroService.getHero(id).then(hero => this.hero = hero);
+    this._routeParamsSubscription = this._route.params.subscribe(params => {
+      let id = +params['id']; // (+) converts string 'id' to a number
+      this._heroService.getHero(id).then(hero => this.hero = hero);
+    });
+  }
+
+  ngOnDestroy() {
+    this._routeParamsSubscription.unsubscribe();
   }
 }
 ----
 
 So, here we have just created [classname]#HeroDetailComponent#, the heroes editor for our application. It uses [elementname]#paper-input# bound to the [propertyname]#hero.name# and [vaadinelement]#vaadin-date-picker# bound to the [propertyname]#hero.birthday# property through two-way data binding in both cases (that is, with the `[(value)]` syntax).
 
-[classname]#HeroDetailComponent# gets the hero ID from [classname]#RouteParams# and calls [methodname]#getHero(id: number)# method from [classname]#HeroService# with the hero ID argument to retrive the hero object. After the retrieval, the hero object is assigned to the [propertyname]#hero# property of [classname]#HeroDetailComponent#.
+[classname]#HeroDetailComponent# gets the hero ID from the [classname]#ActivatedRoute# params and calls [methodname]#getHero(id: number)# method from [classname]#HeroService# with the hero ID argument to retrive the hero object. After the retrieval, the hero object is assigned to the [propertyname]#hero# property of [classname]#HeroDetailComponent#.
 
 Since we use two-way binding, the [propertyname]#hero.name# and the [propertyname]#hero.birthday# sub-property values are automatically displayed in the corresponding elements. When the user edits these values in the elements, the sub-properties of the [propertyname]#hero# property are updated automatically.
 
@@ -96,7 +99,7 @@ Since we use two-way binding, the [propertyname]#hero.name# and the [propertynam
 ====
 The hero object is retrived asynchronously after the component initialization. At this time when the retrieval starts, the component template is already rendered, but the [propertyname]#hero# is not loaded yet, so we can not use [propertyname]#hero.name# and [propertyname]#hero.birthday# sub-properties. Using them at this time would result in errors.
 
-That is why we wrap the [elementname]#paper-input# and the [elementname]#vaadin-date-picker# elements with `<div *ngIf="hero"></div>` in the component template. The `ngIf` structural directive not only hides the content, but also stops the hidden part of the template from being evaluated and rendered. This effectively prevents errors of accessing non-existant sub-properties during the loading.
+That is why we wrap the [elementname]#paper-input# and the [vaadinelement]#vaadin-date-picker# elements with `<div *ngIf="hero"></div>` in the component template. The `ngIf` structural directive not only hides the content, but also stops the hidden part of the template from being evaluated and rendered. This effectively prevents errors of accessing non-existant sub-properties during the loading.
 ====
 
 Unlike with Vaadin Grid in the heroes list, we do not want our editor contents to touch the edges of the browser window. It is nice to have some spacing around them. For that reason, we add `display: block;` and `padding: 16px;` rules in the styles section of our component metadata.
@@ -116,18 +119,63 @@ The Angular 2 Component Router uses `history.pushState` API for navigation. This
 ...
 ----
 
-Next, add routing, the back button, and navigation reaction to the [classname]#AppComponent#. Edit [filename]#app/app.component.ts# to contain the code below:
+Next we create a router configuration file. Add [filename]#app/app.routing.ts# with the following contents:
+
+[source,typescript]
+.[filename]#app/app.routing.ts#
+----
+import { Routes, RouterModule } from '@angular/router';
+
+import { HeroesComponent } from './heroes.component';
+import { HeroDetailComponent } from './hero-detail.component';
+
+const appRoutes: Routes = [
+  {
+    path: '',
+    redirectTo: '/heroes',
+    pathMatch: 'full',
+  },
+  {
+    path: 'heroes',
+    children: [
+      {
+        path: '',
+        component: HeroesComponent,
+        data: {
+          title: 'All heroes',
+          root: true
+        }
+      },
+      {
+        path: ':id',
+        component: HeroDetailComponent,
+        data: {
+          title: 'Hero detail'
+        }
+      }
+    ]
+  }
+];
+
+export const appRoutingProviders: any[] = [
+
+];
+
+export const routing = RouterModule.forRoot(appRoutes);
+----
+
+The routes list starts with the default route, which corresponds to the empty path. This route is used when no path is specified, and in our configuration, it redirects users to the `/heroes` path to open the heroes list by default.
+
+After that in our routing configuration, there are two routes grouped as children under the `/heroes` path: one route is for the heroes list ([classname]#HeroesComponent#) and another is for the hero detail editor ([classname]#HeroDetailComponent#). Note, that the second route path features the `:id` parameter. It is received inside [classname]#HeroDetailComponent# and used there to retrive the hero object, as described above in this step.
+
+Next, add a router outlet, the back button, and the navigation reaction to the [classname]#AppComponent#. Edit [filename]#app/app.component.ts# to contain the code below:
 
 [source,typescript]
 .[filename]#app/app.component.ts#
 ----
 import { Component, OnInit } from '@angular/core';
-import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, RouteData } from '@angular/router-deprecated';
-import { PolymerElement } from '@vaadin/angular2-polymer';
-
-import { HeroService } from './hero.service';
-import { HeroesComponent } from './heroes.component';
-import { HeroDetailComponent } from './hero-detail.component';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'my-app',
@@ -157,68 +205,80 @@ import { HeroDetailComponent } from './hero-detail.component';
       top: 12px;
       left: 8px;
     }
-  `],
-  directives: [
-    ROUTER_DIRECTIVES,
-    PolymerElement('app-header-layout'),
-    PolymerElement('app-header'),
-    PolymerElement('app-toolbar'),
-    PolymerElement('paper-icon-button')
-  ],
-  providers: [
-    ROUTER_PROVIDERS,
-    HeroService
-  ]
+  `]
 })
-@RouteConfig([
-  {
-    path: '/heroes',
-    name: 'Heroes',
-    component: HeroesComponent,
-    useAsDefault: true,
-    data: {
-      title: 'All heroes',
-      root: true
-    }
-  },
-  {
-    path: '/heroes/:id',
-    name: 'HeroDetail',
-    component: HeroDetailComponent,
-    data: {
-      title: 'Hero detail'
-    }
-  }
-])
 export class AppComponent implements OnInit {
   title = '';
   isInChildView = false;
+  private _routerSubscription: Subscription;
 
-  constructor(private _router: Router) { }
+  constructor(private _route: ActivatedRoute,
+              private _router: Router) { }
 
   ngOnInit() {
-    this._router.subscribe(() => {
-      let routeData: RouteData = this._router.currentInstruction.component.routeData;
-      this.title = routeData.get('title');
-      this.isInChildView = !routeData.get('root');
+    this._routerSubscription = this._router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        let route = this._route.snapshot;
+        while (route.firstChild) {
+          route = route.firstChild;
+        }
+        this.title = route.data['title'];
+        this.isInChildView = !route.data['root'];
+      }
     });
   }
 
+  ngOnDestroy() {
+    this._routerSubscription.unsubscribe();
+  }
+
   goBack() {
-    this._router.navigate(['Heroes']);
+    this._router.navigate(['/heroes']);
   }
 }
 ----
 
-Now we import the [classname]#RouteConfig# decorator and some other Angular 2 Component Router parts. We also add the [classname]#HeroDetailComponent# import alongside with the [classname]#HeroesComponent# import.
+Then we need to update the [classname]#AppModule#, to import and enable the hero detail editor and the routing configuration. Change the [filename]#app/app.module.ts# file contents as follows:
 
-As usual with routing in Angular 2, we add [classname]#ROUTER_DIRECTIVES# to the [propertyname]#directives# array of [classname]#AppComponent# component metadata, as well as [classname]#ROUTER_PROVIDERS# to the [propertyname]#providers# array.
+[source,TypeScript]
+.[filename]#app/app.module.ts#
+----
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { PolymerElement } from '@vaadin/angular2-polymer';
 
-We use the [classname]#RouteConfig# decorator to declare routes in our application. There are two routes: one for the heroes list ([classname]#HeroesComponent#) and another for the hero detail editor ([classname]#HeroDetailComponent#).
+import { AppComponent }  from './app.component';
+import { HeroService } from './hero.service';
+import { HeroesComponent } from './heroes.component';
+import { HeroDetailComponent } from './hero-detail.component';
+import { routing, appRoutingProviders } from './app.routing';
 
-Note that the first route has the `useAsDefault: true;` option in order to open the heroes list by default.
-
-The second route path features the `:id` parameter. It is received inside [classname]#HeroDetailComponent# and used there to retrive the hero object, as described above in this step.
+@NgModule({
+  imports: [
+    BrowserModule,
+    routing
+  ],
+  declarations: [
+    AppComponent,
+    PolymerElement('app-header-layout'),
+    PolymerElement('app-header'),
+    PolymerElement('app-toolbar'),
+    PolymerElement('paper-icon-button'),
+    HeroesComponent,
+    PolymerElement('vaadin-grid'),
+    HeroDetailComponent,
+    PolymerElement('paper-input'),
+    PolymerElement('vaadin-date-picker')
+  ],
+  providers: [
+    HeroService,
+    appRoutingProviders
+  ],
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+})
+export class AppModule { }
+----
 
 === Navigation to the Hero Details
 
@@ -228,8 +288,7 @@ The last feature to implement in this step is navigation from the heroes list to
 .[filename]#app/heroes.component.ts#
 ----
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router-deprecated';
-import { PolymerElement } from '@vaadin/angular2-polymer';
+import { Router } from '@angular/router';
 
 import { Hero } from './hero';
 import { HeroService } from './hero.service';
@@ -251,10 +310,7 @@ import { HeroService } from './hero.service';
     vaadin-grid {
       height: 100%;
     }
-  `],
-  directives: [
-    PolymerElement('vaadin-grid')
-  ]
+  `]
 })
 export class HeroesComponent implements OnInit {
   heroes: Hero[];
@@ -272,20 +328,20 @@ export class HeroesComponent implements OnInit {
     this.getHeroes();
   }
 
-  goToHeroDetailById(id: number) {
-    this._router.navigate(['HeroDetail', { id: id }]);
+  onSelect(hero: Hero) {
+    this._router.navigate(['/heroes', hero.id]);
   }
 
   onSelectedItemsChanged(event: any) {
     let selectedIndex: number = event.target.selection.selected()[0];
     if (selectedIndex !== undefined) {
-      this.goToHeroDetailById(this.heroes[selectedIndex].id);
+      this.onSelect(this.heroes[selectedIndex]);
     }
   }
 }
 ----
 
-Now when the user clicks a row inside the heroes list, [elementname]#vaadin-grid# fires [eventname]#selected-items-changed# event. We bound the event to the [methodname]#onSelectedItemsChanged(event: any)# method of the [classname]#HeroesComponent#. In the listener method, we read the selected item index, get the [propertyname]#id# property of the corresponding [propertyname]#heroes# array item, and call [methodname]#goToHeroDetailById(id: number)#, which uses [classname]#Router# to navigate to the hero detail of the selected hero.
+Now when the user clicks a row inside the heroes list, [vaadinelement]#vaadin-grid# fires [eventname]#selected-items-changed# event. We bound the event to the [methodname]#onSelectedItemsChanged(event: any)# method of the [classname]#HeroesComponent#. In the listener method, we read the selected item index, find the selected [propertyname]#heroes# array item, and call [methodname]#onSelect(hero: Hero)#, which uses [classname]#Router# to navigate to the hero detail editor for the selected hero.
 
 === Try It Out
 
@@ -307,11 +363,11 @@ In the folllowing, we go through and explain all the UX-related changes that wer
 
 We added the [propertyname]#title# property to the [classname]#AppComponent# and bound it to the text content of `<div title spacer></div>` inside the toolbar in the template.
 
-Instead of a static title, the title is now updated dynamically. We subscribed to the [classname]#Router# in [classname]#AppComponent# and used [classname]#RouteData# in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the [classname]#Router# event is dispatched so that the [propertyname]#title# property will be updated.
+Instead of a static title, the title is now updated dynamically. We subscribed to the [classname]#Router# events in [classname]#AppComponent# and used route data in the navigation event callback to get the title value specified for the current route. Each time after user opens the application or navigates inside, the [classname]#Router# [eventname]#NavigationEnd# event is dispatched, so that the [propertyname]#title# property will be updated.
 
 ==== The Back Icon in the Toolbar
 
-We added [elementname]#paper-icon-button# to have a back icon inside the [elementname]#app-toolbar# in the template. The icon has a click event binding, which calls the [methodname]#goBack()# method of the [classname]#AppComponent# class. In the method, we invoke the [methodname]#navigate(linkParams: any[])# method of the [classname]#Router# to navigate back to the heroes list from the hero details.
+We added [elementname]#paper-icon-button# to have a back icon inside the [elementname]#app-toolbar# in the template. The icon has a click event binding, which calls the [methodname]#goBack()# method of the [classname]#AppComponent# class. In the method, we invoke the [methodname]#navigate# method of the [classname]#Router# to navigate back to the heroes list from the hero details.
 
 When the heroes list is shown, the back icon is useless, so we need to hide it. To achieve that, we added [propertyname]#isInChildView# property to [classname]#AppComponent#, which is updated from the route data in the navigation event callback. In the template, we added `*ngIf="isInChildView"` for the [elementname]#paper-icon-button#.
 

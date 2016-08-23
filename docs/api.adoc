@@ -11,7 +11,7 @@ This module consists of one generic Angular 2 directive factory method named [cl
 
 == Features
 
-The [classname]#PolymerElement# is composed of a set of low level directives which would be added to the component dynamically.
+The [classname]#PolymerElement# is composed of a set of low level directives which would be added to the module dynamically.
 
 `changeEventsAdapterDirective`::
 This directive configures all the the public [propertyname]#properties#, that notify for their value change in a Polymer element, to be an Angular 2 link:https://angular.io/docs/js/latest/api/core/DirectiveMetadata-class.html+++#+++!+++#+++outputs-anchor[output].
@@ -23,7 +23,7 @@ It allows to notify changes from the Angular side to Polymer. It supports primit
 If you want to notify nested object changes, you can still do it by calling the Polymer's [methodname]#notifyPath# method on the element.
 
 `formElementDirective`::
-If the element has the Polymer Form Element Behavior, this directive is added to the component, and it configures the element to be compatible with the Angular 2 `ngForm`.
+If the element has the Polymer Form Element Behavior, this directive is added to the module, and it configures the element to be compatible with the Angular 2 `ngForm`.
 
 `validationDirective`::
 It is another directive added in the case of the element has the Polymer Form Element Behavior. It sets the Polymer [propertyname]#invalid# flag based on the Angular 2 `ngControl` state.
@@ -34,33 +34,40 @@ It is added if the element has the [methodname]#isInitialized# and the [methodna
 
 == Usage
 
-In order to use the [classname]#PolymerElement# in the [propertyname]#directives# block of your [classname]#Component#, you have to import it as is shown in the example below.
+In order to use the [classname]#PolymerElement# in the [propertyname]#declarations# block of your [classname]#NgModule#, you have to import it as is shown in the example below.
 
 The only public API is the [classname]#PolymerElement(tagName: string): Array<Directive># factory method.
 The argument [propertyname]#tagName# is mandatory, and must match the tag name of the Polymer element.
 The factory returns the set of necessary directives for the given Polymer element.
-Hence, you have to add the [classname]#PolymerElement# directive as many times as different Polymer elements you are using in your Angular 2 component.
+Hence, you have to add the [classname]#PolymerElement# directive as many times as different Polymer elements you are using in your Angular module.
 
 [source,typescript]
 ----
-import { Component } from '@angular/core';
+import { Component, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { PolymerElement } from '@vaadin/angular2-polymer';
 
 @Component({
-  selector: 'my-project-app',
+  selector: 'app-root',
   template: `
     <iron-icon icon="attachment"></iron-icon>
     <paper-input [(value)]="myValue"></paper-input>
     <vaadin-combo-box [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
-  `,
-  directives: [
-    PolymerElement('iron-icon'),
-    PolymerElement('paper-input'),
-    PolymerElement('vaadin-combo-box')
-  ]
+  `
 })
-export class MyProjectAppComponent {
+class AppComponent {
    myValue = 'A';
    myItems = ['A', 'B', 'C'];
 }
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    PolymerElement('iron-icon'),
+    PolymerElement('paper-input'),
+    PolymerElement('vaadin-combo-box')
+  ],
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+})
+export class AppModule { }
 ----
