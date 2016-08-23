@@ -84,7 +84,7 @@ And finally, we modify our [filename]#src/index.html# file to load the web compo
 .src/index.html
 ----
 <body>
-  <my-project-app>Loading...</my-project-app>
+  <app-root>Loading...</app-root>
   {{#each scripts.polyfills}}<script src="{{.}}"></script>{{/each}}
 
   <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
@@ -148,43 +148,69 @@ vendorNpmFiles: [
 == Using Polymer Elements
 
 Now that everything is set, we can add any polymer elements to our application using their element names in templates, and the [classname]#PolymerElement# directive in code.
-For example, modify the [filename]#src/app#my-project.component.html# to have the following code:
+For example, modify the [filename]#src/app/app.component.html# to have the following code:
 
 [source,html]
-.src/app/my-project.component.html
+.src/app/app.component.html
 ----
 <h3>{{title}}</h3>
 <vaadin-combo-box [label]="myLabel" [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
 <paper-input [(value)]="myValue"></paper-input>
 ----
 
-And set the code in the [filename]#src/app/my-project.component.ts# file to use the new elements:
+In the [filename]#src/app/app.component.ts# file, define the properties bound in the template and specify the initial values:
 
 [source,typescript]
-.src/app/my-project.component.ts
+.src/app/app.component.ts
 ----
 import { Component } from '@angular/core';
-import { PolymerElement } from '@vaadin/angular2-polymer';
 
 @Component({
   moduleId: module.id,
-  selector: 'my-project-app',
-  templateUrl: 'my-project.component.html',
-  styleUrls: ['my-project.component.css'],
-  directives: [
-    PolymerElement('vaadin-combo-box'),
-    PolymerElement('paper-input')
-  ]
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.css']
 })
-export class MyProjectAppComponent {
-  title = 'my-project works!';
-  myLabel='Select a number'
+export class AppComponent {
+  title = 'app works!';
+  myLabel = 'Select a number'
   myValue = '4';
   myItems = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 }
 ----
 
-Finally, you can use Polymer custom CSS properties and custom CSS mixins either: in the [filename]#my-project.component.ts# file for the scoped styles, or in the [filename]#index.html# file for the global ones.
+Then import and add the [classname]#PolymerElement# directives and the [classname]#CUSTOM_ELEMENTS_SCHEMA# to the [classname]#AppModule#. Open the [filename]#src/app/app.module.ts# file and replace the contents with the following code:
+
+[source,typescript]
+.src/app/app.module.ts
+----
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    PolymerElement('vaadin-combo-box'),
+    PolymerElement('paper-input')
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule
+  ],
+  providers: [],
+  entryComponents: [AppComponent],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class AppModule { }
+----
+Finally, you can use Polymer custom CSS properties and custom CSS mixins either: in the [filename]#app.component.ts# file for the scoped styles, or in the [filename]#index.html# file for the global ones.
 In the following example we use mixins and properties defined in the Paper [elementname]#color# and [elementname]#typography# elements.
 
 [source,html]
@@ -201,7 +227,7 @@ In the following example we use mixins and properties defined in the Paper [elem
 ----
 
 [source,css]
-.src/app/my-project.component.css
+.src/app/app.component.css
 ----
 paper-input,
 vaadin-combo-box {
@@ -222,7 +248,7 @@ This is done in the [propertyname]#files# section of the [filename]#config/karma
 [source,javascript]
 .config/karma.conf.js
 ----
-  files: [
+    files: [
       ...
       'dist/bower_components/webcomponentsjs/webcomponents-lite.js',
       'dist/elements.html'

@@ -63,6 +63,33 @@ Angular 2 TypeScript QuickStart contains the SystemJS configuration in the [file
 })(this);
 ----
 
+=== Extending AppModule with Polymer Elements
+
+Now we import the [classname]#PolymerElement# directives and attach them to the [classname]#AppModule#, in order to allow using the listed Polymer elements in this Angular module. Edit [filename]#app/app.module.ts#, append the [classname]#PolymerElement# directives to the [propertyname]#declarations# list, and add the [classname]#CUSTOM_ELEMENTS_SCHEMA#, as follows:
+
+[source,typescript]
+.[filename]#app/app.module.ts#
+----
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+
+import { AppComponent }  from './app.component';
+
+@NgModule({
+  imports: [ BrowserModule ],
+  declarations: [
+    AppComponent,
+    PolymerElement('app-header-layout'),
+    PolymerElement('app-header'),
+    PolymerElement('app-toolbar')
+  ],
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+})
+export class AppModule { }
+----
+
 === AppComponent Changes
 
 Open [filename]#app/app.component.ts# and replace the contents with the following code:
@@ -71,7 +98,6 @@ Open [filename]#app/app.component.ts# and replace the contents with the followin
 .[filename]#app/app.component.ts#
 ----
 import { Component } from '@angular/core';
-import { PolymerElement } from '@vaadin/angular2-polymer';
 
 @Component({
   selector: 'my-app',
@@ -90,12 +116,7 @@ import { PolymerElement } from '@vaadin/angular2-polymer';
       background: var(--primary-color);
       color: var(--dark-theme-text-color);
     }
-  `],
-  directives: [
-    PolymerElement('app-header-layout'),
-    PolymerElement('app-header'),
-    PolymerElement('app-toolbar')
-  ]
+  `]
 })
 export class AppComponent { }
 ----
@@ -129,6 +150,6 @@ Apart from the colors, it inherits the font family declared for the body. We hav
 [IMPORTANT]
 .The [classname]#PolymerElement# Directives
 ====
-In order to enable all features of Polymer elements used inside your Angular component templates, remember to import [classname]#PolymerElement# in the component file and add `PolymerElement('element-name')` line for each Polymer element that you use to the [propertyname]#directives# array of your component metadata.
+In order to enable all features of Polymer elements used inside your Angular component templates, remember to import [classname]#PolymerElement# in the module file and add `PolymerElement('element-name')` line for each Polymer element that you use to the [propertyname]#declarations# array of your Angular module metadata.
 ====
 

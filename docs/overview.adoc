@@ -46,17 +46,37 @@ You also need to wait for the "WebComponentsReady" event before bootstrapping th
 . Import the Angular 2 directives and use them in your code.
 +
 [source,typescript,subs="normal"]
-.my-component.ts
+.app/app.module.ts
 ----
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { PolymerElement } from '@vaadin/angular2-polymer';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  imports: +++[+++ BrowserModule +++]+++,
+  declarations: +++[+++
+    AppComponent,
+    PolymerElement('[replaceable]#element-name#')
+  +++]+++,
+  bootstrap: +++[+++ AppComponent +++]+++,
+  schemas: +++[+++ CUSTOM_ELEMENTS_SCHEMA +++]+++
+})
+export class AppModule { }
+----
++
+[source,typescript,subs="normal"]
+.app/app.component.ts
+----
+import { Component } from '@angular2/core';
 
 @Component({
-  selector: 'my-component',
-  template: `+++<+++[replaceable]#element-name#></[replaceable]#element-name#>`,
-  directives: +++[+++ PolymerElement('[replaceable]#element-name#') +++]+++
+  selector: 'app-component',
+  template: +++`<+++[replaceable]#element-name#></[replaceable]#element-name#>+++`+++
 })
-export class MyComponent {
-}
+export class AppComponent { }
 ----
+
+Note, that we also added the [classname]#CUSTOM_ELEMENTS_SCHEMA# to the [classname]#AppModule#. This is required to enable usage of non-standard properties on custom elements in the Angular component templates.
 
 link:https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html[See the tutorial] for complete instructions how to set up your Angular 2 application to work with Polymer elements.
