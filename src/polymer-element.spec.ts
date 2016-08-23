@@ -192,6 +192,7 @@ describe('PolymerElement', () => {
   describe('Checked Element inside Form', () => {
 
     var form: FormGroup;
+    var checkedElement: any;
 
     describe('initially false', () => {
       beforeEach(() => {
@@ -199,15 +200,14 @@ describe('PolymerElement', () => {
         form = new FormGroup({value: new FormControl(false)});
         fixture.debugElement.componentInstance.form = form;
         fixture.detectChanges();
+        checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
       });
 
       it('should set default value', () => {
-        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
         expect(checkedElement.checked).toEqual(false);
       });
 
       it('should set form value', () => {
-        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
         checkedElement.checked = true;
         expect(form.value.value).toEqual(true);
       });
@@ -219,15 +219,14 @@ describe('PolymerElement', () => {
         form = new FormGroup({value: new FormControl(true)});
         fixture.debugElement.componentInstance.form = form;
         fixture.detectChanges();
+        checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
       });
 
       it('should set default value', () => {
-        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
         expect(checkedElement.checked).toEqual(true);
       });
 
       it('should set form value', () => {
-        var checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
         checkedElement.checked = false;
         expect(form.value.value).toEqual(false);
       });
