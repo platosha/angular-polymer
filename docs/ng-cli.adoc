@@ -1,26 +1,26 @@
 ---
-title: Using in Angular-CLI SystemJS Apps
+title: Using in Angular CLI SystemJS Apps
 order: 3
 layout: page
 ---
 
 [[vaadin-angular2-polymer.ng2cli]]
-= Using Polymer Elements in Angular-CLI SystemJS Applications
+= Using Polymer Elements in Angular CLI SystemJS Applications
 
 [[vaadin-angular2-polymer.ng2cli.introduction]]
 == Introduction
 
-https://github.com/angular/angular-cli[Angular-CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
+https://github.com/angular/angular-cli[Angular CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
 
-In this document we will describe all the modifications you have to make to your Angular-CLI project to use Polymer elements.
+In this document we will describe all the modifications you have to make to your Angular CLI project to use Polymer elements.
 
 ////
 // TODO: Uncomment this paragraph after correcting the link below
 [[vaadin-angular2-polymer.ng2cli.webpack-note]]
 [NOTE]
-.Note for the Angular-CLI Webpack Version Users
+.Note for the Angular CLI Webpack Version Users
 ====
-If you are using the webpack version of the Angular-CLI tool, please use the link:ng-cli-webpack.adoc[Using Polymer Elements in Angular-CLI Webpack Applications] guide.
+If you are using the webpack version of the Angular CLI tool, please use the link:ng-cli-webpack.adoc[Using Polymer Elements in Angular CLI Webpack Applications] guide.
 ====
 ////
 
@@ -28,7 +28,7 @@ If you are using the webpack version of the Angular-CLI tool, please use the lin
 [[vaadin-angular2-polymer.ng2cli.preparation]]
 == Preparation
 
-Install the Angular-CLI in your system, and create a new Angular 2 project.
+Install the Angular CLI in your system, and create a new Angular 2 project.
 
 [subs="normal"]
 ----
@@ -57,7 +57,7 @@ Polymer uses the http://bower.io/[Bower] package manager. Hence, you first  have
 [prompt]#$# [command]#bower# init
 ----
 
-By default, Bower installs dependencies in the [filename]#bower_components# folder. But Angular-CLI expects static stuff to be in the [filename]#public# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
+By default, Bower installs dependencies in the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#public# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
 
 [source,json]
 .&#46;bowerrc
@@ -223,7 +223,7 @@ vaadin-combo-box {
 [[vaadin-angular2-polymer.ng2cli.testing]]
 == Testing Polymer Elements
 
-Angular-CLI projects come with https://karma-runner.github.io[Karma] tests.
+Angular CLI projects come with https://karma-runner.github.io[Karma] tests.
 
 Karma needs to be configured appropriately to import all needed Polymer elements, before running any test.
 
