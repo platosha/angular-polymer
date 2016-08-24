@@ -1,26 +1,26 @@
 :linkattrs:
 [[vaadin-angular2-polymer.ng2cli]]
-= Using Polymer Elements in Angular-CLI Webpack Applications
+= Using Polymer Elements in Angular CLI Webpack Applications
 
 [[vaadin-angular2-polymer.ng2cli.introduction]]
 == Introduction
 
-https://github.com/angular/angular-cli[Angular-CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
+https://github.com/angular/angular-cli[Angular CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
 
-In this document we will describe all the modifications you have to make to your Angular-CLI project to use Polymer elements.
+In this document we will describe all the modifications you have to make to your Angular CLI project to use Polymer elements.
 
 [[vaadin-angular2-polymer.ng2cli.webpack-note]]
 [NOTE]
-.Note for the Angular-CLI SystemJS Version Users
+.Note for the Angular CLI SystemJS Version Users
 ====
-If you are using the SystemJS version of the Angular-CLI tool, please follow the link:ng-cli.adoc[Using Polymer Elements in Angular-CLI SystemJS Applications] guide.
+If you are using the SystemJS version of the Angular CLI tool, please follow the link:ng-cli.adoc[Using Polymer Elements in Angular CLI SystemJS Applications] guide.
 ====
 
 
 [[vaadin-angular2-polymer.ng2cli.preparation]]
 == Preparation
 
-Install the Angular-CLI in your system, and create a new Angular 2 project.
+Install the Angular CLI in your system, and create a new Angular 2 project.
 
 [subs="normal"]
 ----
@@ -51,7 +51,7 @@ Polymer uses the http://bower.io/[Bower] package manager. Hence, you first  have
 [prompt]#$# [command]#bower# init
 ----
 
-By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular-CLI expects static stuff to be in the [filename]#public# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
+By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#public# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
 
 [source,json]
 .&#46;bowerrc
@@ -97,7 +97,7 @@ Next we will modify the application index HTML file to load the web components p
 </head>
 ----
 
-In Angular-CLI Webpack projects, the main application file is automatically bundled and appended to the end of the [elementname]#body# section in the application’s [filename]#index.html# file. It means that the Angular application is imported and bootstrapped synchronously. Meanwhile, the Polymer elemnts are loaded from the HTML Imports, which are processed asynchronously in browsers that do not have a native support.
+In Angular CLI Webpack projects, the main application file is automatically bundled and appended to the end of the [elementname]#body# section in the application’s [filename]#index.html# file. It means that the Angular application is imported and bootstrapped synchronously. Meanwhile, the Polymer elemnts are loaded from the HTML Imports, which are processed asynchronously in browsers that do not have a native support.
 
 In order to use Polymer elements from JavaScript with cross-browser support, we have to wait for the Polymer elements to be loaded and registered before running the application code. Therefore, we have to postpone the Angular application import after the [eventname]#WebComponentsReady# event is dispatched. Create a new file [filename]#src/main-polymer.ts# with the following loader script:
 
