@@ -1,6 +1,6 @@
 {
   "name": "@vaadin/angular2-polymer",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "description": "Angular 2 support for Polymer elements",
   "repository": "https://github.com/vaadin/angular2-polymer.git",
   "main": "index.js",
@@ -11,14 +11,18 @@
     "tsc:w": "tsc -w",
     "prepublish": "typings install && tsc"
   },
-  "files": ["index.d.ts", "src/*.js", "src/*.d.ts"],
+  "files": [
+    "index.d.ts",
+    "src/*.js",
+    "src/*.d.ts"
+  ],
   "typescript": {
     "definition": "index.d.ts"
   },
   "author": "Vaadin Ltd",
   "license": "Apache-2.0",
   "dependencies": {
-    "@angular/common":"^2.0.0-rc.5",
+    "@angular/common": "^2.0.0-rc.5",
     "@angular/core": "^2.0.0-rc.5",
     "@angular/forms": "^0.3.0",
     "@angular/platform-browser": "^2.0.0-rc.5",
