@@ -3,22 +3,32 @@
 `angular2-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular 2](https://angular.io/) applications.
 
 ```typescript
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { PolymerElement } from '@vaadin/angular2-polymer';
 
+@NgModule({
+  imports: [ BrowserModule ],
+  declarations: [
+    AppComponent,
+    PolymerElement('paper-input'),
+    PolymerElement('vaadin-combo-box')
+  ],
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+})
+export class AppModule { }
+
 @Component({
-  selector: 'my-component',
+  selector: 'app-component',
   template: `
     <paper-input [(value)]="myValue"></paper-input>
     <vaadin-combo-box [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
-  `,
-  directives: [
-    PolymerElement('paper-input'),
-    PolymerElement('vaadin-combo-box')
-  ]
+  `
 })
-export class MyComponent {
-   myValue = 'A';
-   myItems = ['A', 'B', 'C'];
+class AppComponent {
+  myValue = 'A';
+  myItems = ['A', 'B', 'C'];
 }
 ```
 
