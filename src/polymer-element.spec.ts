@@ -5,8 +5,7 @@ import {
 } from '@angular/core/testing';
 import { PolymerElement } from './polymer-element';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FORM_DIRECTIVES, ControlGroup, Control } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, disableDeprecatedForms, provideForms } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { __platform_browser_private__ } from '@angular/platform-browser';
 
 const Polymer: any = (<any>window).Polymer;
@@ -22,7 +21,6 @@ describe('PolymerElement', () => {
         TestComponent,
         TestComponentForm,
         TestComponentCheckboxForm,
-        TestComponentDeprecatedForm,
         TestComponentLightDom,
         TestComponentDomApi,
         PolymerElement('test-element'),
@@ -162,19 +160,7 @@ describe('PolymerElement', () => {
 
     }
 
-    describe('Deprecated forms API', () => {
-
-      beforeEach(() => {
-        createTestComponent(TestComponentDeprecatedForm);
-        form = new ControlGroup({value: new Control()});
-        fixture.debugElement.componentInstance.form = form;
-        fixture.detectChanges();
-      });
-
-      formTests();
-    });
-
-    describe('New forms API', () => {
+    describe('Forms API', () => {
 
       beforeEach(() => {
         createTestComponent(TestComponentForm);
@@ -339,17 +325,6 @@ class TestComponent {
   nestedObject = { value: undefined };
   arrayObject = [];
   barVisible = false;
-}
-
-@Component({
-  directives: [FORM_DIRECTIVES],
-  template: `
-    <form [ngFormModel]="form">
-      <test-element ngControl="value" required></test-element>
-    </form>`
-})
-class TestComponentDeprecatedForm {
-  value = 'foo';
 }
 
 @Component({
