@@ -4,22 +4,19 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
-  provide,
   Renderer,
   NgZone,
   KeyValueDiffers,
   IterableDiffers,
   DefaultIterableDiffer
 } from '@angular/core';
-import { NgControl as OldNgControl, NG_VALUE_ACCESSOR as OLD_NG_VALUE_ACCESSOR } from '@angular/common';
 import { FormControlName, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
 import { __platform_browser_private__ } from '@angular/platform-browser';
 
 const Polymer:any = (<any>window).Polymer;
 
-class PolymerDomAdapter extends BrowserDomAdapter {
+class PolymerDomAdapter extends __platform_browser_private__.BrowserDomAdapter {
   createStyleElement(css:any, doc:Document = document) {
     var style:any = doc.createElement.call(doc, 'style', 'custom-style');
     this.appendChild(style, this.createTextNode(css));
@@ -143,12 +140,8 @@ export function PolymerElement(name: string): any[] {
     }],
 
     ngDoCheck: function() {
-      const oldControl = this._injector.get(OldNgControl, null);
       const control = this._injector.get(FormControlName, null);
 
-      if (oldControl && oldControl.pristine !== null && oldControl.valid !== null) {
-        this._element.invalid = !oldControl.pristine && !oldControl.valid;
-      }
       if (control) {
         this._element.invalid = !control.pristine && !control.valid;
       }
@@ -158,14 +151,11 @@ export function PolymerElement(name: string): any[] {
   const formElementDirective:any = Directive({
     selector: name,
     providers: [
-      provide(OLD_NG_VALUE_ACCESSOR, {
+      {
+        provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => formElementDirective),
         multi: true
-      }),
-      provide(NG_VALUE_ACCESSOR, {
-        useExisting: forwardRef(() => formElementDirective),
-        multi: true
-      })
+      }
     ],
     host: (isCheckedElement ? { '(checkedChange)': 'onValueChanged($event)' } : { '(valueChange)': 'onValueChanged($event)' })
   }).Class({
