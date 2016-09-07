@@ -40,7 +40,7 @@ Angular 2 TypeScript QuickStart contains the SystemJS configuration in the [file
       // other libraries
       'rxjs':                       'npm:rxjs',
       'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api',
-      '@vaadin/angular2-polymer': 'npm:@vaadin/angular2-polymer'
+      '@vaadin/angular2-polymer':   'npm:@vaadin/angular2-polymer'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
