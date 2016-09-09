@@ -22,20 +22,20 @@ If you are using the SystemJS version of the Angular CLI tool, please follow the
 
 Install the Angular CLI in your system, and create a new Angular 2 project.
 
-[subs="normal"]
+[source,shell]
 ----
-[prompt]#$# [command]#npm# install -g angular-cli@webpack
-[prompt]#$# [command]#ng# new [replaceable]#my-project#
+npm install -g angular-cli@webpack
+ng new my-project
 ----
 
 Check that everything works by compiling, testing, and running your project:
 
-[subs="normal"]
+[source,shell]
 ----
-[prompt]#$# [command]#cd# [replaceable]#my-project#
-[prompt]#$# [command]#ng# build
-[prompt]#$# [command]#ng# test
-[prompt]#$# [command]#ng# serve
+cd my-project
+ng build
+ng test
+ng serve
 ----
 
 After starting the `[prompt]#$# [command]#ng# serve` command, the development server should be running at http://localhost:4200[http://localhost:4200, role="external", window="_blank"]. Press kbd:[Ctrl+C] to stop the development server.
@@ -45,19 +45,19 @@ After starting the `[prompt]#$# [command]#ng# serve` command, the development se
 
 Polymer uses the http://bower.io/[Bower] package manager. Hence, you first  have to install and initialize Bower before continuing:
 
-[subs="normal"]
+[source,shell]
 ----
-[prompt]#$# [command]#npm# install bower -g
-[prompt]#$# [command]#bower# init
+npm install bower -g
+bower init
 ----
 
-By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#public# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
+By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#src/assets# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
 
 [source,json]
 .&#46;bowerrc
 ----
 {
-  "directory" : "public/bower_components"
+  "directory" : "src/assets/bower_components"
 }
 ----
 
@@ -65,9 +65,9 @@ Now, you can install all the Polymer elements that you need in your application.
 
 For instance, to install all the elements in the https://elements.polymer-project.org/browse?package=paper-elements[Polymer Paper] collection, and the [elementname]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaadin-combo-box]# element, run the following:
 
-[subs="normal"]
+[source,shell]
 ----
-[prompt]#$# [command]#bower# install --save [replaceable]#paper-elements vaadin-combo-box#
+bower install --save paper-elements vaadin-combo-box
 ----
 
 [TIP]
@@ -77,7 +77,7 @@ Add the following line to the [filename]#.gitignore# file to prevent the Bower d
 
 [source]
 ----
-public/bower_components
+/src/assets/bower_components
 ----
 ====
 
@@ -90,10 +90,10 @@ Next we will modify the application index HTML file to load the web components p
   ...
 
   <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="bower_components/paper-styles/color.html">
-  <link rel="import" href="bower_components/paper-styles/typography.html">
-  <link rel="import" href="bower_components/vaadin-combo-box/vaadin-combo-box.html">
-  <link rel="import" href="bower_components/paper-input/paper-input.html">
+  <link rel="import" href="/assets/bower_components/paper-styles/color.html">
+  <link rel="import" href="/assets/bower_components/paper-styles/typography.html">
+  <link rel="import" href="/assets/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+  <link rel="import" href="/assets/jjjjbower_components/paper-input/paper-input.html">
 </head>
 ----
 
@@ -104,7 +104,7 @@ In order to use Polymer elements from JavaScript with cross-browser support, we 
 [source,typescript]
 .src/main-polymer.ts
 ----
-document.addEventListener('WebComponentsReady', function() {
+document.addEventListener('WebComponentsReady', () => {
   require('./main.ts');
 });
 ----
@@ -133,9 +133,9 @@ The [filename]#webcomponents.js# polyfill is not necessary for browsers that ful
 
 For using Polymer elements in the Angular 2 application, we need to import the [classname]#PolymerElement# directive from https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]. Thus we need to install the dependency by typing:
 
-[subs="normal"]
+[source,shell]
 ----
-[prompt]#$# [command]#npm# install --save @vaadin/angular2-polymer
+npm install --save @vaadin/angular2-polymer
 ----
 
 
@@ -163,11 +163,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.css'],
+  styleUrls: ['app.component.css']
 })
 export class AppComponent {
   title = 'app works!';
-  myLabel='Select a number'
+  myLabel='Select a number';
   myValue = '4';
   myItems = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 }
