@@ -89,13 +89,29 @@ Next we will modify the application index HTML file to load the web components p
 <head>
   ...
 
-  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="/assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="/assets/bower_components/paper-styles/color.html">
   <link rel="import" href="/assets/bower_components/paper-styles/typography.html">
   <link rel="import" href="/assets/bower_components/vaadin-combo-box/vaadin-combo-box.html">
-  <link rel="import" href="/assets/jjjjbower_components/paper-input/paper-input.html">
+  <link rel="import" href="/assets/bower_components/paper-input/paper-input.html">
 </head>
 ----
+
+[TIP]
+.Move the `webcomponents-lite.min.js` import to `angular-cli.json`
+====
+Optionally, you can move the `webcomponents-lite.min.js`
+to `angular-cli.json` file. To do this, add the lines below:
+
+[source, json]
+----
+{
+  "scripts":[
+    "assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
+----
+====
 
 In Angular CLI Webpack projects, the main application file is automatically bundled and appended to the end of the [elementname]#body# section in the application’s [filename]#index.html# file. It means that the Angular application is imported and bootstrapped synchronously. Meanwhile, the Polymer elemnts are loaded from the HTML Imports, which are processed asynchronously in browsers that do not have a native support.
 
