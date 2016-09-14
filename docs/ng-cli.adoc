@@ -1,6 +1,6 @@
 ---
 title: Using in Angular CLI SystemJS Apps
-order: 3
+order: 4
 layout: page
 ---
 
@@ -14,15 +14,12 @@ https://github.com/angular/angular-cli[Angular CLI] is a command line tool for A
 
 In this document we will describe all the modifications you have to make to your Angular CLI project to use Polymer elements.
 
-////
-// TODO: Uncomment this paragraph after correcting the link below
 [[vaadin-angular2-polymer.ng2cli.webpack-note]]
 [NOTE]
 .Note for the Angular CLI Webpack Version Users
 ====
 If you are using the webpack version of the Angular CLI tool, please use the link:ng-cli-webpack.adoc[Using Polymer Elements in Angular CLI Webpack Applications] guide.
 ====
-////
 
 
 [[vaadin-angular2-polymer.ng2cli.preparation]]
@@ -75,6 +72,17 @@ For instance, to install all the elements in the https://elements.polymer-projec
 ----
 [prompt]#$# [command]#bower# install --save [replaceable]#paper-elements vaadin-combo-box#
 ----
+
+[TIP]
+.Ignore the Bower Dependencies in you Git Repository
+====
+Add the following line to the [filename]#.gitignore# file to prevent the Bower dependencies from being tracked by Git in future:
+
+[source]
+----
+public/bower_components
+----
+====
 
 Next, we will create the [filename]#src/elements.html# file, where we put all the the links to the elements used by the application:
 
