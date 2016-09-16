@@ -20,7 +20,6 @@ In this document we will describe all the modifications you have to make to your
 
 We assume that you already have installed in your system the Angular CLI package and the `ng` command
 is available in your PATH. Otherwise run the following command:
-and install.
 
 [subs="normal"]
 ----
@@ -34,7 +33,7 @@ Then, create a new Angular 2 project.
 [prompt]#$# [command]#ng# new [replaceable]#my-project#
 ----
 
-Check that everything works by compiling, testing, and running your project:
+Check that everything works by compiling, testing, and running your new project:
 
 [subs="normal"]
 ----
@@ -80,7 +79,6 @@ and the [elementname]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaa
 ----
 
 [TIP]
-.Ignore the Bower Dependencies in you Git Repository
 ====
 Add the following line to the [filename]#.gitignore# file to prevent the Bower dependencies from being tracked by Git in future:
 
@@ -90,7 +88,7 @@ src/assets/bower_components
 ----
 ====
 
-Next we will modify the application index HTML file to load the web components polyfill and import the Polymer elements.
+Next we will modify the application index HTML file to load the web components polyfill, and to import the Polymer elements.
 Open the [filename]#src/index.html# file and append the following lines to the [elementname]#head# section:
 
 [source,html]
@@ -180,7 +178,7 @@ For example, modify the [filename]#src/app/app.component.html# to have the follo
 [source,html]
 .src/app/app.component.html
 ----
-<h3>{{title}}</h3>
+<h1>{{title}}</h1>
 <vaadin-combo-box [label]="myLabel" [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
 <paper-input [(value)]="myValue"></paper-input>
 ----
@@ -238,7 +236,7 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ----
 
-Finally, you can use Polymer custom CSS properties and custom CSS mixins in the [filename]#app.component.ts#
+Finally, you can use Polymer custom CSS properties and custom CSS mixins in the [filename]#app.component.css#
 file for the scoped styles, and in the [filename]#index.html# file for the global ones.
 In the following example we use mixins and properties defined in the Paper [elementname]#color# and [elementname]#typography# elements.
 
@@ -270,8 +268,8 @@ vaadin-combo-box {
 
 Angular CLI projects come with https://karma-runner.github.io[Karma] tests.
 
-Since tests are run against the testing module defined in the [filename]#app.component.spec.ts# instead of
-against the one defined in the [filename]#app.module.ts#, you also need to import the [classname]#CUSTOM_ELEMENTS_SCHEMA#
+Since tests are run against the testing module defined in the [filename]#app.component.spec.ts#, instead of
+the one defined in the [filename]#app.module.ts#, you need to import the [classname]#CUSTOM_ELEMENTS_SCHEMA#
 in the test file.
 
 [source,typescript]
@@ -293,7 +291,7 @@ describe('App: NgApp', () => {
 });
 ----
 
-Then, you can test elements API as usual in Angular applications. For example:
+Then, you can test elements API as usual. For example:
 
 [source,typescript]
 .src/app/app.component.spec.ts
@@ -313,8 +311,8 @@ it('vaadin-combo-box and paper-input should have an initial value of 4', async((
 
 === Testing Polymer Elements
 
-Additionally, you might want to test the interactions with Polymer elements.
-It requires Karma to be configured appropriately to import all elements used in your tests.
+Additionally, although discouraged, you might want to test interactions with Polymer elements.
+That requires Karma to be configured appropriately in order to import all elements used in your tests.
 It is done by editing the [filename]#karma.conf.js#.
 
 [source,typescript]
@@ -331,8 +329,8 @@ It is done by editing the [filename]#karma.conf.js#.
 ...
 ----
 
-Then, testing the internal of Polymer elements should work. Note that some times you have to
-introduce timeouts in your tests to allow the elements being fully initialized.
+Then, testing the internals of Polymer elements should work. Note that Polymer elements are already
+unit tested by their authors, and you should not test them.
 
 [source,typescript]
 .src/app/app.component.spec.ts
@@ -347,6 +345,6 @@ it('vaadin-combo-box internal input should have an initial value of 4', async(()
   setTimeout(function() {
     // Use polymer API to access the internals of the element
     expect(combobox.$.input.value).toEqual('4');
-  }, 100)
+  }, 500)
 }));
 ----
