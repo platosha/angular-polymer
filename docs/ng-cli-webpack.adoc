@@ -271,7 +271,7 @@ vaadin-combo-box {
 Angular CLI projects come with https://karma-runner.github.io[Karma] tests.
 
 Since tests are run against the testing module defined in the [filename]#app.component.spec.ts# instead of
-against the one defined in the [filename]#app.module.ts#, you also need to import the [classname]#CUSTOM_ELEMENTS_SCHEMA#
+the one defined in the [filename]#app.module.ts#, you need to import the [classname]#CUSTOM_ELEMENTS_SCHEMA#
 in the test file.
 
 [source,typescript]
@@ -293,7 +293,7 @@ describe('App: NgApp', () => {
 });
 ----
 
-Then, you can test elements API as usual in Angular applications. For example:
+Then, you can test elements API as usual. For example:
 
 [source,typescript]
 .src/app/app.component.spec.ts
@@ -313,8 +313,8 @@ it('vaadin-combo-box and paper-input should have an initial value of 4', async((
 
 === Testing Polymer Elements
 
-Additionally, you might want to test the interactions with Polymer elements.
-It requires Karma to be configured appropriately to import all elements used in your tests.
+Additionally, although discouraged, you might want to test interactions with Polymer elements.
+That requires Karma to be configured appropriately in order to import all elements used in your tests.
 It is done by editing the [filename]#karma.conf.js#.
 
 [source,typescript]
@@ -331,8 +331,8 @@ It is done by editing the [filename]#karma.conf.js#.
 ...
 ----
 
-Then, testing the internal of Polymer elements should work. Note that some times you have to
-introduce timeouts in your tests to allow the elements being fully initialized.
+Then, testing the internals of Polymer elements should work. Note that Polymer elements are already
+unit tested by their author, and you should not test them.
 
 [source,typescript]
 .src/app/app.component.spec.ts
