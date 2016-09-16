@@ -15,22 +15,22 @@ https://github.com/angular/angular-cli[Angular CLI] is a command line tool for A
 
 In this document we will describe all the modifications you have to make to your Angular CLI project to use Polymer elements.
 
-[[vaadin-angular2-polymer.ng2cliwebpack.sysjs-note]]
-[NOTE]
-.Note for the Angular CLI SystemJS Version Users
-====
-If you are using the SystemJS version of the Angular CLI tool, please follow the link:ng-cli.adoc[Using Polymer Elements in Angular CLI SystemJS Applications] guide.
-====
-
-
 [[vaadin-angular2-polymer.ng2cliwebpack.preparation]]
 == Preparation
 
-Install the Angular CLI in your system, and create a new Angular 2 project.
+We assume that you already have installed in your system the Angular CLI package and the `ng` command
+is available in your PATH. Otherwise run the following command:
+and install.
 
 [subs="normal"]
 ----
-[prompt]#$# [command]#npm# install -g angular-cli@webpack
+[prompt]#$# [command]#npm# install -g angular-cli
+----
+
+Then, create a new Angular 2 project.
+
+[subs="normal"]
+----
 [prompt]#$# [command]#ng# new [replaceable]#my-project#
 ----
 
@@ -44,8 +44,8 @@ Check that everything works by compiling, testing, and running your project:
 [prompt]#$# [command]#ng# serve
 ----
 
-After starting the `[prompt]#$# [command]#ng# serve` command, the development server should be running at http://localhost:4200[http://localhost:4200, role="external", window="_blank"].
-Press kbd:[Ctrl+C] to stop the development server.
+When the development server is running you can test the application at http://localhost:4200[http://localhost:4200, role="external", window="_blank"].
+Press kbd:[Ctrl+C] to stop the server.
 
 [[vaadin-angular2-polymer.ng2cliwebpack.dependencies]]
 == Adding Polymer Elements Dependencies
@@ -58,7 +58,7 @@ Polymer uses the http://bower.io/[Bower] package manager. Hence, you first  have
 [prompt]#$# [command]#bower# init
 ----
 
-By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#public# directory.
+By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#src/assets# directory.
 Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
 
 [source,json]
@@ -123,14 +123,14 @@ document.addEventListener('WebComponentsReady', () => {
 });
 ----
 
-Finally, change the main entry point of the application to load the new loader script.
+Change the main entry point of the application to load the new loader script.
 Edit the [filename]#angular-cli.json# file in the project root and replace the line `"main": "main.ts",` with  `"main": "main-polymer.ts",`.
 
 ////
 // TODO: `$ ng set` could be used for editing the config, but it is broken nowadays.
 Replace the editing instructions above with the following paragraph after this PR is merged: https://github.com/angular/angular-cli/pull/1800
 
-Finally, run the following command to set the new [filename]#src/main-polymer.ts# file as the application entry point:
+Run the following command to set the new [filename]#src/main-polymer.ts# file as the application entry point:
 
 [subs="normal"]
 ----
@@ -263,4 +263,90 @@ vaadin-combo-box {
   background: var(--paper-grey-200);
   padding: 8px;
 }
+----
+
+[[vaadin-angular2-polymer.ng2cliwebpack.testing]]
+== Testing
+
+Angular CLI projects come with https://karma-runner.github.io[Karma] tests.
+
+Since tests are run against the testing module defined in the [filename]#app.component.spec.ts# instead of
+against the one defined in the [filename]#app.module.ts#, you also need to import the [classname]#CUSTOM_ELEMENTS_SCHEMA#
+in the test file.
+
+[source,typescript]
+.src/app/app.component.spec.ts
+----
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+...
+
+describe('App: NgApp', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        AppComponent,
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    });
+  });
+  ...
+});
+----
+
+Then, you can test elements API as usual in Angular applications. For example:
+
+[source,typescript]
+.src/app/app.component.spec.ts
+----
+...
+
+it('vaadin-combo-box and paper-input should have an initial value of 4', async(() => {
+  let fixture = TestBed.createComponent(AppComponent);
+  fixture.detectChanges();
+  let compiled = fixture.debugElement.nativeElement;
+  let combobox = compiled.querySelector('vaadin-combo-box');
+  let input = compiled.querySelector('paper-input');
+  expect(combobox.value).toEqual('4');
+  expect(input.value).toEqual('4');
+}));
+----
+
+=== Testing Polymer Elements
+
+Additionally, you might want to test the interactions with Polymer elements.
+It requires Karma to be configured appropriately to import all elements used in your tests.
+It is done by editing the [filename]#karma.conf.js#.
+
+[source,typescript]
+.src/app/app.component.spec.ts
+----
+...
+  files: [
+    { pattern: './src/test.ts', watched: false },
+    { pattern: './src/assets/bower_components/**/*', watched: false, served: true, included: false },
+    { pattern: './src/assets/bower_components/webcomponentsjs/webcomponents-lite.js' },
+    { pattern: './src/assets/bower_components/vaadin-combo-box/vaadin-combo-box.html' },
+    { pattern: './src/assets/bower_components/paper-input/paper-input.html' }
+  ],
+...
+----
+
+Then, testing the internal of Polymer elements should work. Note that some times you have to
+introduce timeouts in your tests to allow the elements being fully initialized.
+
+[source,typescript]
+.src/app/app.component.spec.ts
+----
+...
+it('vaadin-combo-box internal input should have an initial value of 4', async(() => {
+  let fixture = TestBed.createComponent(AppComponent);
+  fixture.detectChanges();
+  let compiled = fixture.debugElement.nativeElement;
+  let combobox = compiled.querySelector('vaadin-combo-box');
+  // Wait until polymer elements have been initialised.
+  setTimeout(function() {
+    // Use polymer API to access the internals of the element
+    expect(combobox.$.input.value).toEqual('4');
+  }, 100)
+}));
 ----
