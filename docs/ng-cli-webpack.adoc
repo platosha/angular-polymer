@@ -1,34 +1,39 @@
+---
+title: Using in Angular CLI Webpack
+order: 3
+layout: page
+---
+
 :linkattrs:
 [[vaadin-angular2-polymer.ng2cli]]
 = Using Polymer Elements in Angular CLI Webpack Applications
 
-[[vaadin-angular2-polymer.ng2cli.introduction]]
+[[vaadin-angular2-polymer.ng2cliwebpack.introduction]]
 == Introduction
 
 https://github.com/angular/angular-cli[Angular CLI] is a command line tool for Angular 2. It is not only a scaffolding tool for creating and modifying a project, but also for other actions like building, running, debugging, and testing the project.
 
 In this document we will describe all the modifications you have to make to your Angular CLI project to use Polymer elements.
 
-[[vaadin-angular2-polymer.ng2cli.webpack-note]]
-[NOTE]
-.Note for the Angular CLI SystemJS Version Users
-====
-If you are using the SystemJS version of the Angular CLI tool, please follow the link:ng-cli.adoc[Using Polymer Elements in Angular CLI SystemJS Applications] guide.
-====
-
-
-[[vaadin-angular2-polymer.ng2cli.preparation]]
+[[vaadin-angular2-polymer.ng2cliwebpack.preparation]]
 == Preparation
 
-Install the Angular CLI in your system, and create a new Angular 2 project.
+We assume that you already have installed in your system the Angular CLI package and the `ng` command
+is available in your PATH. Otherwise run the following command:
 
 [subs="normal"]
 ----
-[prompt]#$# [command]#npm# install -g angular-cli@webpack
+[prompt]#$# [command]#npm# install -g angular-cli
+----
+
+Then, create a new Angular 2 project.
+
+[subs="normal"]
+----
 [prompt]#$# [command]#ng# new [replaceable]#my-project#
 ----
 
-Check that everything works by compiling, testing, and running your project:
+Check that everything works by compiling, testing, and running your new project:
 
 [subs="normal"]
 ----
@@ -38,9 +43,10 @@ Check that everything works by compiling, testing, and running your project:
 [prompt]#$# [command]#ng# serve
 ----
 
-After starting the `[prompt]#$# [command]#ng# serve` command, the development server should be running at http://localhost:4200[http://localhost:4200, role="external", window="_blank"]. Press kbd:[Ctrl+C] to stop the development server.
+When the development server is running you can test the application at http://localhost:4200[http://localhost:4200, role="external", window="_blank"].
+Press kbd:[Ctrl+C] to stop the server.
 
-[[vaadin-angular2-polymer.ng2cli.dependencies]]
+[[vaadin-angular2-polymer.ng2cliwebpack.dependencies]]
 == Adding Polymer Elements Dependencies
 
 Polymer uses the http://bower.io/[Bower] package manager. Hence, you first  have to install and initialize Bower before continuing:
@@ -51,19 +57,21 @@ Polymer uses the http://bower.io/[Bower] package manager. Hence, you first  have
 [prompt]#$# [command]#bower# init
 ----
 
-By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#public# directory. Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
+By default, Bower installs dependencies to the [filename]#bower_components# folder. But Angular CLI expects static stuff to be in the [filename]#src/assets# directory.
+Thus, create the [filename]#.bowerrc# file in the root directory, with the following content:
 
 [source,json]
 .&#46;bowerrc
 ----
 {
-  "directory" : "public/bower_components"
+  "directory" : "src/assets/bower_components"
 }
 ----
 
 Now, you can install all the Polymer elements that you need in your application.
 
-For instance, to install all the elements in the https://elements.polymer-project.org/browse?package=paper-elements[Polymer Paper] collection, and the [elementname]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaadin-combo-box]# element, run the following:
+For instance, to install all the elements in the https://elements.polymer-project.org/browse?package=paper-elements[Polymer Paper] collection,
+and the [elementname]#https://vaadin.com/elements/-/element/vaadin-combo-box[vaadin-combo-box]# element, run the following:
 
 [subs="normal"]
 ----
@@ -71,17 +79,17 @@ For instance, to install all the elements in the https://elements.polymer-projec
 ----
 
 [TIP]
-.Ignore the Bower Dependencies in you Git Repository
 ====
 Add the following line to the [filename]#.gitignore# file to prevent the Bower dependencies from being tracked by Git in future:
 
 [source]
 ----
-public/bower_components
+src/assets/bower_components
 ----
 ====
 
-Next we will modify the application index HTML file to load the web components polyfill and import the Polymer elements. Open the [filename]#src/index.html# file and append the following lines to the [elementname]#head# section:
+Next we will modify the application index HTML file to load the web components polyfill, and to import the Polymer elements.
+Open the [filename]#src/index.html# file and append the following lines to the [elementname]#head# section:
 
 [source,html]
 .src/index.html head additions
@@ -89,32 +97,38 @@ Next we will modify the application index HTML file to load the web components p
 <head>
   ...
 
-  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="bower_components/paper-styles/color.html">
-  <link rel="import" href="bower_components/paper-styles/typography.html">
-  <link rel="import" href="bower_components/vaadin-combo-box/vaadin-combo-box.html">
-  <link rel="import" href="bower_components/paper-input/paper-input.html">
+  <script src="assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="assets/bower_components/paper-styles/color.html">
+  <link rel="import" href="assets/bower_components/paper-styles/typography.html">
+  <link rel="import" href="assets/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+  <link rel="import" href="assets/bower_components/paper-input/paper-input.html">
 </head>
 ----
 
-In Angular CLI Webpack projects, the main application file is automatically bundled and appended to the end of the [elementname]#body# section in the application’s [filename]#index.html# file. It means that the Angular application is imported and bootstrapped synchronously. Meanwhile, the Polymer elemnts are loaded from the HTML Imports, which are processed asynchronously in browsers that do not have a native support.
+In Angular CLI Webpack projects, the main application file is automatically bundled and appended to the end of the [elementname]#body# section of the [filename]#index.html# file.
+It means that the Angular application is imported and bootstrapped synchronously.
+Meanwhile, Polymer elements are loaded from HTML Imports processed asynchronously in browsers that do not have a native support.
 
-In order to use Polymer elements from JavaScript with cross-browser support, we have to wait for the Polymer elements to be loaded and registered before running the application code. Therefore, we have to postpone the Angular application import after the [eventname]#WebComponentsReady# event is dispatched. Create a new file [filename]#src/main-polymer.ts# with the following loader script:
+We have to wait for the Polymer elements to be loaded and registered before running the application code.
+Therefore, we have to postpone the Angular application import until the [eventname]#WebComponentsReady# event is dispatched.
+Create a new file [filename]#src/main-polymer.ts# with the following loader script:
 
 [source,typescript]
 .src/main-polymer.ts
 ----
-document.addEventListener('WebComponentsReady', function() {
+document.addEventListener('WebComponentsReady', () => {
   require('./main.ts');
 });
 ----
 
-In that file we wait until the Polymer elements are registered and load the original main file afterwards. Finally, we change the main entry point of the application to our loader script. Edit the [filename]#angular-cli.json# file in the project root, replace the line `"main": "main.ts",` with the line `"main": "main-polymer.ts",`, and save the file.
+Change the main entry point of the application to load the new loader script.
+Edit the [filename]#angular-cli.json# file in the project root and replace the line `"main": "main.ts",` with  `"main": "main-polymer.ts",`.
 
 ////
-// TODO: `$ ng set` could be used for editing the config, but it is broken nowadays. Replace the editing instructions above with the following paragraph after this PR is merged: https://github.com/angular/angular-cli/pull/1800
+// TODO: `$ ng set` could be used for editing the config, but it is broken nowadays.
+Replace the editing instructions above with the following paragraph after this PR is merged: https://github.com/angular/angular-cli/pull/1800
 
-Finally, run the following command to modify the application configuration file to use the [filename]#src/main-polymer.ts# file as a main application entry point:
+Run the following command to set the new [filename]#src/main-polymer.ts# file as the application entry point:
 
 [subs="normal"]
 ----
@@ -127,11 +141,26 @@ Now you can run `ng serve`, open the application in your browser, and everything
 [TIP]
 The [filename]#webcomponents.js# polyfill is not necessary for browsers that fully implement the Web Components Spec like Chrome.
 
+[TIP]
+====
+Optionally, you can move the [filename]#webcomponents-lite.min.js# from the application [filename]#index.html# to the [filename]#angular-cli.json# configuration file.
 
-[[vaadin-angular2-polymer.ng2cli.directive]]
+[source, json]
+.angular-cli.json
+----
+{
+  "scripts":[
+    "assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
+----
+====
+
+[[vaadin-angular2-polymer.ng2cliwebpack.directive]]
 == Adding The PolymerElement Package
 
-For using Polymer elements in the Angular 2 application, we need to import the [classname]#PolymerElement# directive from https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]. Thus we need to install the dependency by typing:
+For using Polymer elements in the Angular 2 application, we need to import the [classname]#PolymerElement#
+directive from https://github.com/vaadin/angular2-polymer[@vaadin/angular2-polymer]. Thus we need to install the dependency by typing:
 
 [subs="normal"]
 ----
@@ -139,16 +168,17 @@ For using Polymer elements in the Angular 2 application, we need to import the [
 ----
 
 
-[[vaadin-angular2-polymer.ng2cli.using]]
+[[vaadin-angular2-polymer.ng2cliwebpack.using]]
 == Using Polymer Elements
 
-Now that everything is set, we can add any Polymer elements to our application using their element names in templates, and the [classname]#PolymerElement# directive in code.
+Now that everything is set, we can add any Polymer elements to our application using their element names in templates,
+and the [classname]#PolymerElement# directive in code.
 For example, modify the [filename]#src/app/app.component.html# to have the following code:
 
 [source,html]
 .src/app/app.component.html
 ----
-<h3>{{title}}</h3>
+<h1>{{title}}</h1>
 <vaadin-combo-box [label]="myLabel" [(value)]="myValue" [items]="myItems"></vaadin-combo-box>
 <paper-input [(value)]="myValue"></paper-input>
 ----
@@ -167,13 +197,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app works!';
-  myLabel='Select a number'
+  myLabel = 'Select a number';
   myValue = '4';
   myItems = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 }
 ----
 
-Then import and add the [classname]#PolymerElement# directives and the [classname]#CUSTOM_ELEMENTS_SCHEMA# to the [classname]#AppModule#. Open the [filename]#src/app/app.module.ts# file and replace the contents with the following code:
+Then import and add the [classname]#PolymerElement# directives and the [classname]#CUSTOM_ELEMENTS_SCHEMA# to the [classname]#AppModule#.
+Open the [filename]#src/app/app.module.ts# file and replace the contents with the following code:
 
 [source,typescript]
 .src/app/app.module.ts
@@ -205,7 +236,8 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ----
 
-Finally, you can use Polymer custom CSS properties and custom CSS mixins in the [filename]#app.component.ts# file for the scoped styles, and in the [filename]#index.html# file for the global ones.
+Finally, you can use Polymer custom CSS properties and custom CSS mixins in the [filename]#app.component.css#
+file for the scoped styles, and in the [filename]#index.html# file for the global ones.
 In the following example we use mixins and properties defined in the Paper [elementname]#color# and [elementname]#typography# elements.
 
 [source,html]
@@ -229,4 +261,50 @@ vaadin-combo-box {
   background: var(--paper-grey-200);
   padding: 8px;
 }
+----
+
+[[vaadin-angular2-polymer.ng2cliwebpack.testing]]
+== Testing
+
+Angular CLI projects come with https://karma-runner.github.io[Karma] tests.
+
+Since tests are run against the testing module defined in the [filename]#app.component.spec.ts#, instead of
+the one defined in the [filename]#app.module.ts#, you need to import the [classname]#CUSTOM_ELEMENTS_SCHEMA#
+in the test file.
+
+[source,typescript]
+.src/app/app.component.spec.ts
+----
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+...
+
+describe('App: NgApp', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        AppComponent,
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    });
+  });
+  ...
+});
+----
+
+Then, you can test elements API as usual. For example:
+
+[source,typescript]
+.src/app/app.component.spec.ts
+----
+...
+
+it('vaadin-combo-box and paper-input should have an initial value of 4', async(() => {
+  let fixture = TestBed.createComponent(AppComponent);
+  fixture.detectChanges();
+  let compiled = fixture.debugElement.nativeElement;
+  let combobox = compiled.querySelector('vaadin-combo-box');
+  let input = compiled.querySelector('paper-input');
+  expect(combobox.value).toEqual('4');
+  expect(input.value).toEqual('4');
+}));
 ----
