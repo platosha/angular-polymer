@@ -38,7 +38,7 @@ See the overview for a [quick start](https://vaadin.com/docs/-/part/elements/ang
 
 See the [tutorial](https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html) for complete instructions on how to use `angular2-polymer` and how to build a working application with Angular 2 data binding and routes.
 
-If you are using [Angular CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](https://vaadin.com/docs/-/part/elements/angular2-polymer/ng-cli.html) for projects created with the `ng` command line utility.
+If you are using [Angular CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](https://vaadin.com/docs/-/part/elements/angular2-polymer/ng-cli-webpack.html) for projects created with the `ng` command line utility.
 
 ## Demo app
 
