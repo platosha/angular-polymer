@@ -97,7 +97,13 @@ Open the [filename]#src/index.html# file and append the following lines to the [
 <head>
   ...
 
-  <script src="assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="assets/bower_components/webcomponentsjs/webcomponents.min.js"></script>
+  <script>
+    // this script must run before Polymer is imported
+    window.Polymer = {
+      dom: 'shadow'
+    }
+  </script>
   <link rel="import" href="assets/bower_components/paper-styles/color.html">
   <link rel="import" href="assets/bower_components/paper-styles/typography.html">
   <link rel="import" href="assets/bower_components/vaadin-combo-box/vaadin-combo-box.html">
@@ -143,14 +149,14 @@ The [filename]#webcomponents.js# polyfill is not necessary for browsers that ful
 
 [TIP]
 ====
-Optionally, you can move the [filename]#webcomponents-lite.min.js# from the application [filename]#index.html# to the [filename]#angular-cli.json# configuration file.
+Optionally, you can move the [filename]#webcomponents.min.js# from the application [filename]#index.html# to the [filename]#angular-cli.json# configuration file.
 
 [source, json]
 .angular-cli.json
 ----
 {
   "scripts":[
-    "assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"
+    "assets/bower_components/webcomponentsjs/webcomponents.min.js"
   ]
 }
 ----
