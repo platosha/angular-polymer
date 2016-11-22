@@ -23,12 +23,17 @@ Since Vaadin Elements are built using Polymer, you need the [literal]#https://gi
 [prompt]#$# [command]#bower# install [replaceable]#element-name#
 ----
 
-.  Load the Web Components polyfill for browsers that don’t have native support for the Web Components standards, and then import the elements you want to use.
+.  Load the Web Components polyfill for browsers that don’t have native support for the Web Components standards, and configure Polymer to use Shadow DOM. Then you can import the elements you want to use.
 +
 [source,html,subs="normal"]
 .index.html
 ----
-<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+<script>
+  window.Polymer = {
+    dom: 'shadow'
+  };
+</script>
 <link rel="import" href="bower_components/[replaceable]#element-name#/[replaceable]#element-name#.html">
 ----
 +
