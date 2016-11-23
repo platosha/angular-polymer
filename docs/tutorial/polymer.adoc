@@ -15,8 +15,14 @@ In your project root, edit the [filename]#index.html# file and replace the conte
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Polyfills -->
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
     <script src="node_modules/core-js/client/shim.min.js"></script>
+
+    <script>
+      window.Polymer = {
+        dom: 'shadow'
+      };
+    </script>
 
     <!-- JavaScript libraries -->
     <script src="node_modules/zone.js/dist/zone.js"></script>
@@ -67,7 +73,10 @@ The Doctype Declaration::
 We added the `<!DOCTYPE html>` declaration in the first line of the HTML file. It switches document to use the Standards mode, as required by the internals of [vaadinelement]#vaadin-grid#.
 
 The Web Components Polyfill::
-The technology stack behind Web Components (namely, HTML Imports, Shadow DOM, and Custom Elements) is not yet natively supported in all browsers. Therefore, we added the [filename]#webcomponents-lite.min.js# polyfill.
+The technology stack behind Web Components (namely, HTML Imports, Shadow DOM, and Custom Elements) is not yet natively supported in all browsers. Therefore, we added the [filename]#webcomponents.min.js# polyfill.
+
+Configure Polymer DOM::
+By default, Polymer uses shady DOM, which is not compatible with Angular. We created the Polymer global settings object and set it to use shadow DOM instead.
 
 Importing Polymer Elements::
 We added imports of Polymer elements that we are going to use in our application to the head section of the [filename]#index.html# file.
@@ -109,4 +118,3 @@ The HTML imports we have in the [filename]#index.html# file also import any poss
 
 See http://w3c.github.io/webcomponents/spec/imports/#fetching-import[Fetching Import section of the HTML Imports Spec] for more detailed information about the fetching algorithm.
 ====
-
