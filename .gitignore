@@ -48,8 +48,3 @@ bower_components
 .bower-cache
 .bower-registry
 .bower-tmp
-
-
-### Typings ###
-## Ignore downloaded typings
-typings
