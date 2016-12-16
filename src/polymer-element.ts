@@ -278,16 +278,14 @@ export function PolymerElement(name: string): any[] {
     selector: name
   }).Class({
     constructor: [ElementRef, NgZone, function(el: ElementRef, zone: NgZone) {
-      if (!Polymer.Settings.useShadow) {
-        el.nativeElement.async(() => {
-          if (el.nativeElement.isInitialized()) {
-            // Reload outside of Angular to prevent unnecessary ngDoCheck calls
-            zone.runOutsideAngular(() => {
-              el.nativeElement.reloadConfiguration();
-            });
-          }
-        });
-      }
+      el.nativeElement.async(() => {
+        if (el.nativeElement.isInitialized()) {
+          // Reload outside of Angular to prevent unnecessary ngDoCheck calls
+          zone.runOutsideAngular(() => {
+            el.nativeElement.reloadConfiguration();
+          });
+        }
+      });
     }],
   });
 
