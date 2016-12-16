@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/npm/v/@vaadin/angular2-polymer.svg)](https://www.npmjs.com/package/@vaadin/angular2-polymer)
+
 # Angular2-Polymer
 
 `angular2-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular 2](https://angular.io/) applications.
