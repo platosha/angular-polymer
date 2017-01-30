@@ -8,7 +8,7 @@ We took this decision because keeping up with Angular changes proved to take mor
 
 **In addition, we are happy to announce that ownership of the repository will be transferred by 1 Feb 2017 to @platosha, who will continue to maintain it.**
 
-**If you are willing to participate as a collaborator, please leave a comment in #123. The collaborators will be granted access after transferring. We encourage contribution in any form and shape.**
+**If you are willing to participate as a collaborator, please leave a comment in [#123](https://github.com/vaadin/angular2-polymer/issues/123). The collaborators will be granted access after transferring. We encourage contribution in any form and shape.**
 
 # Angular2-Polymer
 
