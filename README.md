@@ -1,5 +1,15 @@
 [![Version](https://img.shields.io/npm/v/@vaadin/angular2-polymer.svg)](https://www.npmjs.com/package/@vaadin/angular2-polymer)
 
+## NOTICE: This library is no longer supported by Vaadin
+
+Vaadin transfers the ownership of this library, thus Vaadin no longer provides support or does active development on it.
+ 
+We took this decision because keeping up with Angular changes proved to take more time from the team than expected, time that we would have preferred to spend on adding value to the Angular2-Polymer library itself. Going forward, we decided to invest that time in adding valuable user benefits to Vaadin Core Elements.
+
+**In addition, we are happy to announce that ownership of the repository will be transferred by 1 Feb 2017 to @platosha, who will continue to maintain it.**
+
+**If you are willing to participate as a collaborator, please leave a comment in #123. The collaborators will be granted access after transferring. We encourage contribution in any form and shape.**
+
 # Angular2-Polymer
 
 `angular2-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular 2](https://angular.io/) applications.
