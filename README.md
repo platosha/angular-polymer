@@ -7,7 +7,7 @@
 ```typescript
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { PolymerElement } from '@platosha/angular-polymer';
+import { PolymerElement } from '@vaadin/angular2-polymer';
 
 @NgModule({
   imports: [ BrowserModule ],
@@ -36,11 +36,11 @@ class AppComponent {
 
 ## Getting started
 
-See the overview for a [quick start](https://vaadin.com/docs/-/part/elements/angular2-polymer/overview.html).
+See the overview for a [quick start](https://github.com/platosha/angular-polymer#getting-started).
 
-See the [tutorial](https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html) for complete instructions on how to use `angular-polymer` and how to build a working application with Angular data binding and routes.
+See the [tutorial](https://github.com/platosha/angular-polymer#angular2-polymer) for complete instructions on how to use `angular-polymer` and how to build a working application with Angular data binding and routes.
 
-If you are using [Angular CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](https://vaadin.com/docs/-/part/elements/angular2-polymer/ng-cli-webpack.html) for projects created with the `ng` command line utility.
+If you are using [Webpack](https://webpack.github.io/) in your project, see the specific [wiki entry](https://github.com/platosha/angular-polymer/wiki/Using-Polymer-Elements-in-Angular-CLI-Webpack-Applications) on how to build angular-polymer apps with webpack.
 
 ## Demo app
 
