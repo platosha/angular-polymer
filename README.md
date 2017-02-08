@@ -1,18 +1,8 @@
 [![Version](https://img.shields.io/npm/v/@vaadin/angular2-polymer.svg)](https://www.npmjs.com/package/@vaadin/angular2-polymer)
 
-## NOTICE: This library is no longer supported by Vaadin
+# Angular-Polymer
 
-Vaadin transfers the ownership of this library, thus Vaadin no longer provides support or does active development on it.
- 
-We took this decision because keeping up with Angular changes proved to take more time from the team than expected, time that we would have preferred to spend on adding value to the Angular2-Polymer library itself. Going forward, we decided to invest that time in adding valuable user benefits to Vaadin Core Elements.
-
-**In addition, we are happy to announce that ownership of the repository will be transferred by 1 Feb 2017 to @platosha, who will continue to maintain it.**
-
-**If you are willing to participate as a collaborator, please leave a comment in [#123](https://github.com/vaadin/angular2-polymer/issues/123). The collaborators will be granted access after transferring. We encourage contribution in any form and shape.**
-
-# Angular2-Polymer
-
-`angular2-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular 2](https://angular.io/) applications.
+`angular-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular](https://angular.io/) applications.
 
 ```typescript
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
@@ -46,26 +36,22 @@ class AppComponent {
 
 ## Getting started
 
-See the overview for a [quick start](https://vaadin.com/docs/-/part/elements/angular2-polymer/overview.html).
+See the overview for a [quick start](https://github.com/platosha/angular-polymer#getting-started).
 
-See the [tutorial](https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html) for complete instructions on how to use `angular2-polymer` and how to build a working application with Angular 2 data binding and routes.
+See the [tutorial](https://github.com/platosha/angular-polymer#angular2-polymer) for complete instructions on how to use `angular-polymer` and how to build a working application with Angular data binding and routes.
 
-If you are using [Angular CLI](https://github.com/angular/angular-cli) in your project, see the specific [document](https://vaadin.com/docs/-/part/elements/angular2-polymer/ng-cli-webpack.html) for projects created with the `ng` command line utility.
+If you are using [Webpack](https://webpack.github.io/) in your project, see the specific [wiki entry](https://github.com/platosha/angular-polymer/blob/master/docs/ng-cli-webpack.adoc) on how to build angular-polymer apps with webpack.
 
 ## Demo app
 
-The Expense Manager demo is an example of a real world application built using Angular 2 and Polymer web components.
+The Expense Manager demo is an example of a real world application built using Angular and Polymer web components.
 
 - [Live demo](http://demo.vaadin.com/expense-manager-ng)
 - [Source code](https://github.com/vaadin/expense-manager-ng2-demo)
 
 ## Where to get Polymer web components
 
-For high quality Polymer web components, see [Vaadin Elements](https://vaadin.com/elements) and the [Polymer Element Catalog](https://elements.polymer-project.org).
-
-## Contributing
-
-See the [contribution instructions](https://github.com/vaadin/vaadin-core-elements#contributing) which apply to this project as well.
+For high quality Polymer web components, see the [Webcomponents Element Catalog](https://www.webcomponents.org/) and [Vaadin Elements](https://vaadin.com/elements).
 
 ## Development
 
@@ -73,11 +59,11 @@ Familiarize yourself with the code and try to follow the same syntax conventions
 
 ### Getting the Code
 
-1. Clone the angular2-polymer project:
+1. Clone the angular-polymer project:
 
   ```shell
-  $ git clone https://github.com/vaadin/angular2-polymer.git
-  $ cd angular2-polymer
+  $ git clone https://github.com/platosha/angular-polymer.git
+  $ cd angular-polymer
   ```
 
 2. Install dependencies. We assume that you have already installed `npm` in your system.
