@@ -36,11 +36,11 @@ class AppComponent {
 
 ## Getting started
 
-See the overview for a [quick start](https://github.com/platosha/angular-polymer#getting-started).
+See the overview for a [quick start](https://github.com/platosha/angular-polymer/blob/master/docs/overview.adoc#quick-start).
 
-See the [tutorial](https://github.com/platosha/angular-polymer#angular2-polymer) for complete instructions on how to use `angular-polymer` and how to build a working application with Angular data binding and routes.
+See the [tutorial](https://github.com/platosha/angular-polymer/blob/master/docs/tutorial-index.adoc) for complete instructions on how to use `angular-polymer` and how to build a working application with Angular data binding and routes.
 
-If you are using [Webpack](https://webpack.github.io/) in your project, see the specific [wiki entry](https://github.com/platosha/angular-polymer/blob/master/docs/ng-cli-webpack.adoc) on how to build angular-polymer apps with webpack.
+If you are using [Webpack](https://webpack.github.io/) in your project, see the specific [document](https://github.com/platosha/angular-polymer/blob/master/docs/ng-cli-webpack.adoc) on how to build angular-polymer apps with webpack.
 
 ## Demo app
 
