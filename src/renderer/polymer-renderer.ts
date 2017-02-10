@@ -56,7 +56,7 @@ export class PolymerRenderer implements Renderer {
   projectNodes(parent: Element|DocumentFragment, nodes: Node[]) {
     if (!parent) return;
     const parentDomApi: any = Polymer.dom(parent);
-    for (var i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       parentDomApi.appendChild(nodes[i]);
     }
   }
@@ -67,18 +67,18 @@ export class PolymerRenderer implements Renderer {
     const parentDomApi = Polymer.dom(parent);
     const nextSibling: Node = Polymer.dom(node).nextSibling;
     if (nextSibling) {
-      for(let i = 0; i < viewRootNodes.length; i++) {
+      for (let i = 0; i < viewRootNodes.length; i++) {
         parentDomApi.insertBefore(viewRootNodes[i], nextSibling);
       }
     } else {
-      for(let i = 0; i < viewRootNodes.length; i++) {
+      for (let i = 0; i < viewRootNodes.length; i++) {
         parentDomApi.appendChild(viewRootNodes[i]);
       }
     }
   }
 
   detachView(viewRootNodes: Node[]) {
-    for(let i = 0; i < viewRootNodes.length; i++) {
+    for (let i = 0; i < viewRootNodes.length; i++) {
       const node: Node = viewRootNodes[i];
       const parent: Element = Polymer.dom(node).parentNode;
       if (parent) {
@@ -95,7 +95,7 @@ export class PolymerRenderer implements Renderer {
         renderElement,
         name,
         decoratePreventDefault(callback)
-    )
+    );
   }
 
   listenGlobal(target: string, name: string, callback: Function): Function {
@@ -103,7 +103,7 @@ export class PolymerRenderer implements Renderer {
         target,
         name,
         decoratePreventDefault(callback)
-    )
+    );
   }
 
   setElementProperty(renderElement: Element|DocumentFragment, propertyName: string, propertyValue: any): void {
@@ -168,7 +168,7 @@ function decoratePreventDefault(handler: Function) {
       event.preventDefault();
       event.returnValue = false;
     }
-  }
+  };
 }
 
 @Injectable()

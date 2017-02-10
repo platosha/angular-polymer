@@ -30,8 +30,8 @@ describe('PolymerRenderer', () => {
   }));
 
   let testElement: Element;
-  var testComponent: TestComponent;
-  var fixture: ComponentFixture<any>;
+  let testComponent: TestComponent;
+  let fixture: ComponentFixture<any>;
   let renderer: PolymerRenderer;
 
   function createTestComponent(type: any) {

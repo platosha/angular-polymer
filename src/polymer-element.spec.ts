@@ -28,13 +28,13 @@ describe('PolymerElement', () => {
     TestBed.compileComponents();
   }));
 
-  var testElement: any;
-  var testComponent: TestComponent;
-  var fixture: ComponentFixture<any>;
+  let testElement: any;
+  let testComponent: TestComponent;
+  let fixture: ComponentFixture<any>;
 
   function createTestComponent(type: any) {
     fixture = TestBed.createComponent(type);
-    testElement = fixture.debugElement.query((el) => el.name == 'test-element').nativeElement;
+    testElement = fixture.debugElement.query((el) => el.name === 'test-element').nativeElement;
     testComponent = fixture.componentInstance;
   }
 
@@ -81,14 +81,14 @@ describe('PolymerElement', () => {
     it('should reflect change to a nested value (object)', () => {
       testComponent.nestedObject.value = 'foo';
       fixture.detectChanges();
-      var nested = Polymer.dom(testElement.root).querySelector('#nested');
+      let nested = Polymer.dom(testElement.root).querySelector('#nested');
       expect(nested.getAttribute('nested-object-value')).toEqual('foo');
     });
 
     it('should reflect change to a nested value (array)', () => {
       testComponent.arrayObject.push('foo');
       fixture.detectChanges();
-      var nested = Polymer.dom(testElement.root).querySelector('#nested');
+      let nested = Polymer.dom(testElement.root).querySelector('#nested');
       expect(nested.getAttribute('array-object-value')).toEqual('foo');
     });
 
@@ -96,7 +96,7 @@ describe('PolymerElement', () => {
 
   describe('Form field', () => {
 
-    var form: any;
+    let form: any;
 
     function formTests(): void {
 
@@ -174,8 +174,8 @@ describe('PolymerElement', () => {
 
   describe('Checked Element inside Form', () => {
 
-    var form: FormGroup;
-    var checkedElement: any;
+    let form: FormGroup;
+    let checkedElement: any;
 
     describe('initially false', () => {
       beforeEach(() => {
@@ -183,7 +183,7 @@ describe('PolymerElement', () => {
         form = new FormGroup({value: new FormControl(false)});
         fixture.debugElement.componentInstance.form = form;
         fixture.detectChanges();
-        checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
+        checkedElement = fixture.debugElement.query((el) => el.name === 'paper-checkbox').nativeElement;
       });
 
       it('should set default value', () => {
@@ -202,7 +202,7 @@ describe('PolymerElement', () => {
         form = new FormGroup({value: new FormControl(true)});
         fixture.debugElement.componentInstance.form = form;
         fixture.detectChanges();
-        checkedElement = fixture.debugElement.query((el) => el.name == 'paper-checkbox').nativeElement;
+        checkedElement = fixture.debugElement.query((el) => el.name === 'paper-checkbox').nativeElement;
       });
 
       it('should set default value', () => {

@@ -12,32 +12,32 @@ import {
 } from '@angular/core';
 import { FormControlName, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-const Polymer:any = (<any>window).Polymer;
+const Polymer: any = (<any>window).Polymer;
 
 
 export function PolymerElement(name: string): any[] {
   const propertiesWithNotify: Array<any> = [];
   const arrayAndObjectProperties: Array<any> = [];
 
-  const proto:any = Object.getPrototypeOf(document.createElement(name));
+  const proto: any = Object.getPrototypeOf(document.createElement(name));
   if (proto.is !== name) {
     throw new Error(`The Polymer element "${name}" has not been registered. Please check that the element is imported correctly.`);
   }
-  const isFormElement:boolean = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
-  const isCheckedElement:boolean = Polymer && Polymer.IronCheckedElementBehaviorImpl && proto.behaviors.indexOf(Polymer.IronCheckedElementBehaviorImpl) > -1;
-  proto.behaviors.forEach((behavior:any) => configureProperties(behavior.properties));
+  const isFormElement: boolean = Polymer && Polymer.IronFormElementBehavior && proto.behaviors.indexOf(Polymer.IronFormElementBehavior) > -1;
+  const isCheckedElement: boolean = Polymer && Polymer.IronCheckedElementBehaviorImpl && proto.behaviors.indexOf(Polymer.IronCheckedElementBehaviorImpl) > -1;
+  proto.behaviors.forEach((behavior: any) => configureProperties(behavior.properties));
   configureProperties(proto.properties);
 
   function configureProperties(properties: any) {
     if (properties) {
       Object.getOwnPropertyNames(properties)
         .filter(name => name.indexOf('_') !== 0)
-        .forEach(name => configureProperty(name, properties))
+        .forEach(name => configureProperty(name, properties));
     }
   }
 
   function configureProperty(name: string, properties: any) {
-    var info = properties[name];
+    let info = properties[name];
     if (typeof info === 'function') {
       info = {
         type: info
@@ -98,7 +98,7 @@ export function PolymerElement(name: string): any[] {
     }
   });
 
-  const formElementDirective:any = Directive({
+  const formElementDirective: any = Directive({
     selector: name,
     providers: [
       {
@@ -149,7 +149,7 @@ export function PolymerElement(name: string): any[] {
     }],
 
     ngOnInit() {
-      var elm = (<any>this)._element;
+      let elm = (<any>this)._element;
       // In case the element has a default value and the directive doesn't have any value set for a property,
       // we need to make sure the element value is set to the directive.
       arrayAndObjectProperties.filter(property => elm[property] && !this[property])
@@ -161,7 +161,7 @@ export function PolymerElement(name: string): any[] {
     _setValueFromElement(property: string, event: Event) {
         // Properties in this directive need to be kept synced manually with the element properties.
         // Don't use event.detail.value here because it might contain changes for a sub-property.
-        var target:any = event.target;
+        let target: any = event.target;
         if (this[property] !== target[property]) {
           this[property] = target[property];
           (<any>this)._differs[property] = this._createDiffer(this[property]);
@@ -169,7 +169,7 @@ export function PolymerElement(name: string): any[] {
     },
 
     _createDiffer(value: string) {
-      var differ = Array.isArray(value) ? (<any>this)._iterableDiffers.find(value).create(null) : (<any>this)._keyValueDiffers.find(value || {}).create(null);
+      let differ = Array.isArray(value) ? (<any>this)._iterableDiffers.find(value).create(null) : (<any>this)._keyValueDiffers.find(value || {}).create(null);
 
       // initial diff with the current value to make sure the differ is synced
       // and doesn't report any outdated changes on the next ngDoCheck call.
@@ -188,7 +188,7 @@ export function PolymerElement(name: string): any[] {
 
     _handleObjectDiffs(property: string, diff: any) {
       if (diff) {
-        var notify = (item: any) => this._notifyPath(property + '.' + item.key, item.currentValue);
+        let notify = (item: any) => this._notifyPath(property + '.' + item.key, item.currentValue);
         diff.forEachRemovedItem(notify);
         diff.forEachAddedItem(notify);
         diff.forEachChangedItem(notify);
@@ -205,15 +205,15 @@ export function PolymerElement(name: string): any[] {
 
     ngDoCheck() {
       arrayAndObjectProperties.forEach(property => {
-        var elm = (<any>this)._element;
-        var _differs = (<any>this)._differs;
+        let elm = (<any>this)._element;
+        let _differs = (<any>this)._differs;
         if (elm[property] !== this[property]) {
           elm[property] = this[property];
           _differs[property] = this._createDiffer(this[property]);
         } else if (_differs[property]) {
 
           // TODO: these differs won't pickup any changes in need properties like items[0].foo
-          var diff = _differs[property].diff(this[property]);
+          let diff = _differs[property].diff(this[property]);
           if (diff instanceof DefaultIterableDiffer) {
             this._handleArrayDiffs(property, diff);
           } else {
@@ -239,7 +239,7 @@ export function PolymerElement(name: string): any[] {
     }],
   });
 
-  var directives = [changeEventsAdapterDirective, notifyForDiffersDirective];
+  let directives = [changeEventsAdapterDirective, notifyForDiffersDirective];
 
   if (isFormElement) {
     directives.push(formElementDirective);
