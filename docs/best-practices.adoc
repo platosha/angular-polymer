@@ -1,0 +1,150 @@
+---
+title: Best practices
+order: 1
+layout: page
+---
+
+[[angular-polymer.best-practices]]
+= Angular Polymer best practices
+
+This document describes various best practices when using the `angular-polymer` library.
+
+== Lists (with `iron-list`)
+Angular has it's own mechanism for dealing with `<template>` elements. That is why something like this:
+``` html
+<iron-list [items]="data" as="item">
+  <template>
+    <div>
+      Name: {{item.value}}
+    </div>
+  </template>
+</iron-list>
+```
+Is *not* possible. Here is some more information: https://github.com/PolymerElements/iron-list/issues/291#issuecomment-251354454
+
+=== Best practice
+Best practice at the moment is to wrap `<iron-list>` with its template in another Polymer element, that is registered outside Angular templates. For example, create my-list.html:
+
+``` html
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-list/iron-list.html">
+
+<dom-module id="my-list">
+  <template>
+    <iron-list items="[[items]]" as="item">
+      <template>
+        <div>
+          Name: [[item.name]]
+        </div>
+      </template>
+    </iron-list>
+  </template>
+
+  <script>
+    Polymer({
+      is: "my-list",
+      properties: {
+        items: Array
+      }
+    });
+  </script>
+</dom-module>
+```
+
+Then import it in index.html, just like any other Polymer element:
+
+``` html
+...
+  <head>
+    ...
+    <link rel="import" href="my-list.html">
+  </head>
+...
+```
+
+Then you can use the `<my-list>` element in declarations (`PolymerElement('my-list')`), as well as in Angular templates. The `<iron-list>` template was already defined in `<my-list>`, therefore we don't have it in Angular templates:
+
+``` html
+<my-list [items]="data"></my-list>
+```
+
+It requires a bit of work, though: you have to manually bypass all the properties and methods you use in `<iron-list>` through `<my-list>`. In the example above, only the `items` property is bypassed.
+
+== Forms
+As `PolymerElement('x-element')` looks for elements named `<x-element>` it doesn't work with Polymer elements that have been extended from native elements like `<form is="iron-form">`.
+For the future, extending native elements will be [dropped in Polymer 2.0](https://github.com/Polymer/polymer/blob/2.0-preview/README.md#v1-custom-elements) so there will be an actual `<iron-form>` element released at some point.
+
+=== Best practice
+
+As a solution in this case you'll have to use Angular form component instead. Another alternative is creating a custom Polymer element that wraps the `<form is="iron-form">`. Same concept like for `iron-lists` in this document.
+
+Here is an approach on how to solve the problem with an angular form:
+```
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <paper-input
+                label="Username"
+                type="text"
+                id="username"
+                class="form-control"
+                formControlName="username"
+                name="username"
+                auto-validate [(errorMessage)]="usernameErrorMessage"></paper-input>
+    </div>
+    <div class="form-group">
+        <paper-input
+                label="E-Mail"
+                type="email"
+                id="email"
+                class="form-control"
+                formControlName="email"
+                name="email"
+                autocomplete="on"
+                required auto-validate [(errorMessage)]="emailErrorMessage"></paper-input>
+    </div>
+
+    <paper-button
+            type="submit" raised
+            [disabled]="!registerForm.valid"
+            (click)="onSubmit()">
+        Register User
+    </paper-button>
+</form>
+```
+
+And the typescript file:
+```
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+
+@Component({
+    selector: 'register',
+    templateUrl: './register.component.html'
+})
+export class RegisterComponent implements OnInit {
+    private registerForm: FormGroup;
+
+    private usernameErrorMessage: string;
+    private emailErrorMessage: string;
+
+    constructor() {
+            this.usernameErrorMessage = '';
+            this.emailErrorMessage = '';
+    }
+
+    ngOnInit() {
+        this.registerForm = new FormGroup({
+            username: new FormControl(null, [Validators.required, Validators.minLength(2)]),
+            email: new FormControl(null, [
+                Validators.required,
+                Validators.pattern('[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?')
+            ])
+        });
+    }
+
+    onSubmit() {
+        console.log(this.registerForm.value.username);
+        console.log(this.registerForm.value.email);
+    }
+}
+```
