@@ -48,3 +48,7 @@ bower_components
 .bower-cache
 .bower-registry
 .bower-tmp
+
+### IntelliJ ###
+.idea
+angular-polymer.iml
