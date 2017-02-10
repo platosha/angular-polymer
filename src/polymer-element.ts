@@ -12,57 +12,7 @@ import {
 } from '@angular/core';
 import { FormControlName, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { __platform_browser_private__ } from '@angular/platform-browser';
-
 const Polymer:any = (<any>window).Polymer;
-
-class PolymerDomAdapter extends __platform_browser_private__.BrowserDomAdapter {
-  createStyleElement(css:any, doc:Document = document) {
-    var style:any = doc.createElement.call(doc, 'style', 'custom-style');
-    this.appendChild(style, this.createTextNode(css));
-    return style;
-  }
-}
-
-class PolymerShadyDomAdapter extends PolymerDomAdapter {
-  parentElement(el) { return Polymer.dom(el).parentNode; }
-
-  appendChild(el, node) { Polymer.dom(el).appendChild(node); }
-  insertBefore(el, node) { Polymer.dom(this.parentElement(el)).insertBefore(node, el); }
-  insertAllBefore(el, nodes) { var elParentDom = Polymer.dom(this.parentElement(el)); nodes.forEach(n => elParentDom.insertBefore(n, el)); }
-  insertAfter(el, node) { this.insertBefore(this.nextSibling(el), node); }
-  removeChild(el, node) { Polymer.dom(el).removeChild(node); }
-  childNodes(el) { return Polymer.dom(el).childNodes; }
-  remove(node) { if (this.parentElement(node)) { this.removeChild(this.parentElement(node), node); } return node; }
-  clearNodes(el) { while(Polymer.dom(el).firstChild) { Polymer.dom(el).removeChild(Polymer.dom(el).firstChild); } }
-
-  firstChild(el) { return Polymer.dom(el).firstChild; }
-  lastChild(el) { return Polymer.dom(el).lastChild; }
-  previousSibling(el) { return Polymer.dom(el).previousSibling; }
-  nextSibling(el) { return Polymer.dom(el).nextSibling; }
-
-  getInnerHTML(el) { return Polymer.dom(el).innerHTML; }
-  setInnerHTML(el, value) { Polymer.dom(el).innerHTML = value; }
-
-  querySelector(el, selector) { return Polymer.dom(el).querySelector(selector); }
-  querySelectorAll(el, selector) { return Polymer.dom(el).querySelectorAll(selector); }
-
-  getDistributedNodes(el) { return Polymer.dom(el).getDistributedNodes(); }
-
-  classList(el) { return Polymer.dom(el).classList; }
-  addClass(el, className) { this.classList(el).add(className); }
-  removeClass(el, className) { this.classList(el).remove(className); }
-  hasClass(el, className) { return this.classList(el).contains(className); }
-
-  setAttribute(el, name, value) { Polymer.dom(el).setAttribute(name, value); }
-  removeAttribute(el, name) { Polymer.dom(el).removeAttribute(name); }
-}
-
-if (Polymer.Settings.useShadow) {
-  __platform_browser_private__.setRootDomAdapter(new PolymerDomAdapter());
-} else {
-  __platform_browser_private__.setRootDomAdapter(new PolymerShadyDomAdapter());
-}
 
 
 export function PolymerElement(name: string): any[] {

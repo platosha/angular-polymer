@@ -6,7 +6,6 @@ import {
 import { PolymerElement } from './polymer-element';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { __platform_browser_private__ } from '@angular/platform-browser';
 
 const Polymer: any = (<any>window).Polymer;
 
@@ -21,8 +20,6 @@ describe('PolymerElement', () => {
         TestComponent,
         TestComponentForm,
         TestComponentCheckboxForm,
-        TestComponentLightDom,
-        TestComponentDomApi,
         PolymerElement('test-element'),
         PolymerElement('paper-checkbox')
       ],
@@ -218,102 +215,6 @@ describe('PolymerElement', () => {
       });
     });
   });
-
-  describe('Light dom content', () => {
-
-    beforeEach((done) => {
-      createTestComponent(TestComponentLightDom);
-      setTimeout(done, 0);
-    });
-
-    function contentParentChildren(contentParentId) {
-      var selected = testElement.$[contentParentId];
-      return Polymer.dom(selected).getDistributedNodes();
-    }
-
-    function containsChild(contentParentId, childClassName) {
-      var children = contentParentChildren(contentParentId);
-      return Array.prototype.filter.call(children, (node) => {
-        return node.classList && node.classList.contains(childClassName);
-      }).length > 0;
-    }
-
-    it('should distribute correctly', () => {
-      // Local dom
-      expect(containsChild('selected', 'foo')).toEqual(false);
-      expect(containsChild('all', 'foo')).toEqual(true);
-
-      expect(containsChild('selected', 'bar')).toEqual(false);
-      expect(containsChild('all', 'bar')).toEqual(false);
-
-      expect(containsChild('selected', 'baz')).toEqual(true);
-
-      var hasQux = Array.prototype.filter.call(contentParentChildren('all'), (node) => {
-        return node.textContent.indexOf('Qux') !== -1;
-      });
-      expect(hasQux.length).toEqual(1);
-
-      // Light dom
-      expect(Polymer.dom(testElement).querySelector('.foo')).not.toEqual(null);
-    });
-
-    it('should support ngif', (done) => {
-      testComponent.barVisible = true;
-      fixture.detectChanges();
-      // Distribution with polyfills is done with MutationObservers, so it is asynchronous
-      setTimeout(function() {
-        expect(containsChild('selected', 'bar')).toEqual(true);
-        expect(containsChild('all', 'bar2')).toEqual(true);
-        done();
-      }, 0);
-    });
-
-  });
-
-  describe('DOM API', () => {
-
-    beforeEach(() => { createTestComponent(TestComponentDomApi); });
-
-    it('should trigger one mutation after multiple operations', (done) => {
-      var observerSpy = jasmine.createSpy('observerSpy');
-      var domApi = Polymer.dom(testElement).observeNodes(observerSpy);
-      testComponent.arrayObject = [1, 2, 3];
-      fixture.detectChanges();
-      testComponent.arrayObject.push(4);
-      fixture.detectChanges();
-      testComponent.arrayObject.pop();
-      fixture.detectChanges();
-      testComponent.arrayObject = [0, 1, 2];
-      fixture.detectChanges();
-      testComponent.barVisible = true;
-      fixture.detectChanges();
-      testComponent.barVisible = false;
-      fixture.detectChanges();
-      setTimeout(function() {
-        expect(observerSpy).toHaveBeenCalledTimes(1);
-        done();
-      }, 0);
-    });
-
-    it('should have the correct adapter', () => {
-      const functionName = (fun) => {
-        var ret = fun.toString();
-        ret = ret.substr('function '.length);
-        ret = ret.substr(0, ret.indexOf('('));
-        return ret;
-      };
-
-      var dom = __platform_browser_private__.getDOM();
-      const adapterName = functionName(dom.constructor);
-
-      if (Polymer.Settings.useShadow) {
-        expect(adapterName).toEqual("PolymerDomAdapter");
-      } else {
-        expect(adapterName).toEqual("PolymerShadyDomAdapter");
-      }
-    });
-
-  });
 });
 
 
@@ -346,26 +247,3 @@ class TestComponentForm {
     <test-element></test-element>`
 })
 class TestComponentCheckboxForm { }
-
-@Component({
-  template: `
-    <test-element [(value)]="value" class="hascontent">
-      <div class="foo">Foo</div>
-      <div class="bar selected" *ngIf="barVisible">Bar</div>
-      <div class="bar2" *ngIf="barVisible">Bar2</div>
-      <div class="baz selected">Baz</div>
-      Qux
-    </test-element>`
-})
-class TestComponentLightDom { }
-
-@Component({
-  template: `
-    <test-element [(value)]="value" class="hascontent">
-      <div class="foo" *ngFor="let item of arrayObject">Foo {{item}}</div>
-      <div class="bar selected" *ngIf="barVisible">Bar</div>
-      <div class="bar2" *ngIf="barVisible">Bar2</div>
-      <div class="baz selected">Baz</div>
-    </test-element>`
-})
-class TestComponentDomApi { }
