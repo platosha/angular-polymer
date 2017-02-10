@@ -71,7 +71,7 @@ describe('PolymerRenderer', () => {
             expect(testRoot).toBe(expectedRoot);
         });
 
-        it('clears previours content using Polymer.dom API', () => {
+        it('clears previous content using Polymer.dom API', () => {
             const spy = jasmine.createSpy('textContentSetterSpy');
             const domApi: any = Polymer.dom(expectedRoot);
             Object.defineProperty(domApi, 'textContent', {set: spy});
