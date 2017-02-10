@@ -8,82 +8,83 @@ import {PolymerRootRenderer} from './polymer-renderer';
 const Polymer: any = (<any>window).Polymer;
 
 @Component({
-  template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject"></test-element>`
+    template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject"></test-element>`
 })
 class TestComponent {
-  constructor(public renderer: Renderer) {}
+    constructor(public renderer: Renderer) {
+    }
 
-  value = 'foo';
-  nestedObject = { value: undefined };
-  arrayObject = [];
-  barVisible = false;
+    value = 'foo';
+    nestedObject = {value: undefined};
+    arrayObject = [];
+    barVisible = false;
 }
 
 describe('PolymerRenderer', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [PolymerModule],
-      declarations: [TestComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    });
-    TestBed.compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [PolymerModule],
+            declarations: [TestComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        });
+        TestBed.compileComponents();
+    }));
 
-  let testElement: Element;
-  let testComponent: TestComponent;
-  let fixture: ComponentFixture<any>;
-  let renderer: PolymerRenderer;
+    let testElement: Element;
+    let testComponent: TestComponent;
+    let fixture: ComponentFixture<any>;
+    let renderer: PolymerRenderer;
 
-  function createTestComponent(type: any) {
-    fixture = TestBed.createComponent(type);
-    testComponent = fixture.componentInstance;
-    testElement = fixture.nativeElement.firstElementChild;
-    renderer = <PolymerRenderer> testComponent.renderer;
-  }
-
-  beforeEach(() => {
-    createTestComponent(TestComponent);
-  });
-
-  it('is in use', () => {
-    expect(renderer instanceof PolymerRenderer).toBe(true);
-  });
-
-  describe('selectRootElement method', () => {
-    let expectedRoot: Element;
+    function createTestComponent(type: any) {
+        fixture = TestBed.createComponent(type);
+        testComponent = fixture.componentInstance;
+        testElement = fixture.nativeElement.firstElementChild;
+        renderer = <PolymerRenderer> testComponent.renderer;
+    }
 
     beforeEach(() => {
-      expectedRoot = document.createElement('div');
-      expectedRoot.classList.add('test-root'); // should be selected as root
-      document.body.appendChild(expectedRoot);
+        createTestComponent(TestComponent);
     });
 
-    afterEach(() => {
-      document.body.removeChild(expectedRoot);
+    it('is in use', () => {
+        expect(renderer instanceof PolymerRenderer).toBe(true);
     });
 
-    it('respects shadow DOM boundaries', () => {
-      (<any> testElement).$.nested.classList.add('test-root'); // should not be selected as root
+    describe('selectRootElement method', () => {
+        let expectedRoot: Element;
 
-      const testRoot = renderer.selectRootElement('.test-root');
+        beforeEach(() => {
+            expectedRoot = document.createElement('div');
+            expectedRoot.classList.add('test-root'); // should be selected as root
+            document.body.appendChild(expectedRoot);
+        });
 
-      expect(testRoot).toBe(expectedRoot);
+        afterEach(() => {
+            document.body.removeChild(expectedRoot);
+        });
+
+        it('respects shadow DOM boundaries', () => {
+            (<any> testElement).$.nested.classList.add('test-root'); // should not be selected as root
+
+            const testRoot = renderer.selectRootElement('.test-root');
+
+            expect(testRoot).toBe(expectedRoot);
+        });
+
+        it('clears previours content using Polymer.dom API', () => {
+            const spy = jasmine.createSpy('textContentSetterSpy');
+            const domApi: any = Polymer.dom(expectedRoot);
+            Object.defineProperty(domApi, 'textContent', {set: spy});
+
+            renderer.selectRootElement('.test-root');
+
+            expect(spy).toHaveBeenCalledWith('');
+        });
     });
-
-    it('clears previours content using Polymer.dom API', () => {
-      const spy = jasmine.createSpy('textContentSetterSpy');
-      const domApi: any = Polymer.dom(expectedRoot);
-      Object.defineProperty(domApi, 'textContent', {set: spy});
-
-      renderer.selectRootElement('.test-root');
-
-      expect(spy).toHaveBeenCalledWith('');
-    });
-  });
 });
 
 describe('PolymerRootRenderer', () => {
-  it('is defined', () => {
-    expect(PolymerRenderer).toBeDefined();
-  });
+    it('is defined', () => {
+        expect(PolymerRenderer).toBeDefined();
+    });
 });
