@@ -1,7 +1,7 @@
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component, Renderer, RootRenderer, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 
-import {PolymerModule} from './../polymer-module';
+import {PolymerModule} from '../polymer-module';
 import {PolymerRenderer} from './polymer-renderer';
 import {PolymerRootRenderer} from './polymer-renderer';
 
@@ -79,6 +79,11 @@ describe('PolymerRenderer', () => {
             renderer.selectRootElement('.test-root');
 
             expect(spy).toHaveBeenCalledWith('');
+        });
+
+        it('updates the value of angular component and polymer component correct', () => {
+            testComponent.value = 'Should change';
+            expect((<any> testElement).value).toBe('Should change');
         });
     });
 });
