@@ -23,7 +23,7 @@ is available in your PATH. Otherwise run the following command:
 
 [subs="normal"]
 ----
-[prompt]#$# [command]#npm# install -g angular-cli
+[prompt]#$# [command]#npm# install -g @angular/cli
 ----
 
 Then, create a new Angular 2 project.
