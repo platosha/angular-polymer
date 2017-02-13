@@ -62,6 +62,9 @@ For high quality Polymer web components, see the [Webcomponents Element Catalog]
 
 Familiarize yourself with the code and try to follow the same syntax conventions to make it easier for us to accept your pull requests.
 
+Discuss / exchange ideas and ask questions here:
+https://polymer.slack.com/messages/polymer-angular/
+
 ### Getting the Code
 
 1. Clone the angular-polymer project:
