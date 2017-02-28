@@ -1,7 +1,7 @@
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component, Renderer, RootRenderer, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 
-import {PolymerModule} from './../polymer-module';
+import {PolymerModule} from '../polymer-module';
 import {PolymerRenderer} from './polymer-renderer';
 import {PolymerRootRenderer} from './polymer-renderer';
 
@@ -11,10 +11,9 @@ const Polymer: any = (<any>window).Polymer;
     template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject"></test-element>`
 })
 class RendererTestComponent {
-    constructor(
-        public renderer: Renderer,
-        public rootRenderer: RootRenderer
-    ) { }
+    constructor(public renderer: Renderer,
+                public rootRenderer: RootRenderer) {
+    }
 
     value = 'foo';
     nestedObject = {value: undefined};
@@ -288,7 +287,7 @@ describe('PolymerRenderer', () => {
     });
 
     it('implements invokeElementMethod method', () => {
-        spyOn(testElement, 'click');
+        spyOn(testElement, (<any> 'click'));
         const callArgs = [];
 
         renderer.invokeElementMethod(testElement, 'click', callArgs);
@@ -329,6 +328,13 @@ describe('PolymerRenderer', () => {
     describe('PolymerRootRenderer', () => {
         it('is injectable', () => {
             expect(rootRenderer instanceof PolymerRootRenderer).toBe(true);
+        });
+    });
+
+    describe('setElementProperty', () => {
+        it('updates the value of angular component and polymer component', () => {
+            (<any> testElement).value = 'Should change';
+            expect((<any> testElement).value).toBe('Should change');
         });
     });
 });
