@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc && concurrently \"npm run tsc:w\" \"live-server --open=tests.html\"",
-    "test-once": "tsc && concurrently \"npm run tsc\" \"live-server --open=tests.html\"",
+    "test-once": "npm run tsc",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "prepublish": "tsc",
