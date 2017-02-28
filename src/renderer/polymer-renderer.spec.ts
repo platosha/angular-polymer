@@ -11,10 +11,9 @@ const Polymer: any = (<any>window).Polymer;
     template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject"></test-element>`
 })
 class RendererTestComponent {
-    constructor(
-        public renderer: Renderer,
-        public rootRenderer: RootRenderer
-    ) { }
+    constructor(public renderer: Renderer,
+                public rootRenderer: RootRenderer) {
+    }
 
     value = 'foo';
     nestedObject = {value: undefined};
@@ -288,7 +287,7 @@ describe('PolymerRenderer', () => {
     });
 
     it('implements invokeElementMethod method', () => {
-        spyOn(testElement, 'click');
+        spyOn(testElement, (<any> 'click'));
         const callArgs = [];
 
         renderer.invokeElementMethod(testElement, 'click', callArgs);
