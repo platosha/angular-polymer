@@ -23,7 +23,7 @@ export class PolymerRenderer implements Renderer {
         return el;
     }
 
-    createElement(parent: Element|DocumentFragment, name: string) {
+    createElement(parent: Element|DocumentFragment, name: string): Element {
         const el: Element = document.createElement(name);
         if (parent) {
             Polymer.dom(parent).appendChild(el);
@@ -44,7 +44,7 @@ export class PolymerRenderer implements Renderer {
         return anchor;
     }
 
-    createText(parent: Element|DocumentFragment, value: string): Node {
+    createText(parent: Element|DocumentFragment, value: string): Text {
         const node = document.createTextNode(value);
         if (parent) {
             Polymer.dom(parent).appendChild(node);
@@ -131,9 +131,9 @@ export class PolymerRenderer implements Renderer {
 
     setElementStyle(renderElement: HTMLElement, styleName: string, styleValue: string): void {
         if (styleValue) {
-            (renderElement.style as any).setProperty(styleName, styleValue);
+            renderElement.style.setProperty(styleName, styleValue);
         } else {
-            (renderElement.style as any).removeProperty(styleName);
+            renderElement.style.removeProperty(styleName);
         }
     }
 
