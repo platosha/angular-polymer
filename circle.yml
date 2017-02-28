@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 6.9.1
+
+dependencies:
+  override:
+    - npm install
+
+compile:
+  override:
+    - npm run lint
+
+test:
+  override:
+    - npm run test
