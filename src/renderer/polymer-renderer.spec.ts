@@ -80,11 +80,6 @@ describe('PolymerRenderer', () => {
 
             expect(spy).toHaveBeenCalledWith('');
         });
-
-        it('updates the value of angular component and polymer component correct', () => {
-            testComponent.value = 'Should change';
-            expect((<any> testElement).value).toBe('Should change');
-        });
     });
 
     describe('tree manipulation', () => {
@@ -334,6 +329,13 @@ describe('PolymerRenderer', () => {
     describe('PolymerRootRenderer', () => {
         it('is injectable', () => {
             expect(rootRenderer instanceof PolymerRootRenderer).toBe(true);
+        });
+    });
+
+    describe('setElementProperty', () => {
+        it('updates the value of angular component and polymer component', () => {
+            (<any> testElement).value = 'Should change';
+            expect((<any> testElement).value).toBe('Should change');
         });
     });
 });
