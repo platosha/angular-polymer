@@ -1,4 +1,6 @@
 *.js
+!karma.conf.js
+!system.config.js
 *.d.ts
 
 # Created by https://www.gitignore.io/api/node,bower,typings

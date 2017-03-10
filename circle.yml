@@ -5,11 +5,10 @@ machine:
 dependencies:
   override:
     - npm install
+    - npm run bower install
+  cache_directories:
+    - bower_components
 
 compile:
   override:
     - npm run lint
-
-test:
-  override:
-    - npm run test-once

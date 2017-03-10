@@ -88,6 +88,12 @@ Finally, you can run the tests by typing:
   $ npm test
   ```
 
+Optionally, you can watch for the source changes and keep the tests running automatically:
+
+  ```shell
+  $ npm run test:w
+  ```
+
 ## License
 
 Apache License 2.0
