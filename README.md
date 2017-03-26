@@ -6,11 +6,10 @@
 
 ```typescript
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { PolymerElement } from '@vaadin/angular2-polymer';
+import { PolymerModule, PolymerElement } from '@vaadin/angular2-polymer';
 
 @NgModule({
-  imports: [ BrowserModule ],
+  imports: [ PolymerModule ],
   declarations: [
     AppComponent,
     PolymerElement('paper-input'),

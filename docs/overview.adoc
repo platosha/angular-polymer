@@ -54,12 +54,11 @@ You also need to wait for the "WebComponentsReady" event before bootstrapping th
 .app/app.module.ts
 ----
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { PolymerElement } from '@vaadin/angular2-polymer';
+import { PolymerModule, PolymerElement } from '@vaadin/angular2-polymer';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  imports: +++[+++ BrowserModule +++]+++,
+  imports: +++[+++ PolymerModule +++]+++,
   declarations: +++[+++
     AppComponent,
     PolymerElement('[replaceable]#element-name#')
@@ -83,5 +82,27 @@ export class AppComponent { }
 ----
 
 Note, that we also added the [classname]#CUSTOM_ELEMENTS_SCHEMA# to the [classname]#AppModule#. This is required to enable usage of non-standard properties on custom elements in the Angular component templates.
+
+== In case you use Angular 2.1 or 2.0
+You can replace the `app.module.ts` code with the following. Use the old `BrowserModule`
+[source,typescript,subs="normal"]
+.app/app.module.ts
+----
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { PolymerElement } from '@vaadin/angular2-polymer';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  imports: +++[+++ BrowserModule +++]+++,
+  declarations: +++[+++
+    AppComponent,
+    PolymerElement('[replaceable]#element-name#')
+  +++]+++,
+  bootstrap: +++[+++ AppComponent +++]+++,
+  schemas: +++[+++ CUSTOM_ELEMENTS_SCHEMA +++]+++
+})
+export class AppModule { }
+----
 
 link:https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html[See the tutorial] for complete instructions how to set up your Angular 2 application to work with Polymer elements.

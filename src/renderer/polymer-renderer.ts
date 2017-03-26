@@ -3,6 +3,21 @@ import {EventManager, AnimationDriver, DOCUMENT} from '@angular/platform-browser
 
 const Polymer: any = (<any>window).Polymer;
 
+/**
+ * The polymer renderer takes care of supporting angular > 2.2 shady DOM
+ *
+ * The problem:
+ * Starting from v2.2, Angular uses direct DOM rendering in browser. BrowserDomAdapter is not invoked by Renderer.
+ * Therefore, changing the default BrowserDomAdapter to PolymerDomAdapter trick is not helpful anymore.
+ * The issue breaks setting Light DOM for Polymer elements in Shady DOM mode of Polymer v1.0.
+ *
+ * The solution:
+ * Instead of PolymerDomAdapter, we created the PolymerRenderer by implementing the Renderer interface.
+ * The PolymerRenderer calls Polymer.dom APIs instead of DOM methods. In order to make Angular use the PolymerRenderer,
+ * we need to define and export custom platforms, i.e., platformPolymer and platformPolymerDynamic.
+ * In practice, developers will have to switch the imports in their main.ts files to use our custom Polymer platforms
+ * instead of the default platformBrowser and platformBrowserDynamic.
+ */
 export class PolymerRenderer implements Renderer {
     constructor(private _rootRenderer: PolymerRootRenderer,
                 private componentType: RenderComponentType,
