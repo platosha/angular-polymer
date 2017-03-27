@@ -8,7 +8,7 @@ import {PolymerRootRenderer} from './polymer-renderer';
 const Polymer: any = (<any>window).Polymer;
 
 @Component({
-    template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject"></test-element>`
+    template: `<test-element [(value)]="value" [(nestedObject)]="nestedObject" [(arrayObject)]="arrayObject" boolean-value></test-element>`
 })
 class RendererTestComponent {
     constructor(public renderer: Renderer,
@@ -246,7 +246,7 @@ describe('PolymerRenderer', () => {
         renderer.setElementAttribute(testElement, 'qux', null);
 
         expect(testDomApi.setAttribute).toHaveBeenCalledWith('foo', 'bar');
-        expect(testDomApi.removeAttribute).toHaveBeenCalledWith('baz');
+        expect(testDomApi.setAttribute).toHaveBeenCalledWith('baz', '');
         expect(testDomApi.removeAttribute).toHaveBeenCalledWith('qux');
     });
 
@@ -259,7 +259,7 @@ describe('PolymerRenderer', () => {
         renderer.setBindingDebugInfo(testElement, 'qux', null);
 
         expect(testDomApi.setAttribute).toHaveBeenCalledWith('foo', 'bar');
-        expect(testDomApi.removeAttribute).toHaveBeenCalledWith('baz');
+        expect(testDomApi.setAttribute).toHaveBeenCalledWith('baz', '');
         expect(testDomApi.removeAttribute).toHaveBeenCalledWith('qux');
     });
 
@@ -328,6 +328,12 @@ describe('PolymerRenderer', () => {
     describe('PolymerRootRenderer', () => {
         it('is injectable', () => {
             expect(rootRenderer instanceof PolymerRootRenderer).toBe(true);
+        });
+    });
+
+    describe('setElementAttribute', () => {
+        it('supports boolean attributes with no value', () => {
+            expect((<any> testElement).booleanValue).toBe(true);
         });
     });
 

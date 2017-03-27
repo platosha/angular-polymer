@@ -125,7 +125,7 @@ export class PolymerRenderer implements Renderer {
     }
 
     setElementAttribute(renderElement: Element|DocumentFragment, attributeName: string, attributeValue: string): void {
-        if (attributeValue) {
+        if (attributeValue != null) {
             Polymer.dom(renderElement).setAttribute(attributeName, attributeValue);
         } else {
             Polymer.dom(renderElement).removeAttribute(attributeName);
