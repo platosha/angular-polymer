@@ -22,7 +22,7 @@
   },
   "author": "Vaadin Ltd",
   "license": "Apache-2.0",
-  "dependencies": {
+  "peerDependencies": {
     "@angular/common": "^2.0.0",
     "@angular/core": "^2.0.0",
     "@angular/forms": "^2.0.0",
