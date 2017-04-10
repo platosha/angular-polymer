@@ -15,11 +15,6 @@
     "lint": "tslint './**/*.ts' --exclude './node_modules/**'",
     "fix-lint": "tslint './**/*.ts' --exclude './node_modules/**' --fix"
   },
-  "files": [
-    "index.d.ts",
-    "src/*.js",
-    "src/*.d.ts"
-  ],
   "typescript": {
     "definition": "index.d.ts"
   },
