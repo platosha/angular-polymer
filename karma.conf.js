@@ -30,12 +30,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      { pattern: '**/*.js', included: false, watched: true },
-      { pattern: 'node_modules/**/*.js', included: false, watched: false },
-      { pattern: 'bower_components/**/*.+(html|css|js)', included: false, watched: false },
-      { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
-      { pattern: 'node_modules/rxjs/**/*.js.map', included: false, watched: false },
-
       'bower_components/webcomponentsjs/webcomponents-lite.min.js',
       'src/test-element.html',
 
@@ -50,6 +44,15 @@ module.exports = function(config) {
       'node_modules/zone.js/dist/fake-async-test.js',
 
       'system.config.js',
+
+      { pattern: 'node_modules/**/*.js', included: false, watched: false },
+      { pattern: 'bower_components/**/*.+(html|css|js)', included: false, watched: false },
+      { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
+      { pattern: 'node_modules/rxjs/**/*.js.map', included: false, watched: false },
+      { pattern: '**/*.js', included: false, watched: true },
+
+      // Serve the sources for debugging
+      { pattern: '**/*.ts', included: false, watched: false, served: true }
     ],
 
 

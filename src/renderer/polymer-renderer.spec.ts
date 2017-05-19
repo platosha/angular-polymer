@@ -1,9 +1,8 @@
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {Component, Renderer, RootRenderer, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {Component, Renderer, RootRenderer, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation} from '@angular/core';
 
 import {PolymerModule} from '../polymer-module';
-import {PolymerRenderer} from './polymer-renderer';
-import {PolymerRootRenderer} from './polymer-renderer';
+import {DefaultPolymerRenderer, EmulatedEncapsulationPolymerRenderer, ShadowDomPolymerRenderer, PolymerRootRenderer} from './polymer-renderer';
 
 const Polymer: any = (<any>window).Polymer;
 
@@ -21,11 +20,35 @@ class RendererTestComponent {
     barVisible = false;
 }
 
-describe('PolymerRenderer', () => {
+@Component({
+    template: `<p>encapsulation: none</p>`,
+    styles: [`p { order: 1; }`],
+    encapsulation: ViewEncapsulation.None
+})
+class StyleEncapsulationNoneComponent {}
+
+@Component({
+    template: `<p>encapsulation: native</p>`,
+    styles: [`p { order: 2; }`],
+    encapsulation: ViewEncapsulation.Native
+})
+class StyleEncapsulationNativeComponent {}
+
+@Component({
+    template: `<p>encapsulation: emulated</p>`,
+    styles: [`p { order: 3; }`],
+    encapsulation: ViewEncapsulation.Emulated
+})
+class StyleEncapsulationEmulatedComponent {}
+
+describe('DefaultPolymerRenderer', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [PolymerModule],
-            declarations: [RendererTestComponent],
+            declarations: [
+                RendererTestComponent,
+                StyleEncapsulationNoneComponent
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         });
         TestBed.compileComponents();
@@ -33,20 +56,20 @@ describe('PolymerRenderer', () => {
 
     let testElement: Element;
     let testDomApi: any;
-    let renderer: PolymerRenderer;
+    let renderer: DefaultPolymerRenderer;
     let rootRenderer: PolymerRootRenderer;
 
     beforeEach(() => {
         const fixture = TestBed.createComponent(RendererTestComponent);
         const testComponent = fixture.componentInstance;
         testElement = fixture.nativeElement.firstElementChild;
-        renderer = <PolymerRenderer> testComponent.renderer;
+        renderer = <DefaultPolymerRenderer> testComponent.renderer;
         testDomApi = Polymer.dom(testElement);
         rootRenderer = <PolymerRootRenderer> testComponent.rootRenderer;
     });
 
     it('is in use', () => {
-        expect(renderer instanceof PolymerRenderer).toBe(true);
+        expect(renderer instanceof DefaultPolymerRenderer).toBe(true);
     });
 
     describe('selectRootElement method', () => {
@@ -288,15 +311,15 @@ describe('PolymerRenderer', () => {
 
     it('implements invokeElementMethod method', () => {
         spyOn(testElement, (<any> 'click'));
-        const callArgs = [];
+        const callArgs = [1, 'foo'];
 
         renderer.invokeElementMethod(testElement, 'click', callArgs);
 
-        expect(testElement['click'].calls.all()).toEqual([{
-            object: testElement,
-            args: callArgs,
-            returnValue: undefined
-        }]);
+        const calls = testElement['click'].calls.all();
+        expect(calls.length).toBe(1);
+        expect(calls[0].object).toBe(testElement);
+        expect(calls[0].args).toEqual(callArgs);
+        expect(calls[0].returnValue).toBeUndefined;
     });
 
     it('implements setText method', () => {
@@ -342,5 +365,72 @@ describe('PolymerRenderer', () => {
             (<any> testElement).value = 'Should change';
             expect((<any> testElement).value).toBe('Should change');
         });
+    });
+
+    it('applies component styles', () => {
+        const fixture = TestBed.createComponent(StyleEncapsulationNoneComponent);
+        const testElement = fixture.nativeElement.firstElementChild;
+        expect(window.getComputedStyle(testElement).order).toBe('1');
+    });
+});
+
+describe('ShadowDomPolymerRenderer', () => {
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [PolymerModule],
+            declarations: [
+                StyleEncapsulationNativeComponent
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        });
+        TestBed.compileComponents();
+    }));
+
+    let testElement: Element;
+
+    beforeEach(() => {
+        const fixture = TestBed.createComponent(StyleEncapsulationNativeComponent);
+        testElement = fixture.nativeElement.shadowRoot.querySelector('p');
+    });
+
+    it('applies component styles', () => {
+        expect(window.getComputedStyle(testElement).order).toBe('2');
+    });
+
+    it('encapsulates component styles', () => {
+        const p = document.createElement('p');
+        document.body.appendChild(p);
+        expect(window.getComputedStyle(p).order).not.toBe('2');
+    });
+});
+
+describe('EmulatedEncapsulationPolymerRenderer', () => {
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [PolymerModule],
+            declarations: [
+                StyleEncapsulationEmulatedComponent
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        });
+        TestBed.compileComponents();
+    }));
+
+    let testElement: Element;
+
+    beforeEach(() => {
+        const fixture = TestBed.createComponent(StyleEncapsulationEmulatedComponent);
+        testElement = fixture.nativeElement.firstElementChild;
+    });
+
+    it('applies component styles', () => {
+        expect(window.getComputedStyle(testElement).order).toBe('3');
+    });
+
+    it('encapsulates component styles', () => {
+        const p = document.createElement('p');
+        document.body.appendChild(p);
+        expect(window.getComputedStyle(p).order).not.toBe('3');
+        document.body.removeChild(p);
     });
 });
