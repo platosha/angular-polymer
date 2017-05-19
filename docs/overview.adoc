@@ -84,4 +84,4 @@ export class AppComponent { }
 
 Note, that we also added the [classname]#CUSTOM_ELEMENTS_SCHEMA# to the [classname]#AppModule#. This is required to enable usage of non-standard properties on custom elements in the Angular component templates.
 
-link:https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html[See the tutorial] for complete instructions how to set up your Angular 2 application to work with Polymer elements.
+link:https://github.com/platosha/angular-polymer/blob/master/docs/tutorial-index.adoc[See the tutorial] for complete instructions how to set up your Angular 2 application to work with Polymer elements.
