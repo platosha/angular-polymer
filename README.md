@@ -4,6 +4,11 @@
 
 `angular-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular](https://angular.io/) applications.
 
+> Note: Currently Angular-Polymer only works with Angular 2.1.2 and lower, or Angular-CLI 1.0.0-beta.21 and lower.
+> Work is being done to upgrade the library to work the latest Angular & CLI. [Want to help Contribute?](https://github.com/platosha/angular-polymer/issues/123)
+
+---
+
 ```typescript
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { PolymerModule, PolymerElement } from '@vaadin/angular2-polymer';
@@ -55,6 +60,9 @@ For high quality Polymer web components, see the [Webcomponents Element Catalog]
 ## Development
 
 Familiarize yourself with the code and try to follow the same syntax conventions to make it easier for us to accept your pull requests.
+
+Discuss / exchange ideas and ask questions here:
+https://polymer.slack.com/messages/polymer-angular/
 
 ### Getting the Code
 

@@ -105,4 +105,4 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ----
 
-link:https://vaadin.com/docs/-/part/elements/angular2-polymer/tutorial-index.html[See the tutorial] for complete instructions how to set up your Angular 2 application to work with Polymer elements.
+link:https://github.com/platosha/angular-polymer/blob/master/docs/tutorial-index.adoc[See the tutorial] for complete instructions how to set up your Angular 2 application to work with Polymer elements.
