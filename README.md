@@ -4,7 +4,7 @@
 
 `angular-polymer` is a directive factory that aims at bridging the gaps between using [Polymer](https://www.polymer-project.org) based Web Components in [Angular](https://angular.io/) applications.
 
-> Note: Currently Angular-Polymer only works with Angular 2.1.2 and lower, or Angular-CLI 1.0.0-beta.21 and lower.
+> Note: Currently Angular-Polymer only works with Angular 2.x, or Angular-CLI 1.0.0-rc.2 and lower.
 > Work is being done to upgrade the library to work the latest Angular & CLI. [Want to help Contribute?](https://github.com/platosha/angular-polymer/issues/123)
 
 ---
