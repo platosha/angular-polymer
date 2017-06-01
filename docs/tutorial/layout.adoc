@@ -72,13 +72,12 @@ Now we import the [classname]#PolymerElement# directives and attach them to the 
 .[filename]#app/app.module.ts#
 ----
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { PolymerElement } from '@vaadin/angular2-polymer';
+import { PolymerModule, PolymerElement } from '@vaadin/angular2-polymer';
 
 import { AppComponent }  from './app.component';
 
 @NgModule({
-  imports: [ BrowserModule ],
+  imports: [ PolymerModule ],
   declarations: [
     AppComponent,
     PolymerElement('app-header-layout'),

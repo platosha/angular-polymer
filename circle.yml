@@ -1,0 +1,14 @@
+machine:
+  node:
+    version: 6.9.1
+
+dependencies:
+  override:
+    - npm install
+    - npm run bower install
+  cache_directories:
+    - bower_components
+
+compile:
+  override:
+    - npm run lint

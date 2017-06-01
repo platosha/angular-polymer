@@ -1,10 +1,23 @@
 # Source files
 bower.json
-index.ts
-/src/
 tsconfig.json
+tslint.json
 typings/
 typings.json
+*.ts
+!*.d.ts
+
+# Tests and testing setup
+*.html
+*.spec.js
+*.spec.ts
+*.spec.d.ts
+system.config.js
+karma.conf.js
+circle.yml
+
+# Docs
+docs/
 
 # Created by https://www.gitignore.io/api/node,bower,typings
 

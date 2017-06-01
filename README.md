@@ -11,11 +11,10 @@
 
 ```typescript
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { PolymerElement } from '@vaadin/angular2-polymer';
+import { PolymerModule, PolymerElement } from '@vaadin/angular2-polymer';
 
 @NgModule({
-  imports: [ BrowserModule ],
+  imports: [ PolymerModule ],
   declarations: [
     AppComponent,
     PolymerElement('paper-input'),
@@ -94,6 +93,12 @@ Finally, you can run the tests by typing:
 
   ```shell
   $ npm test
+  ```
+
+Optionally, you can watch for the source changes and keep the tests running automatically:
+
+  ```shell
+  $ npm run test:w
   ```
 
 ## License

@@ -3,36 +3,40 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 
 <dom-module id="test-element">
-  <template>
-    <div id="nested" nested-object-value$=[[nestedObject.value]] array-object-value$=[[arrayObject.0]]></div>
-    <content id="selected" select=".selected"></content>
-    <content id="all"></content>
-  </template>
+    <template>
+        <div id="nested" nested-object-value$=[[nestedObject.value]] array-object-value$=[[arrayObject.0]]></div>
+        <content id="selected" select=".selected"></content>
+        <content id="all"></content>
+    </template>
 </dom-module>
 
 <script>
-  Polymer({
-    is: 'test-element',
+    Polymer({
+        is: 'test-element',
 
-    behaviors: [
-      Polymer.IronFormElementBehavior
-    ],
+        behaviors: [
+            Polymer.IronFormElementBehavior
+        ],
 
-    properties: {
-      value: {
-        value: '',
-        notify: true
-      },
+        properties: {
+            value: {
+                value: '',
+                notify: true
+            },
 
-      nestedObject: {
-        value: {
-          value: ''
+            booleanValue: {
+                type: Boolean
+            },
+
+            nestedObject: {
+                value: {
+                    value: ''
+                }
+            },
+
+            arrayObject: {
+                value: []
+            }
         }
-      },
-
-      arrayObject: {
-        value: []
-      }
-    }
-  });
+    });
 </script>
