@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/npm/v/@vaadin/angular2-polymer.svg)](https://www.npmjs.com/package/@vaadin/angular2-polymer)
+[![CircleCI](https://img.shields.io/circleci/project/github/platosha/angular-polymer.svg)](https://circleci.com/gh/platosha/angular-polymer) [![Version](https://img.shields.io/npm/v/@vaadin/angular2-polymer.svg)](https://www.npmjs.com/package/@vaadin/angular2-polymer)
 
 # Angular-Polymer
 
