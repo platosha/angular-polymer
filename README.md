@@ -7,6 +7,8 @@
 > Note: Currently Angular-Polymer only works with Angular 2.x, or Angular-CLI 1.0.0-rc.2 and lower.
 > Work is being done to upgrade the library to work the latest Angular & CLI. [Want to help Contribute?](https://github.com/platosha/angular-polymer/issues/123)
 
+**In case are using Angular 4+ and Polymer 2+** you might want to check out https://github.com/hotforfeature/origami
+
 ---
 
 ```typescript
